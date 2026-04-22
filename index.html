@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
+<title>ELTECH</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a7c44">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ELTECH">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--g950:#01120a;--g900:#022415;--g800:#054d2b;--g700:#0a7c44;--g600:#10b461;
+--g500:#1bd171;--g400:#4ee898;--g300:#8af3be;--g200:#c3f9dd;--g100:#e8fcef;
+--accent1:#00d4aa;--accent2:#00b4d8;--accent3:#7c3aed;
+--glass:rgba(2,36,21,0.72);--glass2:rgba(5,77,43,0.4);--glass3:rgba(27,209,113,0.06);
+--gb:rgba(78,232,152,0.18);--gbs:rgba(78,232,152,0.35);
+--text:#eafff3;--text2:rgba(195,249,221,0.75);--text3:rgba(195,249,221,0.4);
+--danger:#ff4757;--warn:#ffa502;--info:#3498ff;
+--r:20px;--rs:14px;--rx:8px;
+--shadow:0 8px 40px rgba(0,0,0,0.35);--glow:0 0 25px rgba(27,209,113,0.2);
+}
+html,body{height:100%;overflow:hidden;font-family:'Sora',sans-serif;background:#1a1a1a;color:var(--text)}
+
+/* BG IMAGE */
+.bg-image{position:fixed;inset:0;z-index:0;background:url('fundo.png') center/cover no-repeat;opacity:1}
+
+/* ANIMATED BG - none */
+body::before{content:none}
+body::after{content:none}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--g600);border-radius:8px}
+
+/* GLASS - Gray frosted */
+.glass{background:rgba(180,180,180,0.12);backdrop-filter:blur(50px) saturate(1.2);-webkit-backdrop-filter:blur(50px) saturate(1.2);border:1px solid rgba(255,255,255,0.2);box-shadow:0 8px 32px rgba(0,0,0,0.15),inset 0 1px 0 rgba(255,255,255,0.2)}
+.glass2{background:rgba(160,160,160,0.1);backdrop-filter:blur(40px) saturate(1.2);-webkit-backdrop-filter:blur(40px) saturate(1.2);border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 20px rgba(0,0,0,0.1),inset 0 1px 0 rgba(255,255,255,0.12)}
+.glass3{background:rgba(140,140,140,0.08);backdrop-filter:blur(30px) saturate(1.1);-webkit-backdrop-filter:blur(30px) saturate(1.1);border:1px solid rgba(255,255,255,0.1);box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.anim-fade{animation:fadeIn .4s ease both}
+.anim-d1{animation-delay:.05s}.anim-d2{animation-delay:.1s}.anim-d3{animation-delay:.15s}.anim-d4{animation-delay:.2s}
+
+/* APP STRUCTURE */
+.app{height:100dvh;display:flex;flex-direction:column;position:relative;z-index:1;overflow:hidden}
+.top-bar{height:58px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;z-index:10}
+.top-bar::before{content:'';position:absolute;inset:0;background:rgba(180,180,180,0.1);backdrop-filter:blur(50px) saturate(1.2);-webkit-backdrop-filter:blur(50px) saturate(1.2);border-bottom:1px solid rgba(255,255,255,0.18)}
+.top-bar h1{font-family:'JetBrains Mono',monospace;font-size:1.6rem;letter-spacing:8px;font-weight:800;color:#ffffff;position:relative;z-index:1;text-shadow:0 0 30px rgba(78,232,152,0.5),0 2px 4px rgba(0,0,0,0.3)}
+.top-bar::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--g400),transparent);z-index:2;opacity:.4}
+.page-content{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 16px 8px;scroll-behavior:smooth}
+.bottom-bar{height:70px;display:flex;align-items:center;justify-content:space-around;flex-shrink:0;z-index:10;position:relative;padding:0 2px}
+.bottom-bar::before{content:'';position:absolute;inset:0;background:rgba(180,180,180,0.1);backdrop-filter:blur(50px) saturate(1.2);-webkit-backdrop-filter:blur(50px) saturate(1.2);border-top:1px solid rgba(255,255,255,0.18)}
+.bottom-bar::after{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--g400),transparent);z-index:2;opacity:.3}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:rgba(255,255,255,0.55);font-size:.58rem;font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;padding:8px 2px;border-radius:var(--rx);transition:all .25s ease;min-width:0;flex:1;position:relative;z-index:1;letter-spacing:.3px}
+.nav-btn svg{width:22px;height:22px;stroke-width:1.8;transition:all .3s ease}
+.nav-btn.active{color:#ffffff}
+.nav-btn.active svg{filter:drop-shadow(0 0 10px rgba(255,255,255,0.5));transform:scale(1.12)}
+.nav-btn.active::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:#ffffff;box-shadow:0 0 10px rgba(255,255,255,0.6)}
+.nav-btn:active{transform:scale(0.88)}
+
+/* PAGE */
+.page{display:none;min-height:100%}
+.page.active{display:block;animation:fadeIn .35s ease}
+
+/* LOGIN PAGE */
+#loginPage{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a1a;padding:24px}
+#loginPage::before{content:none}
+#loginPage.hidden{display:none}
+.login-logo{position:relative;z-index:1;margin-bottom:12px;text-align:center}
+.login-logo h1{font-family:'JetBrains Mono',monospace;font-size:3.2rem;letter-spacing:12px;font-weight:800;color:#ffffff;text-shadow:0 0 60px rgba(78,232,152,0.4),0 0 120px rgba(78,232,152,0.15),0 2px 4px rgba(0,0,0,0.3);animation:float 4s ease-in-out infinite}
+.login-logo p{font-size:.8rem;color:var(--text3);letter-spacing:3px;margin-top:0px;font-weight:400}
+.login-box{width:100%;max-width:400px;border-radius:var(--r);padding:28px 22px;position:relative;z-index:1;animation:scaleIn .5s ease}
+.login-tabs{display:flex;gap:3px;margin-bottom:24px;background:rgba(0,0,0,0.3);border-radius:var(--rs);padding:3px;position:relative}
+.login-tab{flex:1;padding:11px 6px;border:none;background:none;color:var(--text3);font-family:'Sora',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;border-radius:calc(var(--rs) - 2px);transition:all .3s ease;position:relative;z-index:1}
+.login-tab.active{color:white;background:var(--g600);box-shadow:0 4px 15px rgba(16,180,97,0.4)}
+
+/* FORMS */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.72rem;color:var(--text2);margin-bottom:7px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.form-input{width:100%;padding:13px 16px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.15);border-radius:var(--rs);color:var(--text);font-family:'Sora',sans-serif;font-size:.88rem;outline:none;transition:all .25s ease}
+.form-input:focus{border-color:rgba(255,255,255,0.35);box-shadow:0 0 0 3px rgba(255,255,255,0.08)}
+.form-input::placeholder{color:var(--text3)}
+select.form-input{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234ee898' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+select.form-input option{background:var(--g900);color:var(--text)}
+textarea.form-input{resize:vertical;min-height:90px}
+
+/* BUTTONS */
+.btn{width:100%;padding:14px;border:none;border-radius:var(--rs);font-family:'Sora',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .25s ease;position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.08) 50%,transparent 70%);transform:translateX(-100%);transition:transform .5s}
+.btn:active::after{transform:translateX(100%)}
+.btn-primary{background:linear-gradient(135deg,var(--g600) 0%,var(--g700) 50%,#087a45 100%);color:white;box-shadow:0 4px 20px rgba(16,180,97,0.35),inset 0 1px 0 rgba(255,255,255,0.1)}
+.btn-primary:active{transform:scale(0.97);box-shadow:0 2px 10px rgba(16,180,97,0.25)}
+.btn-outline{background:transparent;border:1.5px solid var(--gb);color:var(--g400)}
+.btn-outline:active{background:rgba(78,232,152,0.05)}
+.btn-danger{background:linear-gradient(135deg,#ff5757,#d63030);color:white}
+.btn-sm{padding:9px 16px;font-size:.78rem;width:auto;border-radius:var(--rx)}
+.btn-xs{padding:6px 12px;font-size:.72rem;width:auto;border-radius:var(--rx)}
+.link-btn{background:none;border:none;color:var(--g400);font-family:'Sora',sans-serif;font-size:.78rem;cursor:pointer;text-decoration:none;font-weight:600;transition:color .2s}
+
+.login-form{display:none}.login-form.active{display:block;animation:fadeIn .3s ease}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:50;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{width:100%;max-width:500px;max-height:88dvh;border-radius:24px 24px 0 0;padding:8px 22px 28px;overflow-y:auto;animation:slideUp .35s cubic-bezier(.16,1,.3,1);background:rgba(180,180,180,0.12);backdrop-filter:blur(50px) saturate(1.2);-webkit-backdrop-filter:blur(50px) saturate(1.2);border:1px solid rgba(255,255,255,0.2);border-bottom:none;box-shadow:0 -8px 40px rgba(0,0,0,0.2)}
+.modal-handle{width:40px;height:4px;border-radius:4px;background:rgba(78,232,152,0.25);margin:0 auto 18px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.modal-header h3{font-size:1.15rem;font-weight:800;letter-spacing:.3px;color:#ffffff}
+.modal-close{background:rgba(255,255,255,0.06);border:none;color:var(--text2);cursor:pointer;padding:8px;border-radius:50%;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.modal-close:active{background:rgba(255,255,255,0.12);transform:scale(0.9)}
+.modal-close svg{width:20px;height:20px}
+
+/* SECTION */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.section-header h2{font-size:1.4rem;font-weight:800;letter-spacing:.3px;color:#ffffff}
+.add-btn{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--g500),var(--g600));border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(27,209,113,0.45),0 0 0 3px rgba(27,209,113,0.1);transition:all .25s}
+.add-btn:active{transform:scale(0.88);box-shadow:0 2px 10px rgba(16,180,97,0.3)}
+.add-btn svg{width:22px;height:22px;stroke-width:2.5}
+
+/* CARDS */
+.card{border-radius:var(--rs);padding:16px 18px;margin-bottom:10px;transition:all .2s ease;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--g500),var(--accent1),var(--accent2));opacity:.5;transition:opacity .3s}
+.card:active{transform:scale(0.98)}
+.card:active::before{opacity:1}
+.card-title{font-weight:700;font-size:.92rem;letter-spacing:.2px}
+.card-sub{font-size:.75rem;color:var(--text2);margin-top:3px}
+.card-actions{display:flex;gap:8px;margin-top:12px}
+.card-actions button{padding:7px 14px;border-radius:var(--rx);border:none;font-family:'Sora',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.card-actions .edit-btn{background:rgba(78,232,152,0.12);color:var(--g400)}
+.card-actions .del-btn{background:rgba(255,87,87,0.12);color:var(--danger)}
+.card-actions .open-btn{background:rgba(91,154,255,0.12);color:var(--info)}
+.card-actions button:active{transform:scale(0.92)}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--text3);font-size:.88rem;font-weight:500}
+.empty-state svg{width:52px;height:52px;margin-bottom:14px;opacity:.3;color:var(--g500)}
+.empty-state p{margin-top:6px;font-size:.78rem}
+
+/* ANIMAL ROWS */
+.animal-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:var(--rs);margin-bottom:8px;background:rgba(160,160,160,0.08);border:1px solid rgba(255,255,255,0.1);transition:all .2s;animation:fadeIn .3s ease both}
+.animal-row:active{transform:scale(0.98);border-color:var(--gb)}
+.animal-info{flex:1;min-width:0}
+.animal-info .num{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--g400);font-weight:700}
+.animal-info .name-text{font-size:.82rem;color:var(--text);font-weight:500;margin-left:6px}
+.animal-info .detail{font-size:.73rem;color:var(--text2);margin-top:5px;line-height:1.4}
+.badges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.badge{font-size:.62rem;padding:3px 10px;border-radius:99px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.badge-m{background:rgba(91,154,255,0.15);color:#8bb8ff;border:1px solid rgba(91,154,255,0.2)}
+.badge-f{background:rgba(255,105,180,0.15);color:#ffb0d4;border:1px solid rgba(255,105,180,0.2)}
+.badge-cat{background:rgba(78,232,152,0.1);color:var(--g300);border:1px solid rgba(78,232,152,0.15)}
+.badge-sit{background:rgba(255,184,48,0.12);color:#ffd074;border:1px solid rgba(255,184,48,0.15)}
+.badge-muco{background:rgba(147,130,255,0.12);color:#b8afff;border:1px solid rgba(147,130,255,0.15)}
+.animal-actions{display:flex;gap:6px;flex-shrink:0;margin-left:10px}
+.animal-actions button{width:34px;height:34px;border-radius:var(--rx);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.animal-actions .edit-btn{background:rgba(78,232,152,0.1);color:var(--g400)}
+.animal-actions .del-btn{background:rgba(255,87,87,0.1);color:var(--danger)}
+.animal-actions button:active{transform:scale(0.85)}
+.animal-actions button svg{width:16px;height:16px}
+
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(78,232,152,0.08);border:1px solid rgba(78,232,152,0.15);border-radius:var(--rx);color:var(--g400);font-family:'Sora',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;margin-bottom:18px;padding:8px 14px;transition:all .2s}
+.back-btn:active{transform:scale(0.95);background:rgba(78,232,152,0.15)}
+.back-btn svg{width:16px;height:16px}
+
+/* HOME */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.stat-card{border-radius:var(--rs);padding:18px;text-align:center;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g500),var(--accent1));border-radius:3px 3px 0 0}
+.stat-card .stat-val{font-family:'JetBrains Mono',monospace;font-size:1.7rem;font-weight:700;color:var(--g400);line-height:1;text-shadow:0 0 20px rgba(78,232,152,0.2)}
+.stat-card .stat-lbl{font-size:.68rem;color:var(--text2);margin-top:5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.stat-card .stat-icon{position:absolute;top:10px;right:12px;opacity:.15;font-size:1.6rem}
+
+.chart-container{border-radius:var(--r);padding:20px;margin-bottom:16px;position:relative}
+.chart-container h3{font-size:1.15rem;font-weight:800;margin-bottom:14px;color:#ffffff}
+canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
+.chart-filters{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.filter-chip{padding:7px 16px;border-radius:99px;border:1px solid rgba(78,232,152,0.15);background:transparent;color:var(--text3);font-family:'Sora',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .25s;letter-spacing:.3px}
+.filter-chip.active{background:linear-gradient(135deg,var(--g600),var(--g700));border-color:var(--g600);color:white;box-shadow:0 2px 12px rgba(16,180,97,0.3)}
+.filter-chip:active{transform:scale(0.93)}
+.chart-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;justify-content:center}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--text2);font-weight:500}
+.legend-dot{width:10px;height:10px;border-radius:4px}
+
+.med-section-title{font-size:1.15rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#ffffff}
+.med-section-title .icon{width:28px;height:28px;border-radius:8px;background:rgba(255,184,48,0.15);display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.med-alert-card{border-radius:var(--rs);padding:14px 16px;margin-bottom:8px;border-left:3px solid var(--warn);position:relative}
+.med-alert-card .med-animal{font-weight:700;font-size:.88rem;color:var(--g300)}
+.med-alert-card .med-detail{font-size:.75rem;color:var(--text2);margin-top:4px;line-height:1.5}
+
+/* CONFIG */
+.profile-section{display:flex;flex-direction:column;align-items:center;padding:30px 0 20px}
+.avatar-wrap{position:relative}
+.avatar-circle{width:110px;height:110px;border-radius:50%;border:3px solid var(--g500);overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);cursor:pointer;box-shadow:0 0 30px rgba(78,232,152,0.15);transition:all .3s}
+.avatar-circle:active{transform:scale(0.95)}
+.avatar-circle img{width:100%;height:100%;object-fit:cover}
+.avatar-circle svg{width:40px;height:40px;color:var(--text3)}
+.avatar-circle input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.avatar-edit{position:absolute;bottom:2px;right:2px;width:32px;height:32px;border-radius:50%;background:var(--g600);border:2px solid var(--g950);display:flex;align-items:center;justify-content:center;pointer-events:none}
+.avatar-edit svg{width:14px;height:14px;color:white}
+.profile-name{margin-top:16px;font-size:1.15rem;font-weight:700;background:none;border:none;color:var(--text);text-align:center;font-family:'Sora',sans-serif;border-bottom:2px solid rgba(78,232,152,0.2);padding:6px 12px;outline:none;width:220px;transition:border-color .2s}
+.profile-name:focus{border-color:var(--g500)}
+
+.config-section{border-radius:var(--rs);padding:20px;margin-bottom:14px}
+.config-section h4{font-size:.95rem;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:#ffffff}
+.config-section h4 svg{width:18px;height:18px;color:var(--g400)}
+
+/* ALIMENTAÇÃO COSTS */
+.cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.cost-box{border-radius:var(--rs);padding:16px;text-align:center}
+.cost-box .val{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--g400)}
+.cost-box .lbl{font-size:.68rem;color:var(--text2);margin-top:4px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+
+/* REPORT */
+.report-dl{display:flex;gap:10px;margin-top:12px}
+.report-dl .btn{display:flex;align-items:center;justify-content:center;gap:8px}
+
+/* BACKUP */
+.backup-section{display:flex;gap:10px;margin-top:12px}
+.backup-section .btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:.8rem}
+
+/* TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);padding:12px 24px;border-radius:var(--rs);font-size:.82rem;font-weight:600;z-index:200;opacity:0;transition:all .35s ease;pointer-events:none;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-success{background:rgba(16,180,97,0.9);color:white;backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(16,180,97,0.3)}
+.toast-error{background:rgba(255,87,87,0.9);color:white;backdrop-filter:blur(10px)}
+.toast-info{background:rgba(91,154,255,0.9);color:white;backdrop-filter:blur(10px)}
+
+/* DIET CHECKS */
+.diet-check,.report-check{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--rx);border:1px solid rgba(78,232,152,0.15);background:rgba(0,0,0,0.2);cursor:pointer;transition:all .2s;font-size:.82rem;font-weight:500;color:var(--text2)}
+.diet-check input,.report-check input{display:none}
+.diet-check:has(input:checked),.report-check:has(input:checked){background:rgba(78,232,152,0.15);border-color:var(--g500);color:var(--g300)}
+.diet-check:has(input:checked) span::before,.report-check:has(input:checked) span::before{content:'✓ ';color:var(--g400)}
+.diet-check:active,.report-check:active{transform:scale(0.95)}
+.diet-qtd{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--rx);background:rgba(0,0,0,0.15);border:1px solid rgba(78,232,152,0.1);margin-bottom:8px;animation:fadeIn .25s ease}
+.diet-qtd .diet-label{font-size:.8rem;font-weight:600;color:var(--g300);min-width:90px}
+.diet-qtd input{flex:1}
+
+/* PASSWORD TOGGLE */
+.pass-wrap{position:relative}
+.pass-wrap input{padding-right:46px}
+.pass-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;transition:color .2s}
+.pass-toggle:active{color:var(--g400)}
+.pass-toggle svg{width:20px;height:20px}
+
+/* SEARCH BAR */
+.search-bar{position:relative;margin-bottom:14px}
+.search-bar input{width:100%;padding:11px 16px 11px 42px;background:rgba(0,0,0,0.25);border:1px solid rgba(78,232,152,0.12);border-radius:var(--rs);color:var(--text);font-family:'Sora',sans-serif;font-size:.84rem;outline:none;transition:all .25s}
+.search-bar input:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(27,209,113,0.1)}
+.search-bar input::placeholder{color:var(--text3)}
+.search-bar svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--text3);pointer-events:none;transition:color .2s}
+.search-bar input:focus+svg{color:var(--g400)}
+
+/* CONFIRM MODAL */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+.confirm-overlay.show{display:flex}
+.confirm-box{width:100%;max-width:340px;border-radius:var(--r);padding:28px 24px;text-align:center;animation:scaleIn .25s ease;background:rgba(180,180,180,0.14);backdrop-filter:blur(50px) saturate(1.2);-webkit-backdrop-filter:blur(50px) saturate(1.2);border:1px solid rgba(255,255,255,0.2);box-shadow:0 8px 40px rgba(0,0,0,0.25)}
+.confirm-box .confirm-icon{font-size:2.4rem;margin-bottom:14px}
+.confirm-box .confirm-msg{font-size:.92rem;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:22px}
+.confirm-box .confirm-actions{display:flex;gap:10px}
+.confirm-box .confirm-actions button{flex:1}
+
+/* UTILITY */
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}.mb-8{margin-bottom:8px}.mb-16{margin-bottom:16px}
+.flex-row{display:flex;gap:10px}.flex-row>*{flex:1}
+.hidden{display:none!important}
+.divider{height:1px;background:var(--gb);margin:18px 0}
+</style>
+</head>
+<body>
+
+<div class="bg-image"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ========== LOGIN ========== -->
+<div id="loginPage">
+  <div class="bg-image" style="opacity:1"></div>
+  <div class="login-logo">
+    <h1>ELTECH</h1>
+    <p>GESTÃO PECUÁRIA</p>
+  </div>
+  <div class="login-box glass">
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('login')">Entrar</button>
+      <button class="login-tab" onclick="switchLoginTab('register')">Cadastrar</button>
+    </div>
+    <div id="loginForm" class="login-form active">
+      <div class="form-group"><label>Email ou Nome</label><input class="form-input" id="loginEmail" type="text" placeholder="seu@email.com ou seu nome"></div>
+      <div class="form-group"><label>Senha</label><div class="pass-wrap"><input class="form-input" id="loginPass" type="password" placeholder="••••••••"><button type="button" class="pass-toggle" onclick="togglePass('loginPass',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <button class="btn btn-primary mt-8" onclick="doLogin()">Entrar</button>
+    </div>
+    <div id="registerForm" class="login-form">
+      <div class="form-group"><label>Nome (máx. 15 letras)</label><input class="form-input" id="regName" type="text" maxlength="15" placeholder="Seu nome" oninput="this.value=this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g,'')"></div>
+      <div class="form-group"><label>Email</label><input class="form-input" id="regEmail" type="email" placeholder="seu@email.com"></div>
+      <div class="form-group"><label>Senha</label><div class="pass-wrap"><input class="form-input" id="regPass" type="password" placeholder="Aa1@••••"><button type="button" class="pass-toggle" onclick="togglePass('regPass',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div id="passReqs" style="font-size:.68rem;color:var(--text3);margin-top:-8px;margin-bottom:14px;line-height:1.6">
+        <span id="reqUpper">◯ Uma letra maiúscula</span><br>
+        <span id="reqNumber">◯ Um número</span><br>
+        <span id="reqSpecial">◯ Um caractere especial (!@#$...)</span><br>
+        <span id="reqLen">◯ Mínimo 6 caracteres</span>
+      </div>
+      <div class="form-group"><label>Confirmar Senha</label><div class="pass-wrap"><input class="form-input" id="regPassConfirm" type="password" placeholder="Repita a senha"><button type="button" class="pass-toggle" onclick="togglePass('regPassConfirm',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <button class="btn btn-primary mt-8" onclick="doRegister()">Cadastrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MAIN APP ========== -->
+<div class="app" id="mainApp" style="display:none">
+  <div class="top-bar"><h1>ELTECH</h1></div>
+  <div class="page-content">
+
+    <!-- HOME -->
+    <div class="page active" id="pageHome">
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="chart-container glass">
+        <h3>Visão do Rebanho</h3>
+        <div class="chart-filters" id="chartFilters">
+          <button class="filter-chip active" data-filter="categoria" onclick="setChartFilter('categoria',this)">Categoria</button>
+          <button class="filter-chip" data-filter="sexo" onclick="setChartFilter('sexo',this)">Sexo</button>
+          <button class="filter-chip" data-filter="situacao" onclick="setChartFilter('situacao',this)">Situação</button>
+          <button class="filter-chip" data-filter="raca" onclick="setChartFilter('raca',this)">Raça</button>
+          <button class="filter-chip" data-filter="planilha" onclick="setChartFilter('planilha',this)">Planilha</button>
+          <button class="filter-chip" data-filter="medicado" onclick="setChartFilter('medicado',this)">Medicado</button>
+        </div>
+        <canvas id="pieChart" width="240" height="240"></canvas>
+        <div class="chart-legend" id="chartLegend"></div>
+      </div>
+      <div class="med-section-title"><div class="icon">💊</div> Animais em Medicação</div>
+      <div id="homeMedList"></div>
+    </div>
+
+    <!-- REBANHO -->
+    <div class="page" id="pageRebanho">
+      <div id="rebanhoList">
+        <div class="section-header"><h2>Rebanho</h2><button class="add-btn" onclick="openModal('planilhaModal','rebanho')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div id="rebanhoPlanilhas"></div>
+      </div>
+      <div id="rebanhoDetail" class="hidden">
+        <button class="back-btn" onclick="backToList('rebanho')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
+        <div class="section-header"><h2 id="rebanhoDetailTitle"></h2><button class="add-btn" onclick="openModal('animalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div class="search-bar"><input type="text" id="searchRebanho" placeholder="Buscar por nº ou nome..." oninput="renderAnimals('rebanho')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div id="rebanhoAnimals"></div>
+      </div>
+    </div>
+
+    <!-- INSEMINAÇÃO -->
+    <div class="page" id="pageInseminacao">
+      <div id="insemList">
+        <div class="section-header"><h2>Inseminação</h2><button class="add-btn" onclick="openModal('planilhaModal','inseminacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div id="insemPlanilhas"></div>
+      </div>
+      <div id="insemDetail" class="hidden">
+        <button class="back-btn" onclick="backToList('inseminacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
+        <div class="section-header"><h2 id="insemDetailTitle"></h2><button class="add-btn" onclick="openModal('insemAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div class="search-bar"><input type="text" id="searchInseminacao" placeholder="Buscar por nº ou nome..." oninput="renderAnimals('inseminacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div id="insemAnimals"></div>
+      </div>
+    </div>
+
+    <!-- MEDICAÇÃO -->
+    <div class="page" id="pageMedicacao">
+      <div id="medList">
+        <div class="section-header"><h2>Medicação</h2><button class="add-btn" onclick="openModal('planilhaModal','medicacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div id="medPlanilhas"></div>
+      </div>
+      <div id="medDetail" class="hidden">
+        <button class="back-btn" onclick="backToList('medicacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
+        <div class="section-header"><h2 id="medDetailTitle"></h2><button class="add-btn" onclick="openModal('medAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div class="search-bar"><input type="text" id="searchMedicacao" placeholder="Buscar por nº ou nome..." oninput="renderAnimals('medicacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div id="medAnimals"></div>
+      </div>
+    </div>
+
+    <!-- ALIMENTAÇÃO -->
+    <div class="page" id="pageAlimentacao">
+      <div id="aliList">
+        <div class="section-header"><h2>Alimentação</h2><button class="add-btn" onclick="openModal('planilhaModal','alimentacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div id="aliPlanilhas"></div>
+      </div>
+      <div id="aliDetail" class="hidden">
+        <button class="back-btn" onclick="backToList('alimentacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
+        <div class="section-header"><h2 id="aliDetailTitle"></h2><button class="add-btn" onclick="openModal('aliAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+        <div class="search-bar"><input type="text" id="searchAlimentacao" placeholder="Buscar por nº ou nome..." oninput="renderAnimals('alimentacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div class="cost-grid" id="aliCostGrid"></div>
+        <div id="aliAnimals"></div>
+      </div>
+    </div>
+
+    <!-- RELATÓRIOS -->
+    <div class="page" id="pageRelatorios">
+      <div class="section-header"><h2>Relatórios</h2></div>
+      <div class="glass2" style="border-radius:var(--rs);padding:20px;margin-bottom:16px">
+        <div class="form-group"><label>Planilhas (selecione uma ou mais)</label>
+          <div id="reportSourceChecks" style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;padding:8px;background:rgba(0,0,0,0.2);border-radius:var(--rx);border:1px solid rgba(78,232,152,0.1)"></div>
+        </div>
+        <div class="flex-row">
+          <div class="form-group"><label>Categoria</label><select class="form-input" id="reportFilterCat"><option value="">Todas</option><option>Bezerro</option><option>Bezerra</option><option>Garrote</option><option>Novilha</option><option>Boi</option><option>Vaca seca</option><option>Vaca em lactação</option><option>Touro</option></select></div>
+          <div class="form-group"><label>Sexo</label><select class="form-input" id="reportFilterSex"><option value="">Todos</option><option>Macho</option><option>Fêmea</option></select></div>
+        </div>
+        <div class="flex-row">
+          <div class="form-group"><label>Raça</label><select class="form-input" id="reportFilterRaca"><option value="">Todas</option></select></div>
+          <div class="form-group"><label>Situação</label><select class="form-input" id="reportFilterSit"><option value="">Todas</option><option>Não se aplica</option><option>Anestro</option><option>Vazia</option><option>Prenha</option></select></div>
+        </div>
+        <div class="report-dl">
+          <button class="btn btn-primary" onclick="downloadReport('pdf')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</button>
+          <button class="btn btn-outline" onclick="downloadReport('csv')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIGURAÇÃO -->
+    <div class="page" id="pageConfig">
+      <div class="profile-section">
+        <div class="avatar-wrap">
+          <div class="avatar-circle" id="avatarCircle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" id="avatarPlaceholder"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <img id="avatarImg" src="" style="display:none">
+            <input type="file" accept="image/*" onchange="setAvatar(event)">
+          </div>
+          <div class="avatar-edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+        </div>
+        <input class="profile-name" id="profileName" value="Usuário" placeholder="Seu nome" maxlength="15" oninput="this.value=this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g,'')">
+      </div>
+
+      <div class="config-section glass2">
+        <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Alterar Senha</h4>
+        <div class="form-group"><label>Senha atual</label><div class="pass-wrap"><input class="form-input" type="password" id="cfgOldPass" placeholder="••••••••"><button type="button" class="pass-toggle" onclick="togglePass('cfgOldPass',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <div class="form-group"><label>Nova senha</label><div class="pass-wrap"><input class="form-input" type="password" id="cfgNewPass" placeholder="••••••••"><button type="button" class="pass-toggle" onclick="togglePass('cfgNewPass',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+        <button class="btn btn-primary" onclick="changePassword()">Salvar Nova Senha</button>
+      </div>
+
+      <div class="config-section glass2">
+        <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Backup dos Dados</h4>
+        <p style="font-size:.75rem;color:var(--text2);margin-bottom:12px">Exporte seus dados para um arquivo e restaure quando precisar. Ideal para trocar de celular ou manter uma cópia segura.</p>
+        <div class="backup-section">
+          <button class="btn btn-primary btn-sm" onclick="exportBackup()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar</button>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('importFile').click()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Importar</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+        </div>
+      </div>
+
+      <button class="btn btn-outline mt-16" style="border-color:var(--danger);color:var(--danger)" onclick="doLogout()">
+        Sair da Conta
+      </button>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="nav-btn" data-page="pageRebanho" onclick="goPage('pageRebanho')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5C3 7.5 4.5 6 6.5 6c.5-1.5 2-3 4-3h3c2 0 3.5 1.5 4 3C19.5 6 21 7.5 21 9.5c0 1.5-.8 2.8-2 3.5v5a2 2 0 01-2 2h-1l-.5 2h-1l-.5-2h-4l-.5 2h-1L9 20H8a2 2 0 01-2-2v-5C4.8 12.3 4 11 4 9.5z"/><circle cx="9" cy="9.5" r="1" fill="currentColor"/><circle cx="15" cy="9.5" r="1" fill="currentColor"/><ellipse cx="12" cy="13" rx="2.5" ry="1.5"/><path d="M10.5 13.5v.5M13.5 13.5v.5"/></svg><span>Rebanho</span></button>
+    <button class="nav-btn" data-page="pageInseminacao" onclick="goPage('pageInseminacao')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg><span>Insem.</span></button>
+    <button class="nav-btn" data-page="pageMedicacao" onclick="goPage('pageMedicacao')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 3h6v4H9zM4 7h16v14H4z"/><path d="M12 11v6M9 14h6"/></svg><span>Med.</span></button>
+    <button class="nav-btn active" data-page="pageHome" onclick="goPage('pageHome')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg><span>Home</span></button>
+    <button class="nav-btn" data-page="pageAlimentacao" onclick="goPage('pageAlimentacao')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg><span>Alim.</span></button>
+    <button class="nav-btn" data-page="pageRelatorios" onclick="goPage('pageRelatorios')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>Relat.</span></button>
+    <button class="nav-btn" data-page="pageConfig" onclick="goPage('pageConfig')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span>Config.</span></button>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<div class="modal-overlay" id="planilhaModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="planilhaModalTitle">Nova Planilha</h3><button class="modal-close" onclick="closeModal('planilhaModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><div class="form-group"><label>Nome da planilha</label><input class="form-input" id="planilhaNome" placeholder="Ex: Lote 2025"></div><button class="btn btn-primary mt-8" onclick="savePlanilha()">Salvar</button></div></div>
+
+<div class="modal-overlay" id="animalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="animalModalTitle">Adicionar Animal</h3><button class="modal-close" onclick="closeModal('animalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="flex-row"><div class="form-group"><label>Nº do Animal</label><input class="form-input" id="animalNum" placeholder="001"></div><div class="form-group"><label>Nome</label><input class="form-input" id="animalNome" placeholder="Mimosa"></div></div>
+<div class="flex-row"><div class="form-group"><label>Sexo</label><select class="form-input" id="animalSexo" onchange="onSexoChange()"><option value="Macho">Macho</option><option value="Fêmea">Fêmea</option></select></div><div class="form-group"><label>Categoria</label><select class="form-input" id="animalCat" onchange="onCatChange()"></select></div></div>
+<div class="flex-row"><div class="form-group"><label>Situação</label><select class="form-input" id="animalSit" disabled onchange="onSitChange()"></select></div><div class="form-group"><label>Raça</label><input class="form-input" id="animalRaca" placeholder="Nelore"></div></div>
+<div class="flex-row"><div class="form-group"><label>Peso (kg)</label><input class="form-input" id="animalPeso" type="number" step="0.1" placeholder="Ex: 450"></div><div class="form-group" id="leiteGroup"><label>Prod. Média Leite (L/dia)</label><input class="form-input" id="animalLeite" type="number" step="0.1" placeholder="Ex: 12.5"></div></div>
+<div class="form-group" id="insemGroup"><label>Última Inseminação</label><input class="form-input" id="animalInsem" disabled placeholder="Automático — vem da planilha de inseminação"></div>
+<button class="btn btn-primary mt-8" onclick="saveAnimal()">Salvar</button></div></div>
+
+<div class="modal-overlay" id="insemAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="insemAnimalModalTitle">Adicionar Inseminação</h3><button class="modal-close" onclick="closeModal('insemAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="flex-row"><div class="form-group"><label>Nº Animal</label><input class="form-input" id="insemNum" placeholder="001"></div><div class="form-group"><label>Nome</label><input class="form-input" id="insemNome" placeholder="Mimosa"></div></div>
+<div class="form-group"><label>Data do Procedimento</label><input class="form-input" id="insemData" type="date"></div>
+<div class="flex-row"><div class="form-group"><label>Tempo de Execução</label><input class="form-input" id="insemTempo" placeholder="Ex: 5 min"></div><div class="form-group"><label>Touro Utilizado</label><input class="form-input" id="insemTouro" placeholder="Nome/Código"></div></div>
+<div class="form-group"><label>Muco</label><select class="form-input" id="insemMuco"><option>Bom</option><option>Sujo</option><option>Ruim</option></select></div>
+<div class="form-group"><label>Observação</label><textarea class="form-input" id="insemObs" placeholder="Observações..."></textarea></div>
+<button class="btn btn-primary mt-8" onclick="saveInsemAnimal()">Salvar</button></div></div>
+
+<div class="modal-overlay" id="medAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="medAnimalModalTitle">Adicionar Medicação</h3><button class="modal-close" onclick="closeModal('medAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="flex-row"><div class="form-group"><label>Nº Animal</label><input class="form-input" id="medNum" placeholder="001"></div><div class="form-group"><label>Nome</label><input class="form-input" id="medNome" placeholder="Mimosa"></div></div>
+<div class="flex-row"><div class="form-group"><label>Início</label><input class="form-input" id="medDataIni" type="date"></div><div class="form-group"><label>Até Quando</label><input class="form-input" id="medDataFim" type="date"></div></div>
+<div class="form-group"><label>Medicamentos</label><textarea class="form-input" id="medMedicamentos" placeholder="Descreva medicamentos, dosagem, frequência..." style="min-height:130px"></textarea></div>
+<button class="btn btn-primary mt-8" onclick="saveMedAnimal()">Salvar</button></div></div>
+
+<div class="modal-overlay" id="aliAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="aliAnimalModalTitle">Adicionar Alimentação</h3><button class="modal-close" onclick="closeModal('aliAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="form-group"><label>Tipo de Dieta</label>
+<div id="dietaChecks" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+  <label class="diet-check"><input type="checkbox" value="Pasto" onchange="onDietChange()"><span>Pasto</span></label>
+  <label class="diet-check"><input type="checkbox" value="Silagem" onchange="onDietChange()"><span>Silagem</span></label>
+  <label class="diet-check"><input type="checkbox" value="Ração" onchange="onDietChange()"><span>Ração</span></label>
+  <label class="diet-check"><input type="checkbox" value="Concentrado" onchange="onDietChange()"><span>Concentrado</span></label>
+</div></div>
+<div id="dietQtdFields"></div>
+<div class="form-group"><label>Valor por kg (R$)</label><input class="form-input" id="aliValor" type="number" step="0.01" placeholder="0.00"></div>
+<div class="form-group"><label>Adicionar Animal</label><select class="form-input" id="aliAnimalSelect"><option value="">Selecione...</option></select></div>
+<div id="aliSelectedAnimals" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px"></div>
+<button class="btn btn-outline btn-xs mb-16" onclick="addAliAnimal()">+ Adicionar Animal à Lista</button>
+<button class="btn btn-primary" onclick="saveAliAnimal()">Salvar</button></div></div>
+
+<div class="confirm-overlay" id="confirmModal">
+  <div class="confirm-box glass">
+    <div class="confirm-icon" id="confirmIcon">⚠️</div>
+    <div class="confirm-msg" id="confirmMsg">Tem certeza?</div>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="confirmResolve(false)">Cancelar</button>
+      <button class="btn btn-danger" id="confirmBtn" onclick="confirmResolve(true)">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+let DB={user:{email:'',phone:'',password:'',name:'Usuário',avatar:''},rebanho:[],inseminacao:[],medicacao:[],alimentacao:[]};
+const save=()=>{try{localStorage.setItem('eltech_db',JSON.stringify(DB))}catch(e){}};
+const load=()=>{try{const d=localStorage.getItem('eltech_db');if(d)DB=JSON.parse(d)}catch(e){}};
+load();
+const uid=()=>'_'+Math.random().toString(36).substr(2,9);
+
+// TOAST
+function toast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast toast-'+type+' show';setTimeout(()=>t.classList.remove('show'),2800)}
+
+// PASSWORD TOGGLE
+function togglePass(id,btn){
+  const input=document.getElementById(id);
+  const isHidden=input.type==='password';
+  input.type=isHidden?'text':'password';
+  btn.innerHTML=isHidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  btn.style.color=isHidden?'var(--g400)':'var(--text3)';
+}
+
+// CUSTOM CONFIRM
+let _confirmCb=null;
+function showConfirm(msg,icon='⚠️'){
+  return new Promise(resolve=>{
+    _confirmCb=resolve;
+    document.getElementById('confirmIcon').textContent=icon;
+    document.getElementById('confirmMsg').textContent=msg;
+    document.getElementById('confirmModal').classList.add('show');
+  });
+}
+function confirmResolve(val){
+  document.getElementById('confirmModal').classList.remove('show');
+  if(_confirmCb)_confirmCb(val);_confirmCb=null;
+}
+
+// ========== LOGIN ==========
+function switchLoginTab(tab){
+  document.querySelectorAll('.login-tab').forEach((t,i)=>t.classList.toggle('active',['login','register'][i]===tab));
+  document.querySelectorAll('.login-form').forEach(f=>f.classList.remove('active'));
+  document.getElementById(tab==='login'?'loginForm':'registerForm').classList.add('active');
+}
+
+// Email validation
+function isValidEmail(e){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}
+// Password validation
+function isValidPassword(p){return p.length>=6&&/[A-Z]/.test(p)&&/[0-9]/.test(p)&&/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p)}
+// Name validation (letters only, max 15)
+function isValidName(n){return/^[a-zA-ZÀ-ÿ\s]{1,15}$/.test(n)&&n.trim().length>0}
+
+// Live password feedback on register
+document.getElementById('regPass').addEventListener('input',function(){
+  const p=this.value;
+  const set=(id,ok)=>{const el=document.getElementById(id);el.style.color=ok?'var(--g400)':'var(--text3)';el.textContent=(ok?'✓ ':'◯ ')+el.textContent.substring(2)};
+  set('reqUpper',/[A-Z]/.test(p));set('reqNumber',/[0-9]/.test(p));set('reqSpecial',/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p));set('reqLen',p.length>=6);
+});
+
+function doLogin(){
+  const input=document.getElementById('loginEmail').value.trim();
+  const p=document.getElementById('loginPass').value;
+  if(!input||!p)return toast('Preencha todos os campos','error');
+  // Check if user is registered
+  if(!DB.user.email||!DB.user.password)return toast('Nenhum usuário cadastrado. Cadastre-se primeiro.','error');
+  // Match by email or name
+  const matchEmail=input.toLowerCase()===DB.user.email.toLowerCase();
+  const matchName=input.toLowerCase()===DB.user.name.toLowerCase();
+  if(!matchEmail&&!matchName)return toast('Usuário não encontrado','error');
+  if(p!==DB.user.password)return toast('Senha incorreta','error');
+  enterApp();
+}
+
+function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const passConfirm=document.getElementById('regPassConfirm').value;
+  if(!name||!email||!pass||!passConfirm)return toast('Preencha todos os campos','error');
+  if(!isValidName(name))return toast('Nome: apenas letras, máx. 15 caracteres','error');
+  if(!isValidEmail(email))return toast('Email inválido. Ex: nome@email.com','error');
+  if(!isValidPassword(pass))return toast('Senha precisa de: maiúscula, número e caractere especial','error');
+  if(pass!==passConfirm)return toast('As senhas não coincidem','error');
+  DB.user={email,name,password:pass,avatar:''};save();
+  toast('Cadastro realizado! Faça login.');switchLoginTab('login');
+}
+function enterApp(){document.getElementById('loginPage').classList.add('hidden');document.getElementById('mainApp').style.display='flex';document.getElementById('profileName').value=DB.user.name||'Usuário';if(DB.user.avatar){document.getElementById('avatarImg').src=DB.user.avatar;document.getElementById('avatarImg').style.display='block';document.getElementById('avatarPlaceholder').style.display='none'}renderHome()}
+function doLogout(){document.getElementById('loginPage').classList.remove('hidden');document.getElementById('mainApp').style.display='none'}
+
+// ========== NAV ==========
+function goPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  document.querySelector('.page-content').scrollTop=0;
+  const types=['rebanho','inseminacao','medicacao','alimentacao'];
+  types.forEach(t=>{const l=document.getElementById(t==='inseminacao'?'insemList':t==='medicacao'?'medList':t==='alimentacao'?'aliList':'rebanhoList');const d=document.getElementById(t==='inseminacao'?'insemDetail':t==='medicacao'?'medDetail':t==='alimentacao'?'aliDetail':'rebanhoDetail');if(l&&d){l.classList.remove('hidden');d.classList.add('hidden')}});
+  if(id==='pageHome')renderHome();
+  if(id==='pageRebanho')renderPlanilhas('rebanho');
+  if(id==='pageInseminacao')renderPlanilhas('inseminacao');
+  if(id==='pageMedicacao')renderPlanilhas('medicacao');
+  if(id==='pageAlimentacao')renderPlanilhas('alimentacao');
+  if(id==='pageRelatorios')populateReportSources();
+}
+
+// ========== MODAL ==========
+let currentType='';let editPlanId=null;let editAniId=null;let currentPlanId=null;
+function openModal(id,type){if(type)currentType=type;document.getElementById(id).classList.add('show');
+  if(id==='aliAnimalModal')populateAliSelect();
+  if(id==='animalModal'&&!editAniId){document.getElementById('animalModalTitle').textContent='Adicionar Animal';initAnimalForm()}
+  if(id==='planilhaModal'&&!editPlanId)document.getElementById('planilhaModalTitle').textContent='Nova Planilha';
+}
+function closeModal(id){document.getElementById(id).classList.remove('show');editPlanId=null;editAniId=null;tempAli=[];document.getElementById(id).querySelectorAll('input:not([type=file]):not([disabled]):not([type=checkbox]),textarea').forEach(el=>el.value='');document.getElementById(id).querySelectorAll('select').forEach(el=>el.selectedIndex=0);if(id==='aliAnimalModal'){document.getElementById('aliSelectedAnimals').innerHTML='';document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);document.getElementById('dietQtdFields').innerHTML=''}}
+
+// ========== ANIMAL FORM CONDITIONALS ==========
+function onSexoChange(){
+  const sexo=document.getElementById('animalSexo').value;
+  const catSel=document.getElementById('animalCat');
+  catSel.innerHTML='';
+  if(sexo==='Macho'){
+    ['Bezerro','Garrote','Boi','Touro'].forEach(o=>{catSel.innerHTML+=`<option value="${o}">${o}</option>`});
+  } else {
+    ['Bezerra','Novilha','Vaca seca','Vaca em lactação'].forEach(o=>{catSel.innerHTML+=`<option value="${o}">${o}</option>`});
+  }
+  onCatChange();
+}
+function onCatChange(){
+  const sexo=document.getElementById('animalSexo').value;
+  const cat=document.getElementById('animalCat').value;
+  const sitSel=document.getElementById('animalSit');
+  if(sexo==='Macho'||cat==='Bezerra'){
+    sitSel.innerHTML='<option value="Não se aplica">Não se aplica</option>';
+    sitSel.disabled=true;
+  } else {
+    sitSel.innerHTML='';
+    ['Anestro','Vazia','Prenha'].forEach(o=>{sitSel.innerHTML+=`<option value="${o}">${o}</option>`});
+    sitSel.disabled=false;
+  }
+  onSitChange();
+}
+function onSitChange(){
+  updateFieldVisibility();
+}
+function updateFieldVisibility(){
+  const sexo=document.getElementById('animalSexo').value;
+  const cat=document.getElementById('animalCat').value;
+  const sit=document.getElementById('animalSit').value;
+  // Esconder Leite e Inseminação quando: macho, bezerra, bezerro ou anestro
+  const hideLeiteInsem=(sexo==='Macho'||cat==='Bezerro'||cat==='Bezerra'||sit==='Anestro');
+  document.getElementById('leiteGroup').style.display=hideLeiteInsem?'none':'block';
+  document.getElementById('insemGroup').style.display=hideLeiteInsem?'none':'block';
+  // Limpar valores quando escondido
+  if(hideLeiteInsem){
+    document.getElementById('animalLeite').value='';
+  }
+}
+function initAnimalForm(){
+  onSexoChange();
+}
+
+// ========== PLANILHA CRUD ==========
+function planilhaHTML(type,p){
+  const dateStr=p.createdAt?new Date(p.createdAt).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+  return`<div class="card glass2 anim-fade"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="card-title">${p.name}</div><div class="card-sub">${p.animals.length} registro(s)${dateStr?' · Criada em '+dateStr:''}</div></div></div><div class="card-actions"><button class="edit-btn" onclick="event.stopPropagation();editPlan('${type}','${p.id}')">Editar</button><button class="del-btn" onclick="event.stopPropagation();delPlan('${type}','${p.id}')">Excluir</button><button class="open-btn" onclick="openDetail('${type}','${p.id}')">Abrir →</button></div></div>`;
+}
+function renderPlanilhas(type){
+  const map={rebanho:'rebanhoPlanilhas',inseminacao:'insemPlanilhas',medicacao:'medPlanilhas',alimentacao:'aliPlanilhas'};
+  const el=document.getElementById(map[type]);
+  // Sort newest first
+  const sorted=[...DB[type]].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  el.innerHTML=sorted.length?sorted.map(p=>planilhaHTML(type,p)).join(''):'<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>Nenhuma planilha criada.<br>Toque no + para começar.</p></div>';
+}
+function savePlanilha(){const name=document.getElementById('planilhaNome').value.trim();if(!name)return toast('Digite o nome','error');if(editPlanId){const p=DB[currentType].find(x=>x.id===editPlanId);if(p)p.name=name}else DB[currentType].push({id:uid(),name,animals:[],createdAt:Date.now()});save();closeModal('planilhaModal');renderPlanilhas(currentType);toast('Planilha salva!')}
+function editPlan(type,id){currentType=type;editPlanId=id;const p=DB[type].find(x=>x.id===id);document.getElementById('planilhaNome').value=p.name;document.getElementById('planilhaModalTitle').textContent='Editar Planilha';openModal('planilhaModal',type)}
+async function delPlan(type,id){const ok=await showConfirm('Excluir esta planilha e todos os registros?','🗑️');if(!ok)return;DB[type]=DB[type].filter(x=>x.id!==id);save();renderPlanilhas(type);toast('Planilha excluída')}
+
+// ========== DETAIL VIEW ==========
+function openDetail(type,id){
+  currentPlanId=id;currentType=type;
+  const listId={rebanho:'rebanhoList',inseminacao:'insemList',medicacao:'medList',alimentacao:'aliList'}[type];
+  const detId={rebanho:'rebanhoDetail',inseminacao:'insemDetail',medicacao:'medDetail',alimentacao:'aliDetail'}[type];
+  const titleId={rebanho:'rebanhoDetailTitle',inseminacao:'insemDetailTitle',medicacao:'medDetailTitle',alimentacao:'aliDetailTitle'}[type];
+  const searchId={rebanho:'searchRebanho',inseminacao:'searchInseminacao',medicacao:'searchMedicacao',alimentacao:'searchAlimentacao'}[type];
+  document.getElementById(listId).classList.add('hidden');document.getElementById(detId).classList.remove('hidden');
+  const p=DB[type].find(x=>x.id===id);
+  document.getElementById(titleId).textContent=p.name;
+  // Clear search on open
+  const searchEl=document.getElementById(searchId);if(searchEl)searchEl.value='';
+  renderAnimals(type);
+}
+function backToList(type){
+  const listId={rebanho:'rebanhoList',inseminacao:'insemList',medicacao:'medList',alimentacao:'aliList'}[type];
+  const detId={rebanho:'rebanhoDetail',inseminacao:'insemDetail',medicacao:'medDetail',alimentacao:'aliDetail'}[type];
+  document.getElementById(detId).classList.add('hidden');document.getElementById(listId).classList.remove('hidden');renderPlanilhas(type);
+}
+
+function getInsemDate(num){let d='';DB.inseminacao.forEach(p=>p.animals.forEach(a=>{if(a.num===num&&a.data>d)d=a.data}));return d?new Date(d+'T12:00').toLocaleDateString('pt-BR'):'Sem registro'}
+
+function renderAnimals(type){
+  const p=DB[type].find(x=>x.id===currentPlanId);if(!p)return;
+  const container=document.getElementById({rebanho:'rebanhoAnimals',inseminacao:'insemAnimals',medicacao:'medAnimals',alimentacao:'aliAnimals'}[type]);
+  
+  // Search filter
+  const searchId={rebanho:'searchRebanho',inseminacao:'searchInseminacao',medicacao:'searchMedicacao',alimentacao:'searchAlimentacao'}[type];
+  const searchEl=document.getElementById(searchId);
+  const q=(searchEl?searchEl.value:'').toLowerCase().trim();
+  
+  let animals=p.animals;
+  if(q){
+    animals=animals.filter(a=>{
+      const num=(a.num||'').toLowerCase();
+      const nome=(a.nome||'').toLowerCase();
+      // For alimentacao, also search in linked animals
+      if(type==='alimentacao'){
+        const linked=(a.animais||[]).some(x=>(x.num||'').toLowerCase().includes(q)||(x.nome||'').toLowerCase().includes(q));
+        return num.includes(q)||nome.includes(q)||linked;
+      }
+      return num.includes(q)||nome.includes(q);
+    });
+  }
+
+  if(!animals.length){
+    const msg=q?'Nenhum resultado para "'+q+'"':'Nenhum registro.<br>Toque no + para adicionar.';
+    container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${q?'<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>':'<path d="M12 2C6.48 2 2 6 2 10.5c0 3.03 2.16 5.66 5.25 6.8L6 22l3.5-2.5L12 22l2.5-2.5L18 22l-1.25-4.7C19.84 16.16 22 13.53 22 10.5 22 6 17.52 2 12 2z"/>'}</svg><p>${msg}</p></div>`;
+    if(type==='alimentacao')document.getElementById('aliCostGrid').innerHTML='';return;
+  }
+
+  if(type==='rebanho'){
+    container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="badges"><span class="badge ${a.sexo==='Macho'?'badge-m':'badge-f'}">${a.sexo}</span><span class="badge badge-cat">${a.cat}</span><span class="badge badge-sit">${a.sit}</span></div><div class="detail">Raça: ${a.raca} · Peso: ${a.peso?a.peso+' kg':'—'} · Leite: ${a.leite?a.leite+' L/dia':'—'}</div><div class="detail">Insem: ${getInsemDate(a.num)}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');
+  } else if(type==='inseminacao'){
+    container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">Data: ${a.data?new Date(a.data+'T12:00').toLocaleDateString('pt-BR'):'-'} · Touro: ${a.touro||'-'}</div><div class="badges"><span class="badge badge-muco">Muco: ${a.muco}</span><span class="badge badge-cat">${a.tempo||'-'}</span></div>${a.obs?`<div class="detail" style="font-style:italic;margin-top:3px">${a.obs}</div>`:''}</div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('inseminacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('inseminacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');
+  } else if(type==='medicacao'){
+    container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">De ${a.dataIni?new Date(a.dataIni+'T12:00').toLocaleDateString('pt-BR'):'-'} até ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'-'}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('medicacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('medicacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="detail" style="margin-top:8px;white-space:pre-wrap;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px">${a.medicamentos}</div></div>`).join('');
+  } else if(type==='alimentacao'){
+    let totalC=0,totalA=0;animals.forEach(a=>{totalC+=parseFloat(a.valor||0);totalA+=(a.animais||[]).length});
+    document.getElementById('aliCostGrid').innerHTML=`<div class="cost-box glass3"><div class="val">R$ ${totalC.toFixed(2)}</div><div class="lbl">Valor/kg Total</div></div><div class="cost-box glass3"><div class="val">${totalA}</div><div class="lbl">Animais</div></div>`;
+    container.innerHTML=animals.map((a,i)=>{
+      const dietaStr=(a.dietas||[]).map(d=>`<span class="badge badge-cat" style="margin:2px">${d.tipo}${d.qtd?' · '+d.qtd+' kg':''}</span>`).join('')||`<span class="badge badge-cat">${a.racao||'—'}</span>`;
+      return `<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--g400);font-size:.9rem">Dieta</div><div class="detail">R$ ${parseFloat(a.valor||0).toFixed(2)} /kg</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('alimentacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('alimentacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">${dietaStr}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${(a.animais||[]).map(x=>`<span class="badge badge-m" style="margin:1px">#${x.num} ${x.nome}</span>`).join('')}</div></div>`;
+    }).join('');
+  }
+}
+async function delAnimal(type,aid){const ok=await showConfirm('Excluir este registro?','🗑️');if(!ok)return;const p=DB[type].find(x=>x.id===currentPlanId);p.animals=p.animals.filter(x=>x.id!==aid);save();renderAnimals(type);toast('Registro excluído')}
+
+// ========== SAVE ANIMALS ==========
+function saveAnimal(){const p=DB.rebanho.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('animalNum').value.trim();const nome=document.getElementById('animalNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,sexo:document.getElementById('animalSexo').value,cat:document.getElementById('animalCat').value,sit:document.getElementById('animalSit').value,raca:document.getElementById('animalRaca').value.trim()||'N/A',peso:document.getElementById('animalPeso').value||'',leite:document.getElementById('animalLeite').value||''};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('animalModal');renderAnimals('rebanho');toast('Animal salvo!')}
+function saveInsemAnimal(){const p=DB.inseminacao.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('insemNum').value.trim();const nome=document.getElementById('insemNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,data:document.getElementById('insemData').value,tempo:document.getElementById('insemTempo').value,touro:document.getElementById('insemTouro').value,muco:document.getElementById('insemMuco').value,obs:document.getElementById('insemObs').value};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('insemAnimalModal');renderAnimals('inseminacao');toast('Inseminação salva!')}
+function saveMedAnimal(){const p=DB.medicacao.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('medNum').value.trim();const nome=document.getElementById('medNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,dataIni:document.getElementById('medDataIni').value,dataFim:document.getElementById('medDataFim').value,medicamentos:document.getElementById('medMedicamentos').value};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('medAnimalModal');renderAnimals('medicacao');toast('Medicação salva!')}
+
+let tempAli=[];
+function populateAliSelect(){const sel=document.getElementById('aliAnimalSelect');sel.innerHTML='<option value="">Selecione...</option>';DB.rebanho.forEach(p=>p.animals.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`}))}
+function addAliAnimal(){const sel=document.getElementById('aliAnimalSelect');if(!sel.value)return;const[num,nome]=sel.value.split('|');if(tempAli.find(a=>a.num===num))return toast('Já adicionado','info');tempAli.push({num,nome});renderTempAli()}
+function renderTempAli(){document.getElementById('aliSelectedAnimals').innerHTML=tempAli.map((a,i)=>`<span class="badge badge-cat" style="cursor:pointer;padding:5px 12px" onclick="tempAli.splice(${i},1);renderTempAli()">#${a.num} ${a.nome} ✕</span>`).join('')}
+
+// Diet type checkboxes
+function onDietChange(){
+  const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]');
+  const container=document.getElementById('dietQtdFields');
+  container.innerHTML='';
+  checks.forEach(cb=>{
+    if(cb.checked){
+      container.innerHTML+=`<div class="diet-qtd"><span class="diet-label">${cb.value}</span><input class="form-input" id="dietQtd_${cb.value}" type="number" step="0.1" placeholder="Qtd em kg" style="padding:10px 12px;font-size:.82rem"></div>`;
+    }
+  });
+}
+function getSelectedDiets(){
+  const diets=[];
+  const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]');
+  checks.forEach(cb=>{
+    if(cb.checked){
+      const qtdEl=document.getElementById('dietQtd_'+cb.value);
+      diets.push({tipo:cb.value,qtd:qtdEl?qtdEl.value:''});
+    }
+  });
+  return diets;
+}
+function setDietChecks(diets){
+  // Reset all
+  document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);
+  document.getElementById('dietQtdFields').innerHTML='';
+  if(!diets||!diets.length)return;
+  diets.forEach(d=>{
+    const cb=document.querySelector(`#dietaChecks input[value="${d.tipo}"]`);
+    if(cb)cb.checked=true;
+  });
+  onDietChange();
+  // Set quantities after fields are rendered
+  diets.forEach(d=>{
+    const el=document.getElementById('dietQtd_'+d.tipo);
+    if(el)el.value=d.qtd||'';
+  });
+}
+
+function saveAliAnimal(){
+  const p=DB.alimentacao.find(x=>x.id===currentPlanId);if(!p)return;
+  const dietas=getSelectedDiets();
+  if(!dietas.length)return toast('Selecione ao menos um tipo de dieta','error');
+  const d={dietas,valor:document.getElementById('aliValor').value,animais:[...tempAli],
+    // backward compat
+    racao:dietas.map(x=>x.tipo).join(', ')};
+  if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
+  else p.animals.push({id:uid(),...d});
+  tempAli=[];save();closeModal('aliAnimalModal');renderAnimals('alimentacao');toast('Alimentação salva!');
+}
+
+// ========== EDIT ANIMALS ==========
+function editAnimal(type,aid){
+  const p=DB[type].find(x=>x.id===currentPlanId);const a=p.animals.find(x=>x.id===aid);if(!a)return;editAniId=aid;
+  if(type==='rebanho'){document.getElementById('animalNum').value=a.num;document.getElementById('animalNome').value=a.nome;document.getElementById('animalSexo').value=a.sexo;onSexoChange();document.getElementById('animalCat').value=a.cat;onCatChange();document.getElementById('animalSit').value=a.sit;updateFieldVisibility();document.getElementById('animalRaca').value=a.raca;document.getElementById('animalPeso').value=a.peso||'';document.getElementById('animalLeite').value=a.leite||'';document.getElementById('animalInsem').value=getInsemDate(a.num);document.getElementById('animalModalTitle').textContent='Editar Animal';openModal('animalModal')}
+  else if(type==='inseminacao'){document.getElementById('insemNum').value=a.num;document.getElementById('insemNome').value=a.nome;document.getElementById('insemData').value=a.data;document.getElementById('insemTempo').value=a.tempo;document.getElementById('insemTouro').value=a.touro;document.getElementById('insemMuco').value=a.muco;document.getElementById('insemObs').value=a.obs;document.getElementById('insemAnimalModalTitle').textContent='Editar Inseminação';openModal('insemAnimalModal')}
+  else if(type==='medicacao'){document.getElementById('medNum').value=a.num;document.getElementById('medNome').value=a.nome;document.getElementById('medDataIni').value=a.dataIni;document.getElementById('medDataFim').value=a.dataFim;document.getElementById('medMedicamentos').value=a.medicamentos;document.getElementById('medAnimalModalTitle').textContent='Editar Medicação';openModal('medAnimalModal')}
+  else if(type==='alimentacao'){setDietChecks(a.dietas||[]);document.getElementById('aliValor').value=a.valor;tempAli=[...(a.animais||[])];renderTempAli();document.getElementById('aliAnimalModalTitle').textContent='Editar Alimentação';openModal('aliAnimalModal')}
+}
+
+// ========== HOME ==========
+let chartFilter='categoria';
+const COLORS=['#1bd171','#5b9aff','#ffb830','#ff5757','#a78bfa','#f472b6','#2dd4bf','#fb923c','#818cf8','#a3e635','#fbbf24','#67e8f9'];
+function setChartFilter(f,btn){chartFilter=f;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderHome()}
+function renderHome(){
+  let all=[];DB.rebanho.forEach(p=>p.animals.forEach(a=>all.push(a)));
+  let medCount=0;const today=new Date().toISOString().split('T')[0];DB.medicacao.forEach(p=>p.animals.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medCount++}));
+  let insemCount=0;DB.inseminacao.forEach(p=>insemCount+=p.animals.length);
+
+  // Greeting
+  const hour=new Date().getHours();
+  const greet=hour<12?'Bom dia':hour<18?'Boa tarde':'Boa noite';
+  const userName=DB.user.name||'Usuário';
+
+  document.getElementById('statGrid').innerHTML=`
+    <div style="grid-column:1/-1;margin-bottom:4px"><p style="font-size:1rem;font-weight:700;color:#fff">${greet}, ${userName}!</p><p style="font-size:.75rem;color:var(--text2);margin-top:2px">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</p></div>
+    <div class="stat-card glass2 anim-fade"><div class="stat-icon">🐄</div><div class="stat-val">${all.length}</div><div class="stat-lbl">Total Animais</div></div>
+    <div class="stat-card glass2 anim-fade anim-d1"><div class="stat-icon">💊</div><div class="stat-val">${medCount}</div><div class="stat-lbl">Em Medicação</div></div>
+    <div class="stat-card glass2 anim-fade anim-d2"><div class="stat-icon">🧬</div><div class="stat-val">${insemCount}</div><div class="stat-lbl">Inseminações</div></div>
+    <div class="stat-card glass2 anim-fade anim-d3"><div class="stat-icon">📋</div><div class="stat-val">${DB.rebanho.length+DB.inseminacao.length+DB.medicacao.length+DB.alimentacao.length}</div><div class="stat-lbl">Planilhas</div></div>`;
+
+  const counts={};
+  // Build set of medicated animal numbers
+  const medNums=new Set();DB.medicacao.forEach(p=>p.animals.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medNums.add(a.num)}));
+
+  if(chartFilter==='planilha'){
+    DB.rebanho.forEach(p=>{counts[p.name]=p.animals.length});
+  } else if(chartFilter==='medicado'){
+    let mc=0,naoMed=0;
+    all.forEach(a=>{if(medNums.has(a.num))mc++;else naoMed++});
+    if(mc)counts['Em medicação']=mc;
+    if(naoMed)counts['Sem medicação']=naoMed;
+  } else {
+    all.forEach(a=>{let k='';if(chartFilter==='categoria')k=a.cat;else if(chartFilter==='sexo')k=a.sexo;else if(chartFilter==='situacao')k=a.sit;else k=a.raca||'N/A';counts[k]=(counts[k]||0)+1});
+  }
+  drawPie(counts);
+
+  let meds=[];DB.medicacao.forEach(p=>p.animals.forEach(a=>{if(!a.dataFim||a.dataFim>=today)meds.push(a)}));
+  document.getElementById('homeMedList').innerHTML=meds.length?meds.map(a=>`<div class="med-alert-card glass3 anim-fade"><div class="med-animal">#${a.num} ${a.nome}</div><div class="med-detail">Até: ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'Indefinido'}</div><div class="med-detail">${a.medicamentos}</div></div>`).join(''):'<div class="empty-state" style="padding:30px"><p>Nenhum animal em medicação no momento.</p></div>';
+}
+function drawPie(data){
+  const c=document.getElementById('pieChart'),ctx=c.getContext('2d'),W=c.width,H=c.height,cx=W/2,cy=H/2,r=Math.min(W,H)/2-16;
+  ctx.clearRect(0,0,W,H);
+  const keys=Object.keys(data),total=keys.reduce((s,k)=>s+data[k],0);
+  const leg=document.getElementById('chartLegend');
+  if(!total){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(78,232,152,0.15)';ctx.lineWidth=20;ctx.stroke();ctx.fillStyle='rgba(195,249,221,0.3)';ctx.font='500 13px Sora';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Sem dados',cx,cy);leg.innerHTML='';return}
+  let start=-Math.PI/2;leg.innerHTML='';
+  keys.forEach((k,i)=>{
+    const angle=(data[k]/total)*Math.PI*2;const color=COLORS[i%COLORS.length];
+    // Draw donut segment
+    ctx.beginPath();ctx.arc(cx,cy,r,start,start+angle);ctx.arc(cx,cy,r*0.55,start+angle,start,true);ctx.closePath();ctx.fillStyle=color;ctx.fill();
+    // Label
+    if(angle>0.35){const mid=start+angle/2;const lx=cx+Math.cos(mid)*(r*0.78);const ly=cy+Math.sin(mid)*(r*0.78);ctx.fillStyle='#fff';ctx.font='700 11px Sora';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(data[k],lx,ly)}
+    start+=angle;
+    leg.innerHTML+=`<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${k} (${data[k]})</div>`;
+  });
+  // Center text
+  ctx.fillStyle='var(--text)';ctx.font='700 22px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(total,cx,cy-6);
+  ctx.fillStyle='rgba(195,249,221,0.5)';ctx.font='500 10px Sora';ctx.fillText('TOTAL',cx,cy+12);
+}
+
+// ========== RELATÓRIOS ==========
+function populateReportSources(){
+  const container=document.getElementById('reportSourceChecks');
+  container.innerHTML='';
+  const add=(type,label,list)=>{list.forEach(p=>{container.innerHTML+=`<label class="report-check"><input type="checkbox" value="${type}:${p.id}"><span>${label} — ${p.name}</span></label>`})};
+  add('rebanho','Rebanho',DB.rebanho);
+  add('inseminacao','Inseminação',DB.inseminacao);
+  add('medicacao','Medicação',DB.medicacao);
+  add('alimentacao','Alimentação',DB.alimentacao);
+  if(!container.innerHTML)container.innerHTML='<div style="padding:12px;color:var(--text3);font-size:.8rem;text-align:center">Nenhuma planilha criada</div>';
+  // Populate raça filter dynamically
+  const racas=new Set();DB.rebanho.forEach(p=>p.animals.forEach(a=>{if(a.raca&&a.raca!=='N/A')racas.add(a.raca)}));
+  const racaSel=document.getElementById('reportFilterRaca');
+  racaSel.innerHTML='<option value="">Todas</option>';
+  [...racas].sort().forEach(r=>{racaSel.innerHTML+=`<option>${r}</option>`});
+}
+function getFiltered(){
+  const checks=document.querySelectorAll('#reportSourceChecks input[type=checkbox]:checked');
+  if(!checks.length)return{sources:[],animals:[],type:'',name:''};
+  const sources=[];let allAnimals=[];let names=[];let mainType='';
+  checks.forEach(cb=>{
+    const[type,id]=cb.value.split(':');
+    const p=DB[type].find(x=>x.id===id);
+    if(!p)return;
+    sources.push({type,planilha:p});
+    if(!mainType)mainType=type;
+    names.push(p.name);
+    p.animals.forEach(a=>allAnimals.push({...a,_type:type,_planilha:p.name}));
+  });
+  // Apply filters (only for rebanho type animals)
+  const cf=document.getElementById('reportFilterCat').value;
+  const sf=document.getElementById('reportFilterSex').value;
+  const rf=document.getElementById('reportFilterRaca').value;
+  const stf=document.getElementById('reportFilterSit').value;
+  if(cf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.cat===cf);
+  if(sf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.sexo===sf);
+  if(rf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.raca===rf);
+  if(stf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.sit===stf);
+  return{sources,animals:allAnimals,type:mainType,name:names.join(', ')};
+}
+function downloadReport(fmt){
+  const result=getFiltered();
+  if(!result.animals.length)return toast('Selecione planilhas e verifique os filtros','error');
+  const{sources,animals,name}=result;
+  const now=new Date(),ds=now.toLocaleDateString('pt-BR'),ts=now.toLocaleTimeString('pt-BR');
+
+  // Group animals by source type
+  const grouped={};
+  animals.forEach(a=>{const key=a._type+'|'+a._planilha;if(!grouped[key])grouped[key]={type:a._type,planilha:a._planilha,items:[]};grouped[key].items.push(a)});
+
+  if(fmt==='csv'){
+    let csv='';
+    Object.values(grouped).forEach(g=>{
+      csv+=`\n--- ${g.planilha} (${g.type}) ---\n`;
+      if(g.type==='rebanho')csv+='Numero,Nome,Sexo,Categoria,Situacao,Raca,Peso(kg),Leite(L/dia)\n'+g.items.map(a=>`${a.num},${a.nome},${a.sexo},${a.cat},${a.sit},${a.raca},${a.peso||''},${a.leite||''}`).join('\n');
+      else if(g.type==='inseminacao')csv+='Numero,Nome,Data,Tempo,Touro,Muco,Obs\n'+g.items.map(a=>`${a.num},${a.nome},${a.data},${a.tempo},${a.touro},${a.muco},"${a.obs||''}"`).join('\n');
+      else if(g.type==='medicacao')csv+='Numero,Nome,Inicio,Fim,Medicamentos\n'+g.items.map(a=>`${a.num},${a.nome},${a.dataIni},${a.dataFim},"${a.medicamentos||''}"`).join('\n');
+      else csv+='Dieta,Valor/kg,Animais\n'+g.items.map(a=>{const dt=(a.dietas||[]).map(d=>d.tipo+(d.qtd?' '+d.qtd+'kg':'')).join('; ')||a.racao||'';return`"${dt}",${a.valor},"${(a.animais||[]).map(x=>x.num+'-'+x.nome).join('; ')}"`}).join('\n');
+      csv+='\n';
+    });
+    const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download=`ELTECH_Relatorio_${ds.replace(/\//g,'-')}.csv`;l.click();toast('Excel exportado!');
+  } else {
+    let tables='';
+    Object.values(grouped).forEach(g=>{
+      let rows='';
+      if(g.type==='rebanho')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Sexo</th><th>Cat.</th><th>Situação</th><th>Raça</th><th>Peso</th><th>Leite</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.sexo}</td><td>${a.cat}</td><td>${a.sit}</td><td>${a.raca}</td><td>${a.peso?a.peso+'kg':'—'}</td><td>${a.leite?a.leite+'L':'—'}</td></tr>`).join('');
+      else if(g.type==='inseminacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Data</th><th>Tempo</th><th>Touro</th><th>Muco</th><th>Obs</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.data}</td><td>${a.tempo}</td><td>${a.touro}</td><td>${a.muco}</td><td>${a.obs||''}</td></tr>`).join('');
+      else if(g.type==='medicacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Início</th><th>Fim</th><th>Medicamentos</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.dataIni}</td><td>${a.dataFim}</td><td>${a.medicamentos||''}</td></tr>`).join('');
+      else rows='<tr class="hdr"><th>Dieta</th><th>Valor/kg</th><th>Animais</th></tr>'+g.items.map((a,i)=>{const dt=(a.dietas||[]).map(d=>`${d.tipo}${d.qtd?' — '+d.qtd+'kg':''}`).join(', ')||a.racao||'—';return`<tr class="${i%2?'alt':''}"><td>${dt}</td><td>R$ ${parseFloat(a.valor||0).toFixed(2)}</td><td>${(a.animais||[]).map(x=>'#'+x.num+' '+x.nome).join(', ')}</td></tr>`}).join('');
+      tables+=`<h2 style="color:#0a7c44;font-size:16px;margin:24px 0 8px;border-bottom:2px solid #0a7c44;padding-bottom:6px">${g.planilha} <span style="font-weight:400;font-size:12px;color:#888">(${g.type})</span></h2><table>${rows}</table><p style="font-size:11px;color:#999;margin-top:4px">${g.items.length} registro(s)</p>`;
+    });
+    const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>ELTECH</title><style>*{margin:0;box-sizing:border-box}body{font-family:Segoe UI,sans-serif;padding:40px 24px;color:#1a1a1a;background:#fff}.hd{text-align:center;margin-bottom:24px}.hd h1{color:#0a7c44;font-size:28px;letter-spacing:3px;margin-bottom:4px}.hd p{color:#666;font-size:12px}table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px}th,td{padding:9px 10px;text-align:left;border-bottom:1px solid #e5e5e5}.hdr th{background:linear-gradient(135deg,#0a7c44,#10b461);color:#fff;font-weight:600;border:none;font-size:11px}.alt td{background:#f0fdf4}.ft{text-align:center;margin-top:30px;padding-top:14px;border-top:2px solid #0a7c44;color:#666;font-size:11px}</style></head><body><div class="hd"><h1>ELTECH</h1><p>Relatório · ${ds} às ${ts}</p></div>${tables}<div class="ft">Total: ${animals.length} registro(s) · Gerado por ELTECH</div></body></html>`;
+    const w=window.open('','_blank');w.document.write(html);w.document.close();setTimeout(()=>w.print(),400);toast('PDF gerado!');
+  }
+}
+
+// ========== CONFIG ==========
+function setAvatar(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{DB.user.avatar=ev.target.result;document.getElementById('avatarImg').src=ev.target.result;document.getElementById('avatarImg').style.display='block';document.getElementById('avatarPlaceholder').style.display='none';save();toast('Foto atualizada!')};r.readAsDataURL(f)}
+document.getElementById('profileName').addEventListener('change',function(){DB.user.name=this.value;save();toast('Nome salvo!')});
+function changePassword(){const o=document.getElementById('cfgOldPass').value;const n=document.getElementById('cfgNewPass').value;if(!o||!n)return toast('Preencha os campos','error');if(o!==DB.user.password)return toast('Senha atual incorreta','error');if(!isValidPassword(n))return toast('Nova senha precisa de: maiúscula, número e caractere especial','error');DB.user.password=n;save();toast('Senha alterada!');document.getElementById('cfgOldPass').value='';document.getElementById('cfgNewPass').value=''}
+
+// ========== BACKUP ==========
+function exportBackup(){
+  const data=JSON.stringify(DB,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  const d=new Date();
+  a.download=`ELTECH_backup_${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;
+  a.click();
+  toast('Backup exportado com sucesso!');
+}
+function importBackup(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async function(ev){
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(!data.rebanho&&!data.inseminacao&&!data.medicacao)throw new Error('Formato inválido');
+      const ok=await showConfirm('Isso vai substituir TODOS os dados atuais. Deseja continuar?','📦');
+      if(!ok)return;
+      DB=data;save();
+      if(DB.user.name)document.getElementById('profileName').value=DB.user.name;
+      if(DB.user.avatar){document.getElementById('avatarImg').src=DB.user.avatar;document.getElementById('avatarImg').style.display='block';document.getElementById('avatarPlaceholder').style.display='none'}
+      goPage('pageHome');
+      toast('Backup restaurado com sucesso!');
+    }catch(err){toast('Arquivo de backup inválido','error')}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+// ========== INIT ==========
+renderPlanilhas('rebanho');renderPlanilhas('inseminacao');renderPlanilhas('medicacao');renderPlanilhas('alimentacao');
+
+// ========== PWA ==========
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(()=>console.log('SW registered')).catch(e=>console.log('SW failed',e))}
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;
+  // Show install button after login
+  const installDiv=document.createElement('div');
+  installDiv.id='installBanner';
+  installDiv.style.cssText='position:fixed;bottom:80px;left:16px;right:16px;z-index:60;padding:16px 20px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;animation:slideUp .4s ease';
+  installDiv.className='glass';
+  installDiv.innerHTML='<div style="flex:1"><div style="font-weight:700;font-size:.88rem">Instalar ELTECH</div><div style="font-size:.72rem;color:var(--text2);margin-top:2px">Adicione à tela inicial do celular</div></div><button class="btn btn-primary btn-sm" onclick="installApp()" style="flex-shrink:0">Instalar</button><button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:1.2rem">✕</button>';
+  document.body.appendChild(installDiv);
+});
+function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(r=>{if(r.outcome==='accepted')toast('App instalado!');deferredPrompt=null;const b=document.getElementById('installBanner');if(b)b.remove()})}}
+window.addEventListener('appinstalled',()=>{toast('ELTECH instalado no seu celular!');const b=document.getElementById('installBanner');if(b)b.remove()});
+</script>
+</body>
+</html>
