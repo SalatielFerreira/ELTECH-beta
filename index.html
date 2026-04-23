@@ -77,9 +77,9 @@ body::after{content:none}
 #loginPage{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a1a;padding:24px}
 #loginPage::before{content:none}
 #loginPage.hidden{display:none}
-.login-logo{position:relative;z-index:1;margin-bottom:12px;text-align:center}
+.login-logo{position:relative;z-index:1;margin-bottom:40px;text-align:center}
 .login-logo h1{font-family:'JetBrains Mono',monospace;font-size:3.2rem;letter-spacing:12px;font-weight:800;color:#ffffff;text-shadow:0 0 60px rgba(78,232,152,0.4),0 0 120px rgba(78,232,152,0.15),0 2px 4px rgba(0,0,0,0.3);animation:float 4s ease-in-out infinite}
-.login-logo p{font-size:.8rem;color:var(--text3);letter-spacing:3px;margin-top:2px;font-weight:400}
+.login-logo p{font-size:.8rem;color:var(--text3);letter-spacing:3px;margin-top:6px;font-weight:400}
 .login-box{width:100%;max-width:400px;border-radius:var(--r);padding:28px 22px;position:relative;z-index:1;animation:scaleIn .5s ease}
 .login-tabs{display:flex;gap:3px;margin-bottom:24px;background:rgba(0,0,0,0.3);border-radius:var(--rs);padding:3px;position:relative}
 .login-tab{flex:1;padding:11px 6px;border:none;background:none;color:var(--text3);font-family:'Sora',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;border-radius:calc(var(--rs) - 2px);transition:all .3s ease;position:relative;z-index:1}
@@ -315,7 +315,7 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 
 <!-- ========== MAIN APP ========== -->
 <div class="app" id="mainApp" style="display:none">
-  <div class="top-bar"><h1>ELTECH</h1></div>
+  <div class="top-bar"><h1>ELTECH</h1><button onclick="refreshCurrentPage()" style="position:absolute;right:16px;z-index:2;background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;padding:6px;display:flex;align-items:center" title="Atualizar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button></div>
   <div class="page-content">
 
     <!-- HOME -->
@@ -368,16 +368,9 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 
     <!-- MEDICAÇÃO -->
     <div class="page" id="pageMedicacao">
-      <div id="medList">
-        <div class="section-header"><h2>Medicação</h2><button class="add-btn" onclick="openModal('planilhaModal','medicacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
-        <div id="medPlanilhas"></div>
-      </div>
-      <div id="medDetail" class="hidden">
-        <button class="back-btn" onclick="backToList('medicacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
-        <div class="section-header"><h2 id="medDetailTitle"></h2><button class="add-btn" onclick="openModal('medAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
-        <div class="search-bar"><input type="text" id="searchMedicacao" placeholder="Buscar por nº ou nome..." oninput="renderAnimals('medicacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
-        <div id="medAnimals"></div>
-      </div>
+      <div class="section-header"><h2>Medicação</h2><button class="add-btn" onclick="openModal('medAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+      <div class="search-bar"><input type="text" id="searchMedicacao" placeholder="Buscar por nº ou nome..." oninput="renderMedDirect()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div id="medDirectList"></div>
     </div>
 
     <!-- ALIMENTAÇÃO -->
@@ -448,7 +441,7 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
         </div>
       </div>
 
-      <button class="btn btn-outline mt-16" style="background:rgba(255,87,87,0.12);color:var(--danger);border: none;margin-bottom: 20px;" onclick="doLogout()">
+      <button class="btn btn-outline mt-16" style="border-color:var(--danger);color:var(--danger)" onclick="doLogout()">
         Sair da Conta
       </button>
     </div>
@@ -480,11 +473,11 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 <div class="flex-row"><div class="form-group"><label>Sexo</label><select class="form-input" id="animalSexo" onchange="onSexoChange()"><option value="Macho">Macho</option><option value="Fêmea">Fêmea</option></select></div><div class="form-group"><label>Categoria</label><select class="form-input" id="animalCat" onchange="onCatChange()"></select></div></div>
 <div class="flex-row"><div class="form-group"><label>Situação</label><select class="form-input" id="animalSit" disabled onchange="onSitChange()"></select></div><div class="form-group"><label>Raça</label><input class="form-input" id="animalRaca" placeholder="Nelore"></div></div>
 <div class="flex-row"><div class="form-group"><label>Peso (kg)</label><input class="form-input" id="animalPeso" type="number" step="0.1" placeholder="Ex: 450"></div><div class="form-group" id="leiteGroup"><label>Prod. Média Leite (L/dia)</label><input class="form-input" id="animalLeite" type="number" step="0.1" placeholder="Ex: 12.5"></div></div>
-<div class="form-group" id="insemGroup"><label>Última Inseminação</label><input class="form-input" id="animalInsem" disabled placeholder="Automático — vem da planilha de inseminação"></div>
+<div class="form-group" id="partoGroup" style="display:none"><label>Data do Último Parto</label><input class="form-input" id="animalUltimoParto" type="date"></div>
 <button class="btn btn-primary mt-8" onclick="saveAnimal()">Salvar</button></div></div>
 
 <div class="modal-overlay" id="insemAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="insemAnimalModalTitle">Adicionar Inseminação</h3><button class="modal-close" onclick="closeModal('insemAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="flex-row"><div class="form-group"><label>Nº Animal</label><input class="form-input" id="insemNum" placeholder="001"></div><div class="form-group"><label>Nome</label><input class="form-input" id="insemNome" placeholder="Mimosa"></div></div>
+<div class="form-group"><label>Animal</label><select class="form-input" id="insemAnimalSelect"><option value="">Selecione o animal...</option></select></div>
 <div class="form-group"><label>Data do Procedimento</label><input class="form-input" id="insemData" type="date"></div>
 <div class="flex-row"><div class="form-group"><label>Tempo de Execução</label><input class="form-input" id="insemTempo" placeholder="Ex: 5 min"></div><div class="form-group"><label>Touro Utilizado</label><input class="form-input" id="insemTouro" placeholder="Nome/Código"></div></div>
 <div class="form-group"><label>Muco</label><select class="form-input" id="insemMuco"><option>Bom</option><option>Sujo</option><option>Ruim</option></select></div>
@@ -492,7 +485,7 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 <button class="btn btn-primary mt-8" onclick="saveInsemAnimal()">Salvar</button></div></div>
 
 <div class="modal-overlay" id="medAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="medAnimalModalTitle">Adicionar Medicação</h3><button class="modal-close" onclick="closeModal('medAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="flex-row"><div class="form-group"><label>Nº Animal</label><input class="form-input" id="medNum" placeholder="001"></div><div class="form-group"><label>Nome</label><input class="form-input" id="medNome" placeholder="Mimosa"></div></div>
+<div class="form-group"><label>Animal</label><select class="form-input" id="medAnimalSelect"><option value="">Selecione o animal...</option></select></div>
 <div class="flex-row"><div class="form-group"><label>Início</label><input class="form-input" id="medDataIni" type="date"></div><div class="form-group"><label>Até Quando</label><input class="form-input" id="medDataFim" type="date"></div></div>
 <div class="form-group"><label>Medicamentos</label><textarea class="form-input" id="medMedicamentos" placeholder="Descreva medicamentos, dosagem, frequência..." style="min-height:130px"></textarea></div>
 <button class="btn btn-primary mt-8" onclick="saveMedAnimal()">Salvar</button></div></div>
@@ -525,7 +518,7 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 
 <script>
 // ========== DATA ==========
-let DB={user:{email:'',phone:'',password:'',name:'Usuário',avatar:''},rebanho:[],inseminacao:[],medicacao:[],alimentacao:[]};
+let DB={user:{email:'',phone:'',password:'',name:'Usuário',avatar:''},rebanho:[],inseminacao:[],medicacao:[],alimentacao:[],medDirect:[]};
 const save=()=>{try{localStorage.setItem('eltech_db',JSON.stringify(DB))}catch(e){}};
 const load=()=>{try{const d=localStorage.getItem('eltech_db');if(d)DB=JSON.parse(d)}catch(e){}};
 load();
@@ -610,6 +603,18 @@ function enterApp(){document.getElementById('loginPage').classList.add('hidden')
 function doLogout(){document.getElementById('loginPage').classList.remove('hidden');document.getElementById('mainApp').style.display='none'}
 
 // ========== NAV ==========
+function refreshCurrentPage(){
+  const active=document.querySelector('.page.active');
+  if(!active)return;
+  const id=active.id;
+  if(id==='pageHome')renderHome();
+  else if(id==='pageRebanho'){if(!document.getElementById('rebanhoDetail').classList.contains('hidden'))renderAnimals('rebanho');else renderPlanilhas('rebanho');}
+  else if(id==='pageInseminacao'){if(!document.getElementById('insemDetail').classList.contains('hidden'))renderAnimals('inseminacao');else renderPlanilhas('inseminacao');}
+  else if(id==='pageMedicacao')renderMedDirect();
+  else if(id==='pageAlimentacao'){if(!document.getElementById('aliDetail').classList.contains('hidden'))renderAnimals('alimentacao');else renderPlanilhas('alimentacao');}
+  else if(id==='pageRelatorios')populateReportSources();
+  toast('Atualizado!','info');
+}
 function goPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -620,7 +625,7 @@ function goPage(id){
   if(id==='pageHome')renderHome();
   if(id==='pageRebanho')renderPlanilhas('rebanho');
   if(id==='pageInseminacao')renderPlanilhas('inseminacao');
-  if(id==='pageMedicacao')renderPlanilhas('medicacao');
+  if(id==='pageMedicacao')renderMedDirect();
   if(id==='pageAlimentacao')renderPlanilhas('alimentacao');
   if(id==='pageRelatorios')populateReportSources();
 }
@@ -629,6 +634,8 @@ function goPage(id){
 let currentType='';let editPlanId=null;let editAniId=null;let currentPlanId=null;
 function openModal(id,type){if(type)currentType=type;document.getElementById(id).classList.add('show');
   if(id==='aliAnimalModal')populateAliSelect();
+  if(id==='medAnimalModal')populateMedSelect();
+  if(id==='insemAnimalModal')populateInsemSelect();
   if(id==='animalModal'&&!editAniId){document.getElementById('animalModalTitle').textContent='Adicionar Animal';initAnimalForm()}
   if(id==='planilhaModal'&&!editPlanId)document.getElementById('planilhaModalTitle').textContent='Nova Planilha';
 }
@@ -667,14 +674,14 @@ function updateFieldVisibility(){
   const sexo=document.getElementById('animalSexo').value;
   const cat=document.getElementById('animalCat').value;
   const sit=document.getElementById('animalSit').value;
-  // Esconder Leite e Inseminação quando: macho, bezerra, bezerro ou anestro
-  const hideLeiteInsem=(sexo==='Macho'||cat==='Bezerro'||cat==='Bezerra'||sit==='Anestro');
-  document.getElementById('leiteGroup').style.display=hideLeiteInsem?'none':'block';
-  document.getElementById('insemGroup').style.display=hideLeiteInsem?'none':'block';
-  // Limpar valores quando escondido
-  if(hideLeiteInsem){
-    document.getElementById('animalLeite').value='';
-  }
+  // Esconder Leite quando: macho, bezerro, bezerra ou anestro
+  const hideLeite=(sexo==='Macho'||cat==='Bezerro'||cat==='Bezerra'||sit==='Anestro');
+  document.getElementById('leiteGroup').style.display=hideLeite?'none':'block';
+  if(hideLeite)document.getElementById('animalLeite').value='';
+  // Mostrar Último Parto quando: fêmea + (Novilha/Vaca seca/Vaca em lactação) + (Vazia/Prenha)
+  const showParto=(sexo==='Fêmea'&&(cat==='Novilha'||cat==='Vaca seca'||cat==='Vaca em lactação')&&(sit==='Vazia'||sit==='Prenha'));
+  document.getElementById('partoGroup').style.display=showParto?'block':'none';
+  if(!showParto)document.getElementById('animalUltimoParto').value='';
 }
 function initAnimalForm(){
   onSexoChange();
@@ -741,6 +748,13 @@ function renderAnimals(type){
     });
   }
 
+  // Sort by animal number ascending
+  animals.sort((a,b)=>{
+    const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;
+    if(na!==nb)return na-nb;
+    return(a.num||'').localeCompare(b.num||'');
+  });
+
   if(!animals.length){
     const msg=q?'Nenhum resultado para "'+q+'"':'Nenhum registro.<br>Toque no + para adicionar.';
     container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${q?'<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>':'<path d="M12 2C6.48 2 2 6 2 10.5c0 3.03 2.16 5.66 5.25 6.8L6 22l3.5-2.5L12 22l2.5-2.5L18 22l-1.25-4.7C19.84 16.16 22 13.53 22 10.5 22 6 17.52 2 12 2z"/>'}</svg><p>${msg}</p></div>`;
@@ -748,7 +762,13 @@ function renderAnimals(type){
   }
 
   if(type==='rebanho'){
-    container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="badges"><span class="badge ${a.sexo==='Macho'?'badge-m':'badge-f'}">${a.sexo}</span><span class="badge badge-cat">${a.cat}</span><span class="badge badge-sit">${a.sit}</span></div><div class="detail">Raça: ${a.raca} · Peso: ${a.peso?a.peso+' kg':'—'} · Leite: ${a.leite?a.leite+' L/dia':'—'}</div><div class="detail">Insem: ${getInsemDate(a.num)}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');
+    container.innerHTML=animals.map((a,i)=>{
+      const insemStr=getInsemDate(a.num);
+      const insemLine=insemStr!=='Sem registro'?` · Insem: ${insemStr}`:'';
+      let partoLine='';
+      if(a.ultimoParto){const dias=Math.floor((Date.now()-new Date(a.ultimoParto+'T12:00').getTime())/(1000*60*60*24));partoLine=` · Parto: ${dias} dias`;}
+      return`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="badges"><span class="badge ${a.sexo==='Macho'?'badge-m':'badge-f'}">${a.sexo}</span><span class="badge badge-cat">${a.cat}</span><span class="badge badge-sit">${a.sit}</span></div><div class="detail">Raça: ${a.raca} · Peso: ${a.peso?a.peso+' kg':'—'} · Leite: ${a.leite?a.leite+' L/dia':'—'}</div><div class="detail">${insemLine}${partoLine}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`;
+    }).join('');
   } else if(type==='inseminacao'){
     container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">Data: ${a.data?new Date(a.data+'T12:00').toLocaleDateString('pt-BR'):'-'} · Touro: ${a.touro||'-'}</div><div class="badges"><span class="badge badge-muco">Muco: ${a.muco}</span><span class="badge badge-cat">${a.tempo||'-'}</span></div>${a.obs?`<div class="detail" style="font-style:italic;margin-top:3px">${a.obs}</div>`:''}</div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('inseminacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('inseminacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');
   } else if(type==='medicacao'){
@@ -765,9 +785,59 @@ function renderAnimals(type){
 async function delAnimal(type,aid){const ok=await showConfirm('Excluir este registro?','🗑️');if(!ok)return;const p=DB[type].find(x=>x.id===currentPlanId);p.animals=p.animals.filter(x=>x.id!==aid);save();renderAnimals(type);toast('Registro excluído')}
 
 // ========== SAVE ANIMALS ==========
-function saveAnimal(){const p=DB.rebanho.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('animalNum').value.trim();const nome=document.getElementById('animalNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,sexo:document.getElementById('animalSexo').value,cat:document.getElementById('animalCat').value,sit:document.getElementById('animalSit').value,raca:document.getElementById('animalRaca').value.trim()||'N/A',peso:document.getElementById('animalPeso').value||'',leite:document.getElementById('animalLeite').value||''};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('animalModal');renderAnimals('rebanho');toast('Animal salvo!')}
-function saveInsemAnimal(){const p=DB.inseminacao.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('insemNum').value.trim();const nome=document.getElementById('insemNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,data:document.getElementById('insemData').value,tempo:document.getElementById('insemTempo').value,touro:document.getElementById('insemTouro').value,muco:document.getElementById('insemMuco').value,obs:document.getElementById('insemObs').value};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('insemAnimalModal');renderAnimals('inseminacao');toast('Inseminação salva!')}
-function saveMedAnimal(){const p=DB.medicacao.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('medNum').value.trim();const nome=document.getElementById('medNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,dataIni:document.getElementById('medDataIni').value,dataFim:document.getElementById('medDataFim').value,medicamentos:document.getElementById('medMedicamentos').value};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('medAnimalModal');renderAnimals('medicacao');toast('Medicação salva!')}
+function saveAnimal(){const p=DB.rebanho.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('animalNum').value.trim();const nome=document.getElementById('animalNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,sexo:document.getElementById('animalSexo').value,cat:document.getElementById('animalCat').value,sit:document.getElementById('animalSit').value,raca:document.getElementById('animalRaca').value.trim()||'N/A',peso:document.getElementById('animalPeso').value||'',leite:document.getElementById('animalLeite').value||'',ultimoParto:document.getElementById('animalUltimoParto').value||''};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('animalModal');renderAnimals('rebanho');toast('Animal salvo!')}
+function populateInsemSelect(){
+  const sel=document.getElementById('insemAnimalSelect');
+  sel.innerHTML='<option value="">Selecione o animal...</option>';
+  DB.rebanho.forEach(p=>p.animals.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`}));
+}
+function saveInsemAnimal(){const p=DB.inseminacao.find(x=>x.id===currentPlanId);if(!p)return;
+  const sel=document.getElementById('insemAnimalSelect');
+  let num,nome;
+  if(sel.value){const parts=sel.value.split('|');num=parts[0];nome=parts[1];}
+  else if(editAniId){const existing=p.animals.find(x=>x.id===editAniId);if(existing){num=existing.num;nome=existing.nome;}}
+  if(!num)return toast('Selecione um animal','error');
+  const d={num,nome,data:document.getElementById('insemData').value,tempo:document.getElementById('insemTempo').value,touro:document.getElementById('insemTouro').value,muco:document.getElementById('insemMuco').value,obs:document.getElementById('insemObs').value};
+  if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});
+  save();closeModal('insemAnimalModal');renderAnimals('inseminacao');toast('Inseminação salva!');
+}
+function saveMedAnimal(){
+  const sel=document.getElementById('medAnimalSelect');
+  if(!sel.value&&!editAniId)return toast('Selecione um animal','error');
+  let num,nome;
+  if(sel.value){const parts=sel.value.split('|');num=parts[0];nome=parts[1];}
+  else if(editAniId){const existing=DB.medDirect.find(x=>x.id===editAniId);if(existing){num=existing.num;nome=existing.nome;}}
+  if(!num)return toast('Selecione um animal','error');
+  const d={num,nome,dataIni:document.getElementById('medDataIni').value,dataFim:document.getElementById('medDataFim').value,medicamentos:document.getElementById('medMedicamentos').value};
+  if(editAniId){const a=DB.medDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
+  else DB.medDirect.push({id:uid(),...d});
+  save();closeModal('medAnimalModal');renderMedDirect();toast('Medicação salva!');
+}
+function populateMedSelect(){
+  const sel=document.getElementById('medAnimalSelect');
+  sel.innerHTML='<option value="">Selecione o animal...</option>';
+  DB.rebanho.forEach(p=>p.animals.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`}));
+}
+function renderMedDirect(){
+  if(!DB.medDirect)DB.medDirect=[];
+  const container=document.getElementById('medDirectList');
+  const q=(document.getElementById('searchMedicacao')?document.getElementById('searchMedicacao').value:'').toLowerCase().trim();
+  let items=DB.medDirect;
+  if(q)items=items.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));
+  items=[...items].sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
+  if(!items.length){container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 3h6v4H9zM4 7h16v14H4z"/><path d="M12 11v6M9 14h6"/></svg><p>${q?'Nenhum resultado para "'+q+'"':'Nenhuma medicação registrada.<br>Toque no + para adicionar.'}</p></div>`;return}
+  container.innerHTML=items.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">De ${a.dataIni?new Date(a.dataIni+'T12:00').toLocaleDateString('pt-BR'):'-'} até ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'-'}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="detail" style="margin-top:8px;white-space:pre-wrap;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px">${a.medicamentos}</div></div>`).join('');
+}
+function editMedDirect(aid){
+  const a=DB.medDirect.find(x=>x.id===aid);if(!a)return;editAniId=aid;
+  populateMedSelect();
+  document.getElementById('medAnimalSelect').value=a.num+'|'+a.nome;
+  document.getElementById('medDataIni').value=a.dataIni;document.getElementById('medDataFim').value=a.dataFim;
+  document.getElementById('medMedicamentos').value=a.medicamentos;
+  document.getElementById('medAnimalModalTitle').textContent='Editar Medicação';
+  openModal('medAnimalModal');
+}
+async function delMedDirect(aid){const ok=await showConfirm('Excluir esta medicação?','🗑️');if(!ok)return;DB.medDirect=DB.medDirect.filter(x=>x.id!==aid);save();renderMedDirect();toast('Medicação excluída')}
 
 let tempAli=[];
 function populateAliSelect(){const sel=document.getElementById('aliAnimalSelect');sel.innerHTML='<option value="">Selecione...</option>';DB.rebanho.forEach(p=>p.animals.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`}))}
@@ -828,8 +898,8 @@ function saveAliAnimal(){
 // ========== EDIT ANIMALS ==========
 function editAnimal(type,aid){
   const p=DB[type].find(x=>x.id===currentPlanId);const a=p.animals.find(x=>x.id===aid);if(!a)return;editAniId=aid;
-  if(type==='rebanho'){document.getElementById('animalNum').value=a.num;document.getElementById('animalNome').value=a.nome;document.getElementById('animalSexo').value=a.sexo;onSexoChange();document.getElementById('animalCat').value=a.cat;onCatChange();document.getElementById('animalSit').value=a.sit;updateFieldVisibility();document.getElementById('animalRaca').value=a.raca;document.getElementById('animalPeso').value=a.peso||'';document.getElementById('animalLeite').value=a.leite||'';document.getElementById('animalInsem').value=getInsemDate(a.num);document.getElementById('animalModalTitle').textContent='Editar Animal';openModal('animalModal')}
-  else if(type==='inseminacao'){document.getElementById('insemNum').value=a.num;document.getElementById('insemNome').value=a.nome;document.getElementById('insemData').value=a.data;document.getElementById('insemTempo').value=a.tempo;document.getElementById('insemTouro').value=a.touro;document.getElementById('insemMuco').value=a.muco;document.getElementById('insemObs').value=a.obs;document.getElementById('insemAnimalModalTitle').textContent='Editar Inseminação';openModal('insemAnimalModal')}
+  if(type==='rebanho'){document.getElementById('animalNum').value=a.num;document.getElementById('animalNome').value=a.nome;document.getElementById('animalSexo').value=a.sexo;onSexoChange();document.getElementById('animalCat').value=a.cat;onCatChange();document.getElementById('animalSit').value=a.sit;updateFieldVisibility();document.getElementById('animalRaca').value=a.raca;document.getElementById('animalPeso').value=a.peso||'';document.getElementById('animalLeite').value=a.leite||'';document.getElementById('animalUltimoParto').value=a.ultimoParto||'';document.getElementById('animalModalTitle').textContent='Editar Animal';openModal('animalModal')}
+  else if(type==='inseminacao'){populateInsemSelect();document.getElementById('insemAnimalSelect').value=a.num+'|'+a.nome;document.getElementById('insemData').value=a.data;document.getElementById('insemTempo').value=a.tempo;document.getElementById('insemTouro').value=a.touro;document.getElementById('insemMuco').value=a.muco;document.getElementById('insemObs').value=a.obs;document.getElementById('insemAnimalModalTitle').textContent='Editar Inseminação';openModal('insemAnimalModal')}
   else if(type==='medicacao'){document.getElementById('medNum').value=a.num;document.getElementById('medNome').value=a.nome;document.getElementById('medDataIni').value=a.dataIni;document.getElementById('medDataFim').value=a.dataFim;document.getElementById('medMedicamentos').value=a.medicamentos;document.getElementById('medAnimalModalTitle').textContent='Editar Medicação';openModal('medAnimalModal')}
   else if(type==='alimentacao'){setDietChecks(a.dietas||[]);document.getElementById('aliValor').value=a.valor;tempAli=[...(a.animais||[])];renderTempAli();document.getElementById('aliAnimalModalTitle').textContent='Editar Alimentação';openModal('aliAnimalModal')}
 }
@@ -840,7 +910,8 @@ const COLORS=['#1bd171','#5b9aff','#ffb830','#ff5757','#a78bfa','#f472b6','#2dd4
 function setChartFilter(f,btn){chartFilter=f;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderHome()}
 function renderHome(){
   let all=[];DB.rebanho.forEach(p=>p.animals.forEach(a=>all.push(a)));
-  let medCount=0;const today=new Date().toISOString().split('T')[0];DB.medicacao.forEach(p=>p.animals.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medCount++}));
+  if(!DB.medDirect)DB.medDirect=[];
+  let medCount=0;const today=new Date().toISOString().split('T')[0];DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medCount++});
   let insemCount=0;DB.inseminacao.forEach(p=>insemCount+=p.animals.length);
 
   // Greeting
@@ -857,7 +928,7 @@ function renderHome(){
 
   const counts={};
   // Build set of medicated animal numbers
-  const medNums=new Set();DB.medicacao.forEach(p=>p.animals.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medNums.add(a.num)}));
+  const medNums=new Set();DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medNums.add(a.num)});
 
   if(chartFilter==='planilha'){
     DB.rebanho.forEach(p=>{counts[p.name]=p.animals.length});
@@ -871,7 +942,7 @@ function renderHome(){
   }
   drawPie(counts);
 
-  let meds=[];DB.medicacao.forEach(p=>p.animals.forEach(a=>{if(!a.dataFim||a.dataFim>=today)meds.push(a)}));
+  let meds=[];DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)meds.push(a)});
   document.getElementById('homeMedList').innerHTML=meds.length?meds.map(a=>`<div class="med-alert-card glass3 anim-fade"><div class="med-animal">#${a.num} ${a.nome}</div><div class="med-detail">Até: ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'Indefinido'}</div><div class="med-detail">${a.medicamentos}</div></div>`).join(''):'<div class="empty-state" style="padding:30px"><p>Nenhum animal em medicação no momento.</p></div>';
 }
 function drawPie(data){
@@ -1008,7 +1079,7 @@ function importBackup(e){
 }
 
 // ========== INIT ==========
-renderPlanilhas('rebanho');renderPlanilhas('inseminacao');renderPlanilhas('medicacao');renderPlanilhas('alimentacao');
+renderPlanilhas('rebanho');renderPlanilhas('inseminacao');renderPlanilhas('alimentacao');if(!DB.medDirect)DB.medDirect=[];
 
 // ========== PWA ==========
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(()=>console.log('SW registered')).catch(e=>console.log('SW failed',e))}
