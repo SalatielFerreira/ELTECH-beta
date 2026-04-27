@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1">
 <title>ELTECH</title>
-<link rel="manifest" href="./manifest.json">
+<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a7c44">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ELTECH">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -340,16 +340,21 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 
     <!-- REBANHO -->
     <div class="page" id="pageRebanho">
-      <div id="rebanhoList">
-        <div class="section-header"><h2>Rebanho</h2><button class="add-btn" onclick="openModal('planilhaModal','rebanho')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
-        <div id="rebanhoPlanilhas"></div>
+      <div class="section-header"><h2>Rebanho</h2>
+        <div style="display:flex;gap:8px">
+          <button class="add-btn" style="width:40px;height:40px;background:rgba(255,255,255,0.12);box-shadow:none;border:1px solid rgba(255,255,255,0.2)" onclick="toggleRebanhoFilter()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg></button>
+          <button class="add-btn" onclick="openModal('animalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button>
+        </div>
       </div>
-      <div id="rebanhoDetail" class="hidden">
-        <button class="back-btn" onclick="backToList('rebanho')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
-        <div class="section-header"><h2 id="rebanhoDetailTitle"></h2><button class="add-btn" onclick="openModal('animalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
-        <div class="search-bar"><input type="text" id="searchRebanho" placeholder="Buscar por nº ou nome..." oninput="renderAnimals('rebanho')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
-        <div id="rebanhoAnimals"></div>
+      <div id="rebanhoFilterBar" class="hidden" style="margin-bottom:14px">
+        <div class="flex-row" style="gap:6px">
+          <select class="form-input" id="filterSexo" onchange="renderRebanhoDirect()" style="padding:9px 12px;font-size:.78rem"><option value="">Sexo</option><option>Macho</option><option>Fêmea</option></select>
+          <select class="form-input" id="filterCat" onchange="renderRebanhoDirect()" style="padding:9px 12px;font-size:.78rem"><option value="">Categoria</option><option>Bezerro</option><option>Bezerra</option><option>Garrote</option><option>Novilha</option><option>Boi</option><option>Vaca seca</option><option>Vaca em lactação</option><option>Touro</option></select>
+          <select class="form-input" id="filterSit" onchange="renderRebanhoDirect()" style="padding:9px 12px;font-size:.78rem"><option value="">Situação</option><option>Não se aplica</option><option>Anestro</option><option>Vazia</option><option>Prenha</option></select>
+        </div>
       </div>
+      <div class="search-bar"><input type="text" id="searchRebanho" placeholder="Buscar por nº ou nome..." oninput="renderRebanhoDirect()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <div id="rebanhoDirectList"></div>
     </div>
 
     <!-- INSEMINAÇÃO -->
@@ -375,33 +380,25 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 
     <!-- ALIMENTAÇÃO -->
     <div class="page" id="pageAlimentacao">
-      <div id="aliList">
-        <div class="section-header"><h2>Alimentação</h2><button class="add-btn" onclick="openModal('planilhaModal','alimentacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
-        <div id="aliPlanilhas"></div>
-      </div>
-      <div id="aliDetail" class="hidden">
-        <button class="back-btn" onclick="backToList('alimentacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
-        <div class="section-header"><h2 id="aliDetailTitle"></h2><button class="add-btn" onclick="openModal('aliAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
-        <div class="search-bar"><input type="text" id="searchAlimentacao" placeholder="Buscar por nº ou nome..." oninput="renderAnimals('alimentacao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
-        <div class="cost-grid" id="aliCostGrid"></div>
-        <div id="aliAnimals"></div>
-      </div>
+      <div class="section-header"><h2>Alimentação</h2><button class="add-btn" onclick="openModal('aliAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button></div>
+      <div class="cost-grid" id="aliCostGrid"></div>
+      <div id="aliDirectList"></div>
     </div>
 
     <!-- RELATÓRIOS -->
     <div class="page" id="pageRelatorios">
       <div class="section-header"><h2>Relatórios</h2></div>
       <div class="glass2" style="border-radius:var(--rs);padding:20px;margin-bottom:16px">
-        <div class="form-group"><label>Planilhas (selecione uma ou mais)</label>
-          <div id="reportSourceChecks" style="display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto;padding:8px;background:rgba(0,0,0,0.2);border-radius:var(--rx);border:1px solid rgba(78,232,152,0.1)"></div>
+        <div class="form-group"><label>Fonte dos Dados</label>
+          <div id="reportSourceChecks" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;padding:8px;background:rgba(0,0,0,0.2);border-radius:var(--rx);border:1px solid rgba(255,255,255,0.1)"></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>Categoria</label><select class="form-input" id="reportFilterCat"><option value="">Todas</option><option>Bezerro</option><option>Bezerra</option><option>Garrote</option><option>Novilha</option><option>Boi</option><option>Vaca seca</option><option>Vaca em lactação</option><option>Touro</option></select></div>
           <div class="form-group"><label>Sexo</label><select class="form-input" id="reportFilterSex"><option value="">Todos</option><option>Macho</option><option>Fêmea</option></select></div>
+          <div class="form-group"><label>Categoria</label><select class="form-input" id="reportFilterCat"><option value="">Todas</option><option>Bezerro</option><option>Bezerra</option><option>Garrote</option><option>Novilha</option><option>Boi</option><option>Vaca seca</option><option>Vaca em lactação</option><option>Touro</option></select></div>
         </div>
         <div class="flex-row">
-          <div class="form-group"><label>Raça</label><select class="form-input" id="reportFilterRaca"><option value="">Todas</option></select></div>
           <div class="form-group"><label>Situação</label><select class="form-input" id="reportFilterSit"><option value="">Todas</option><option>Não se aplica</option><option>Anestro</option><option>Vazia</option><option>Prenha</option></select></div>
+          <div class="form-group"><label>Raça</label><select class="form-input" id="reportFilterRaca"><option value="">Todas</option></select></div>
         </div>
         <div class="report-dl">
           <button class="btn btn-primary" onclick="downloadReport('pdf')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</button>
@@ -474,7 +471,7 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 <div class="flex-row"><div class="form-group"><label>Situação</label><select class="form-input" id="animalSit" disabled onchange="onSitChange()"></select></div><div class="form-group"><label>Raça</label><input class="form-input" id="animalRaca" placeholder="Nelore"></div></div>
 <div class="flex-row"><div class="form-group"><label>Peso (kg)</label><input class="form-input" id="animalPeso" type="number" step="0.1" placeholder="Ex: 450"></div><div class="form-group" id="leiteGroup"><label>Prod. Média Leite (L/dia)</label><input class="form-input" id="animalLeite" type="number" step="0.1" placeholder="Ex: 12.5"></div></div>
 <div class="form-group" id="partoGroup" style="display:none"><label>Data do Último Parto</label><input class="form-input" id="animalUltimoParto" type="date"></div>
-<button class="btn btn-primary mt-8" onclick="saveAnimal()">Salvar</button></div></div>
+<button class="btn btn-primary mt-8" onclick="saveAnimalDirect()">Salvar</button></div></div>
 
 <div class="modal-overlay" id="insemAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="insemAnimalModalTitle">Adicionar Inseminação</h3><button class="modal-close" onclick="closeModal('insemAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="form-group"><label>Animal</label><select class="form-input" id="insemAnimalSelect"><option value="">Selecione o animal...</option></select></div>
@@ -487,23 +484,25 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 <div class="modal-overlay" id="medAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="medAnimalModalTitle">Adicionar Medicação</h3><button class="modal-close" onclick="closeModal('medAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="form-group"><label>Animal</label><select class="form-input" id="medAnimalSelect"><option value="">Selecione o animal...</option></select></div>
 <div class="flex-row"><div class="form-group"><label>Início</label><input class="form-input" id="medDataIni" type="date"></div><div class="form-group"><label>Até Quando</label><input class="form-input" id="medDataFim" type="date"></div></div>
-<div class="form-group"><label>Medicamentos</label><textarea class="form-input" id="medMedicamentos" placeholder="Descreva medicamentos, dosagem, frequência..." style="min-height:130px"></textarea></div>
+<div class="form-group"><label>Tipo</label><select class="form-input" id="medTipo"><option value="Vacina">Vacina</option><option value="Vermífugo">Vermífugo</option><option value="Tratamento">Tratamento</option></select></div>
+<div class="form-group"><label>Nome do Medicamento</label><input class="form-input" id="medNomeMed" placeholder="Ex: Ivermectina"></div>
+<div class="form-group"><label>Dosagem</label><input class="form-input" id="medDosagem" placeholder="Ex: 5ml, 2 comprimidos..."></div>
 <button class="btn btn-primary mt-8" onclick="saveMedAnimal()">Salvar</button></div></div>
 
 <div class="modal-overlay" id="aliAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="aliAnimalModalTitle">Adicionar Alimentação</h3><button class="modal-close" onclick="closeModal('aliAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="form-group"><label>Tipo de Dieta</label>
 <div id="dietaChecks" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
-  <label class="diet-check"><input type="checkbox" value="Pasto" onchange="onDietChange()"><span>Pasto</span></label>
-  <label class="diet-check"><input type="checkbox" value="Silagem" onchange="onDietChange()"><span>Silagem</span></label>
-  <label class="diet-check"><input type="checkbox" value="Ração" onchange="onDietChange()"><span>Ração</span></label>
-  <label class="diet-check"><input type="checkbox" value="Concentrado" onchange="onDietChange()"><span>Concentrado</span></label>
+  <label class="diet-check"><input type="checkbox" value="Pasto" onchange="onDietChange2()"><span>Pasto</span></label>
+  <label class="diet-check"><input type="checkbox" value="Silagem" onchange="onDietChange2()"><span>Silagem</span></label>
+  <label class="diet-check"><input type="checkbox" value="Ração" onchange="onDietChange2()"><span>Ração</span></label>
+  <label class="diet-check"><input type="checkbox" value="Concentrado" onchange="onDietChange2()"><span>Concentrado</span></label>
 </div></div>
-<div id="dietQtdFields"></div>
-<div class="form-group"><label>Valor por kg (R$)</label><input class="form-input" id="aliValor" type="number" step="0.01" placeholder="0.00"></div>
-<div class="form-group"><label>Adicionar Animal</label><select class="form-input" id="aliAnimalSelect"><option value="">Selecione...</option></select></div>
-<div id="aliSelectedAnimals" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px"></div>
-<button class="btn btn-outline btn-xs mb-16" onclick="addAliAnimal()">+ Adicionar Animal à Lista</button>
-<button class="btn btn-primary" onclick="saveAliAnimal()">Salvar</button></div></div>
+<div id="dietDetailFields"></div>
+<div class="form-group"><label>Adicionar Animal</label><select class="form-input" id="aliAnimalSelect"><option value="">Selecione o animal...</option></select></div>
+<div id="aliSelectedAnimals" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px"></div>
+<button class="btn btn-outline btn-xs mb-16" onclick="addAliAnimalNew()">+ Adicionar Animal</button>
+<div id="aliCostPreview" style="margin-bottom:14px"></div>
+<button class="btn btn-primary" onclick="saveAliDirect()">Salvar</button></div></div>
 
 <div class="confirm-overlay" id="confirmModal">
   <div class="confirm-box glass">
@@ -518,7 +517,7 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 
 <script>
 // ========== DATA ==========
-let DB={user:{email:'',phone:'',password:'',name:'Usuário',avatar:''},rebanho:[],inseminacao:[],medicacao:[],alimentacao:[],medDirect:[]};
+let DB={user:{email:'',phone:'',password:'',name:'Usuário',avatar:''},rebanho:[],rebanhoDirect:[],inseminacao:[],medicacao:[],alimentacao:[],medDirect:[],aliDirect:[]};
 const save=()=>{try{localStorage.setItem('eltech_db',JSON.stringify(DB))}catch(e){}};
 const load=()=>{try{const d=localStorage.getItem('eltech_db');if(d)DB=JSON.parse(d)}catch(e){}};
 load();
@@ -608,10 +607,10 @@ function refreshCurrentPage(){
   if(!active)return;
   const id=active.id;
   if(id==='pageHome')renderHome();
-  else if(id==='pageRebanho'){if(!document.getElementById('rebanhoDetail').classList.contains('hidden'))renderAnimals('rebanho');else renderPlanilhas('rebanho');}
+  else if(id==='pageRebanho')renderRebanhoDirect();
   else if(id==='pageInseminacao'){if(!document.getElementById('insemDetail').classList.contains('hidden'))renderAnimals('inseminacao');else renderPlanilhas('inseminacao');}
   else if(id==='pageMedicacao')renderMedDirect();
-  else if(id==='pageAlimentacao'){if(!document.getElementById('aliDetail').classList.contains('hidden'))renderAnimals('alimentacao');else renderPlanilhas('alimentacao');}
+  else if(id==='pageAlimentacao')renderAliDirect();
   else if(id==='pageRelatorios')populateReportSources();
   toast('Atualizado!','info');
 }
@@ -623,23 +622,23 @@ function goPage(id){
   const types=['rebanho','inseminacao','medicacao','alimentacao'];
   types.forEach(t=>{const l=document.getElementById(t==='inseminacao'?'insemList':t==='medicacao'?'medList':t==='alimentacao'?'aliList':'rebanhoList');const d=document.getElementById(t==='inseminacao'?'insemDetail':t==='medicacao'?'medDetail':t==='alimentacao'?'aliDetail':'rebanhoDetail');if(l&&d){l.classList.remove('hidden');d.classList.add('hidden')}});
   if(id==='pageHome')renderHome();
-  if(id==='pageRebanho')renderPlanilhas('rebanho');
+  if(id==='pageRebanho')renderRebanhoDirect();
   if(id==='pageInseminacao')renderPlanilhas('inseminacao');
   if(id==='pageMedicacao')renderMedDirect();
-  if(id==='pageAlimentacao')renderPlanilhas('alimentacao');
+  if(id==='pageAlimentacao')renderAliDirect();
   if(id==='pageRelatorios')populateReportSources();
 }
 
 // ========== MODAL ==========
 let currentType='';let editPlanId=null;let editAniId=null;let currentPlanId=null;
 function openModal(id,type){if(type)currentType=type;document.getElementById(id).classList.add('show');
-  if(id==='aliAnimalModal')populateAliSelect();
+  if(id==='aliAnimalModal')populateAliAnimalSelect();
   if(id==='medAnimalModal')populateMedSelect();
   if(id==='insemAnimalModal')populateInsemSelect();
   if(id==='animalModal'&&!editAniId){document.getElementById('animalModalTitle').textContent='Adicionar Animal';initAnimalForm()}
   if(id==='planilhaModal'&&!editPlanId)document.getElementById('planilhaModalTitle').textContent='Nova Planilha';
 }
-function closeModal(id){document.getElementById(id).classList.remove('show');editPlanId=null;editAniId=null;tempAli=[];document.getElementById(id).querySelectorAll('input:not([type=file]):not([disabled]):not([type=checkbox]),textarea').forEach(el=>el.value='');document.getElementById(id).querySelectorAll('select').forEach(el=>el.selectedIndex=0);if(id==='aliAnimalModal'){document.getElementById('aliSelectedAnimals').innerHTML='';document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);document.getElementById('dietQtdFields').innerHTML=''}}
+function closeModal(id){document.getElementById(id).classList.remove('show');editPlanId=null;editAniId=null;tempAliAnimals=[];document.getElementById(id).querySelectorAll('input:not([type=file]):not([disabled]):not([type=checkbox]),textarea').forEach(el=>el.value='');document.getElementById(id).querySelectorAll('select').forEach(el=>el.selectedIndex=0);if(id==='aliAnimalModal'){const as=document.getElementById('aliSelectedAnimals');if(as)as.innerHTML='';document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);const df=document.getElementById('dietDetailFields');if(df)df.innerHTML='';const cp=document.getElementById('aliCostPreview');if(cp)cp.innerHTML=''}}
 
 // ========== ANIMAL FORM CONDITIONALS ==========
 function onSexoChange(){
@@ -685,6 +684,71 @@ function updateFieldVisibility(){
 }
 function initAnimalForm(){
   onSexoChange();
+}
+
+// ========== REBANHO DIRECT ==========
+function toggleRebanhoFilter(){document.getElementById('rebanhoFilterBar').classList.toggle('hidden')}
+function getAllRebanhoAnimals(){
+  // Merge old planilha-based animals + new direct animals
+  if(!DB.rebanhoDirect)DB.rebanhoDirect=[];
+  let all=[...DB.rebanhoDirect];
+  DB.rebanho.forEach(p=>p.animals.forEach(a=>{if(!all.find(x=>x.id===a.id))all.push(a)}));
+  return all;
+}
+function renderRebanhoDirect(){
+  const container=document.getElementById('rebanhoDirectList');
+  let animals=getAllRebanhoAnimals();
+  // Search
+  const q=(document.getElementById('searchRebanho')?.value||'').toLowerCase().trim();
+  if(q)animals=animals.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));
+  // Filters
+  const fs=document.getElementById('filterSexo')?.value||'';
+  const fc=document.getElementById('filterCat')?.value||'';
+  const fst=document.getElementById('filterSit')?.value||'';
+  if(fs)animals=animals.filter(a=>a.sexo===fs);
+  if(fc)animals=animals.filter(a=>a.cat===fc);
+  if(fst)animals=animals.filter(a=>a.sit===fst);
+  // Sort
+  animals.sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
+  if(!animals.length){container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5C3 7.5 4.5 6 6.5 6c.5-1.5 2-3 4-3h3c2 0 3.5 1.5 4 3C19.5 6 21 7.5 21 9.5c0 1.5-.8 2.8-2 3.5v5a2 2 0 01-2 2h-1l-.5 2h-1l-.5-2h-4l-.5 2h-1L9 20H8a2 2 0 01-2-2v-5C4.8 12.3 4 11 4 9.5z"/></svg><p>${q||fs||fc||fst?'Nenhum resultado encontrado.':'Nenhum animal cadastrado.<br>Toque no + para adicionar.'}</p></div>`;return}
+  container.innerHTML=animals.map((a,i)=>{
+    const insemStr=getInsemDate(a.num);
+    const insemLine=insemStr!=='Sem registro'?' · Insem: '+insemStr:'';
+    let partoLine='';
+    if(a.ultimoParto){const dias=Math.floor((Date.now()-new Date(a.ultimoParto+'T12:00').getTime())/(1000*60*60*24));partoLine=' · Parto: '+dias+' dias';}
+    return`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="badges"><span class="badge ${a.sexo==='Macho'?'badge-m':'badge-f'}">${a.sexo}</span><span class="badge badge-cat">${a.cat}</span><span class="badge badge-sit">${a.sit}</span></div><div class="detail">Raça: ${a.raca} · Peso: ${a.peso?a.peso+' kg':'—'} · Leite: ${a.leite?a.leite+' L/dia':'—'}</div><div class="detail">${insemLine}${partoLine}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editRebanhoAnimal('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delRebanhoAnimal('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`;
+  }).join('');
+}
+function saveAnimalDirect(){
+  if(!DB.rebanhoDirect)DB.rebanhoDirect=[];
+  const num=document.getElementById('animalNum').value.trim();
+  const nome=document.getElementById('animalNome').value.trim();
+  if(!num||!nome)return toast('Preencha nº e nome','error');
+  const d={num,nome,sexo:document.getElementById('animalSexo').value,cat:document.getElementById('animalCat').value,sit:document.getElementById('animalSit').value,raca:document.getElementById('animalRaca').value.trim()||'N/A',peso:document.getElementById('animalPeso').value||'',leite:document.getElementById('animalLeite').value||'',ultimoParto:document.getElementById('animalUltimoParto').value||''};
+  if(editAniId){const a=DB.rebanhoDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d);else{DB.rebanho.forEach(p=>{const ai=p.animals.find(x=>x.id===editAniId);if(ai)Object.assign(ai,d)})}}
+  else DB.rebanhoDirect.push({id:uid(),...d});
+  save();closeModal('animalModal');renderRebanhoDirect();toast('Animal salvo!');
+}
+function editRebanhoAnimal(aid){
+  let a=DB.rebanhoDirect.find(x=>x.id===aid);
+  if(!a){DB.rebanho.forEach(p=>{const f=p.animals.find(x=>x.id===aid);if(f)a=f})}
+  if(!a)return;editAniId=aid;
+  document.getElementById('animalNum').value=a.num;document.getElementById('animalNome').value=a.nome;
+  document.getElementById('animalSexo').value=a.sexo;onSexoChange();
+  document.getElementById('animalCat').value=a.cat;onCatChange();
+  document.getElementById('animalSit').value=a.sit;updateFieldVisibility();
+  document.getElementById('animalRaca').value=a.raca;
+  document.getElementById('animalPeso').value=a.peso||'';
+  document.getElementById('animalLeite').value=a.leite||'';
+  document.getElementById('animalUltimoParto').value=a.ultimoParto||'';
+  document.getElementById('animalModalTitle').textContent='Editar Animal';
+  openModal('animalModal');
+}
+async function delRebanhoAnimal(aid){
+  const ok=await showConfirm('Excluir este animal?','🗑️');if(!ok)return;
+  DB.rebanhoDirect=DB.rebanhoDirect.filter(x=>x.id!==aid);
+  DB.rebanho.forEach(p=>{p.animals=p.animals.filter(x=>x.id!==aid)});
+  save();renderRebanhoDirect();toast('Animal excluído');
 }
 
 // ========== PLANILHA CRUD ==========
@@ -789,7 +853,9 @@ function saveAnimal(){const p=DB.rebanho.find(x=>x.id===currentPlanId);if(!p)ret
 function populateInsemSelect(){
   const sel=document.getElementById('insemAnimalSelect');
   sel.innerHTML='<option value="">Selecione o animal...</option>';
-  DB.rebanho.forEach(p=>p.animals.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`}));
+  const eligible=getAllRebanhoAnimals().filter(a=>a.sexo!=='Macho'&&a.cat!=='Bezerra'&&a.sit!=='Anestro');
+  eligible.sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
+  eligible.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`});
 }
 function saveInsemAnimal(){const p=DB.inseminacao.find(x=>x.id===currentPlanId);if(!p)return;
   const sel=document.getElementById('insemAnimalSelect');
@@ -808,7 +874,7 @@ function saveMedAnimal(){
   if(sel.value){const parts=sel.value.split('|');num=parts[0];nome=parts[1];}
   else if(editAniId){const existing=DB.medDirect.find(x=>x.id===editAniId);if(existing){num=existing.num;nome=existing.nome;}}
   if(!num)return toast('Selecione um animal','error');
-  const d={num,nome,dataIni:document.getElementById('medDataIni').value,dataFim:document.getElementById('medDataFim').value,medicamentos:document.getElementById('medMedicamentos').value};
+  const d={num,nome,dataIni:document.getElementById('medDataIni').value,dataFim:document.getElementById('medDataFim').value,tipo:document.getElementById('medTipo').value,nomeMed:document.getElementById('medNomeMed').value,dosagem:document.getElementById('medDosagem').value,medicamentos:document.getElementById('medTipo').value+' — '+document.getElementById('medNomeMed').value};
   if(editAniId){const a=DB.medDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
   else DB.medDirect.push({id:uid(),...d});
   save();closeModal('medAnimalModal');renderMedDirect();toast('Medicação salva!');
@@ -816,7 +882,8 @@ function saveMedAnimal(){
 function populateMedSelect(){
   const sel=document.getElementById('medAnimalSelect');
   sel.innerHTML='<option value="">Selecione o animal...</option>';
-  DB.rebanho.forEach(p=>p.animals.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`}));
+  const all=getAllRebanhoAnimals().slice().sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
+  all.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`});
 }
 function renderMedDirect(){
   if(!DB.medDirect)DB.medDirect=[];
@@ -826,74 +893,133 @@ function renderMedDirect(){
   if(q)items=items.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));
   items=[...items].sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
   if(!items.length){container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 3h6v4H9zM4 7h16v14H4z"/><path d="M12 11v6M9 14h6"/></svg><p>${q?'Nenhum resultado para "'+q+'"':'Nenhuma medicação registrada.<br>Toque no + para adicionar.'}</p></div>`;return}
-  container.innerHTML=items.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">De ${a.dataIni?new Date(a.dataIni+'T12:00').toLocaleDateString('pt-BR'):'-'} até ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'-'}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="detail" style="margin-top:8px;white-space:pre-wrap;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px">${a.medicamentos}</div></div>`).join('');
+  container.innerHTML=items.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">De ${a.dataIni?new Date(a.dataIni+'T12:00').toLocaleDateString('pt-BR'):'-'} até ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'-'}</div><div class="badges" style="margin-top:6px"><span class="badge badge-muco">${a.tipo||'—'}</span></div></div><div class="animal-actions"><button class="edit-btn" onclick="editMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="detail" style="margin-top:8px;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px"><strong>${a.nomeMed||'—'}</strong> · Dosagem: ${a.dosagem||'—'}</div></div>`).join('');
 }
 function editMedDirect(aid){
   const a=DB.medDirect.find(x=>x.id===aid);if(!a)return;editAniId=aid;
   populateMedSelect();
   document.getElementById('medAnimalSelect').value=a.num+'|'+a.nome;
   document.getElementById('medDataIni').value=a.dataIni;document.getElementById('medDataFim').value=a.dataFim;
-  document.getElementById('medMedicamentos').value=a.medicamentos;
+  document.getElementById('medTipo').value=a.tipo||'Vacina';
+  document.getElementById('medNomeMed').value=a.nomeMed||'';
+  document.getElementById('medDosagem').value=a.dosagem||'';
   document.getElementById('medAnimalModalTitle').textContent='Editar Medicação';
   openModal('medAnimalModal');
 }
 async function delMedDirect(aid){const ok=await showConfirm('Excluir esta medicação?','🗑️');if(!ok)return;DB.medDirect=DB.medDirect.filter(x=>x.id!==aid);save();renderMedDirect();toast('Medicação excluída')}
 
-let tempAli=[];
-function populateAliSelect(){const sel=document.getElementById('aliAnimalSelect');sel.innerHTML='<option value="">Selecione...</option>';DB.rebanho.forEach(p=>p.animals.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`}))}
-function addAliAnimal(){const sel=document.getElementById('aliAnimalSelect');if(!sel.value)return;const[num,nome]=sel.value.split('|');if(tempAli.find(a=>a.num===num))return toast('Já adicionado','info');tempAli.push({num,nome});renderTempAli()}
-function renderTempAli(){document.getElementById('aliSelectedAnimals').innerHTML=tempAli.map((a,i)=>`<span class="badge badge-cat" style="cursor:pointer;padding:5px 12px" onclick="tempAli.splice(${i},1);renderTempAli()">#${a.num} ${a.nome} ✕</span>`).join('')}
+function populateAliAnimalSelect(){
+  const sel=document.getElementById('aliAnimalSelect');
+  sel.innerHTML='<option value="">Selecione o animal...</option>';
+  const all=getAllRebanhoAnimals().slice().sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
+  all.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`});
+}
+let tempAliAnimals=[];
+function addAliAnimalNew(){
+  const sel=document.getElementById('aliAnimalSelect');if(!sel.value)return;
+  const[num,nome]=sel.value.split('|');
+  if(tempAliAnimals.find(a=>a.num===num))return toast('Já adicionado','info');
+  tempAliAnimals.push({num,nome});renderTempAliAnimals();sel.selectedIndex=0;calcAliCost();
+}
+function renderTempAliAnimals(){
+  document.getElementById('aliSelectedAnimals').innerHTML=tempAliAnimals.map((a,i)=>`<span class="badge badge-cat" style="cursor:pointer;padding:5px 12px" onclick="tempAliAnimals.splice(${i},1);renderTempAliAnimals();calcAliCost()">#${a.num} ${a.nome} ✕</span>`).join('');
+}
+function saveAliDirect(){
+  if(!DB.aliDirect)DB.aliDirect=[];
+  const dietas=getSelectedDiets2();
+  if(!dietas.length)return toast('Selecione ao menos um tipo de dieta','error');
+  if(!tempAliAnimals.length&&!editAniId)return toast('Adicione ao menos um animal','error');
+  const numAni=tempAliAnimals.length;
+  let totalCost=0;
+  dietas.forEach(d=>{totalCost+=parseFloat(d.valorKg||0)*parseFloat(d.kg||0)*numAni});
+  const d={dietas,animais:[...tempAliAnimals],numAnimais:numAni,custoTotal:totalCost};
+  if(editAniId){const a=DB.aliDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
+  else DB.aliDirect.push({id:uid(),createdAt:Date.now(),...d});
+  tempAliAnimals=[];save();closeModal('aliAnimalModal');renderAliDirect();toast('Alimentação salva!');
+}
 
-// Diet type checkboxes
-function onDietChange(){
+// New diet fields with value per kg + kg consumed per animal
+function onDietChange2(){
   const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]');
-  const container=document.getElementById('dietQtdFields');
+  const container=document.getElementById('dietDetailFields');
   container.innerHTML='';
   checks.forEach(cb=>{
     if(cb.checked){
-      container.innerHTML+=`<div class="diet-qtd"><span class="diet-label">${cb.value}</span><input class="form-input" id="dietQtd_${cb.value}" type="number" step="0.1" placeholder="Qtd em kg" style="padding:10px 12px;font-size:.82rem"></div>`;
+      container.innerHTML+=`<div class="diet-qtd" style="flex-direction:column;gap:6px;padding:12px 14px"><div class="diet-label" style="min-width:auto;margin-bottom:4px">${cb.value}</div><div class="flex-row"><div class="form-group" style="margin-bottom:0"><label style="font-size:.65rem">Valor/kg (R$)</label><input class="form-input" id="dietVal_${cb.value}" type="number" step="0.01" placeholder="R$/kg" style="padding:9px 12px;font-size:.82rem" oninput="calcAliCost()"></div><div class="form-group" style="margin-bottom:0"><label style="font-size:.65rem">Consumo/animal (kg)</label><input class="form-input" id="dietKg_${cb.value}" type="number" step="0.1" placeholder="kg/animal" style="padding:9px 12px;font-size:.82rem" oninput="calcAliCost()"></div></div></div>`;
     }
   });
+  calcAliCost();
 }
-function getSelectedDiets(){
-  const diets=[];
-  const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]');
+function calcAliCost(){
+  const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]:checked');
+  const numAnimais=tempAliAnimals.length;
+  let totalCost=0;
+  const preview=document.getElementById('aliCostPreview');
+  let lines='';
   checks.forEach(cb=>{
-    if(cb.checked){
-      const qtdEl=document.getElementById('dietQtd_'+cb.value);
-      diets.push({tipo:cb.value,qtd:qtdEl?qtdEl.value:''});
-    }
+    const val=parseFloat(document.getElementById('dietVal_'+cb.value)?.value||0);
+    const kgPerAnimal=parseFloat(document.getElementById('dietKg_'+cb.value)?.value||0);
+    const kgTotal=kgPerAnimal*numAnimais;
+    const cost=val*kgTotal;
+    totalCost+=cost;
+    if(val||kgPerAnimal)lines+=`<div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text2);padding:2px 0"><span>${cb.value}: ${kgPerAnimal}kg × ${numAnimais} animais × R$${val.toFixed(2)}</span><span>R$ ${cost.toFixed(2)}</span></div>`;
+  });
+  if(lines||numAnimais)preview.innerHTML=`<div class="glass3" style="border-radius:var(--rx);padding:12px;margin-top:4px"><div style="font-size:.72rem;color:var(--text3);margin-bottom:6px">${numAnimais} animal(is) selecionado(s)</div>${lines}<div style="display:flex;justify-content:space-between;font-size:.9rem;font-weight:700;color:var(--g400);border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:6px"><span>Custo Total</span><span>R$ ${totalCost.toFixed(2)}</span></div></div>`;
+  else preview.innerHTML='';
+}
+function getSelectedDiets2(){
+  const diets=[];
+  document.querySelectorAll('#dietaChecks input[type=checkbox]:checked').forEach(cb=>{
+    const valEl=document.getElementById('dietVal_'+cb.value);
+    const kgEl=document.getElementById('dietKg_'+cb.value);
+    diets.push({tipo:cb.value,valorKg:valEl?valEl.value:'',kg:kgEl?kgEl.value:''});
   });
   return diets;
 }
-function setDietChecks(diets){
-  // Reset all
-  document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);
-  document.getElementById('dietQtdFields').innerHTML='';
-  if(!diets||!diets.length)return;
-  diets.forEach(d=>{
-    const cb=document.querySelector(`#dietaChecks input[value="${d.tipo}"]`);
-    if(cb)cb.checked=true;
-  });
-  onDietChange();
-  // Set quantities after fields are rendered
-  diets.forEach(d=>{
-    const el=document.getElementById('dietQtd_'+d.tipo);
-    if(el)el.value=d.qtd||'';
-  });
-}
-
-function saveAliAnimal(){
-  const p=DB.alimentacao.find(x=>x.id===currentPlanId);if(!p)return;
-  const dietas=getSelectedDiets();
+function saveAliDirect(){
+  if(!DB.aliDirect)DB.aliDirect=[];
+  const dietas=getSelectedDiets2();
   if(!dietas.length)return toast('Selecione ao menos um tipo de dieta','error');
-  const d={dietas,valor:document.getElementById('aliValor').value,animais:[...tempAli],
-    // backward compat
-    racao:dietas.map(x=>x.tipo).join(', ')};
-  if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
-  else p.animals.push({id:uid(),...d});
-  tempAli=[];save();closeModal('aliAnimalModal');renderAnimals('alimentacao');toast('Alimentação salva!');
+  if(!tempAliAnimals.length&&!editAniId)return toast('Adicione ao menos um animal','error');
+  const numAni=editAniId&&!tempAliAnimals.length?(DB.aliDirect.find(x=>x.id===editAniId)?.animais||[]).length:tempAliAnimals.length;
+  const animais=tempAliAnimals.length?[...tempAliAnimals]:(editAniId?(DB.aliDirect.find(x=>x.id===editAniId)?.animais||[]):[]);
+  let totalCost=0;
+  dietas.forEach(d=>{totalCost+=parseFloat(d.valorKg||0)*parseFloat(d.kg||0)*animais.length});
+  const d={dietas,animais,numAnimais:animais.length,custoTotal:totalCost};
+  if(editAniId){const a=DB.aliDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
+  else DB.aliDirect.push({id:uid(),createdAt:Date.now(),...d});
+  tempAliAnimals=[];save();closeModal('aliAnimalModal');renderAliDirect();toast('Alimentação salva!');
 }
+function renderAliDirect(){
+  if(!DB.aliDirect)DB.aliDirect=[];
+  const container=document.getElementById('aliDirectList');
+  const costGrid=document.getElementById('aliCostGrid');
+  const items=[...DB.aliDirect].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  let totalGeral=0;items.forEach(a=>totalGeral+=parseFloat(a.custoTotal||0));
+  costGrid.innerHTML=items.length?`<div class="cost-box glass3"><div class="val">R$ ${totalGeral.toFixed(2)}</div><div class="lbl">Custo Total</div></div><div class="cost-box glass3"><div class="val">${items.length}</div><div class="lbl">Dietas</div></div>`:'';
+  if(!items.length){container.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg><p>Nenhuma alimentação registrada.<br>Toque no + para adicionar.</p></div>';return}
+  container.innerHTML=items.map((a,i)=>{
+    const dietBadges=a.dietas.map(d=>`<span class="badge badge-cat" style="margin:2px">${d.tipo}: ${d.kg||0}kg × R$${parseFloat(d.valorKg||0).toFixed(2)}</span>`).join('');
+    const animalBadges=(a.animais||[]).map(x=>`<span class="badge badge-m" style="margin:1px">#${x.num} ${x.nome}</span>`).join('');
+    return`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--g400);font-size:.9rem">${a.numAnimais||0} animais</div><div class="detail">R$ ${parseFloat(a.custoTotal||0).toFixed(2)}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAliDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAliDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">${dietBadges}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${animalBadges}</div></div>`;
+  }).join('');
+}
+function editAliDirect(aid){
+  const a=DB.aliDirect.find(x=>x.id===aid);if(!a)return;editAniId=aid;
+  document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);
+  a.dietas.forEach(d=>{const cb=document.querySelector('#dietaChecks input[value="'+d.tipo+'"]');if(cb)cb.checked=true});
+  onDietChange2();
+  a.dietas.forEach(d=>{
+    const ve=document.getElementById('dietVal_'+d.tipo);if(ve)ve.value=d.valorKg||'';
+    const ke=document.getElementById('dietKg_'+d.tipo);if(ke)ke.value=d.kg||'';
+  });
+  tempAliAnimals=[...(a.animais||[])];renderTempAliAnimals();
+  populateAliAnimalSelect();
+  calcAliCost();
+  document.getElementById('aliAnimalModalTitle').textContent='Editar Alimentação';
+  openModal('aliAnimalModal');
+}
+async function delAliDirect(aid){const ok=await showConfirm('Excluir esta alimentação?','🗑️');if(!ok)return;DB.aliDirect=DB.aliDirect.filter(x=>x.id!==aid);save();renderAliDirect();toast('Alimentação excluída')}
 
 // ========== EDIT ANIMALS ==========
 function editAnimal(type,aid){
@@ -909,7 +1035,7 @@ let chartFilter='categoria';
 const COLORS=['#1bd171','#5b9aff','#ffb830','#ff5757','#a78bfa','#f472b6','#2dd4bf','#fb923c','#818cf8','#a3e635','#fbbf24','#67e8f9'];
 function setChartFilter(f,btn){chartFilter=f;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderHome()}
 function renderHome(){
-  let all=[];DB.rebanho.forEach(p=>p.animals.forEach(a=>all.push(a)));
+  let all=getAllRebanhoAnimals();
   if(!DB.medDirect)DB.medDirect=[];
   let medCount=0;const today=new Date().toISOString().split('T')[0];DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medCount++});
   let insemCount=0;DB.inseminacao.forEach(p=>insemCount+=p.animals.length);
@@ -970,14 +1096,17 @@ function drawPie(data){
 function populateReportSources(){
   const container=document.getElementById('reportSourceChecks');
   container.innerHTML='';
-  const add=(type,label,list)=>{list.forEach(p=>{container.innerHTML+=`<label class="report-check"><input type="checkbox" value="${type}:${p.id}"><span>${label} — ${p.name}</span></label>`})};
-  add('rebanho','Rebanho',DB.rebanho);
-  add('inseminacao','Inseminação',DB.inseminacao);
-  add('medicacao','Medicação',DB.medicacao);
-  add('alimentacao','Alimentação',DB.alimentacao);
-  if(!container.innerHTML)container.innerHTML='<div style="padding:12px;color:var(--text3);font-size:.8rem;text-align:center">Nenhuma planilha criada</div>';
-  // Populate raça filter dynamically
-  const racas=new Set();DB.rebanho.forEach(p=>p.animals.forEach(a=>{if(a.raca&&a.raca!=='N/A')racas.add(a.raca)}));
+  // Rebanho = single list
+  container.innerHTML+=`<label class="report-check"><input type="checkbox" value="rebanho"><span>Rebanho</span></label>`;
+  // Medicação = single list
+  if(DB.medDirect&&DB.medDirect.length)container.innerHTML+=`<label class="report-check"><input type="checkbox" value="medicacao"><span>Medicação (${DB.medDirect.length})</span></label>`;
+  // Alimentação = single list
+  if(DB.aliDirect&&DB.aliDirect.length)container.innerHTML+=`<label class="report-check"><input type="checkbox" value="alimentacao"><span>Alimentação (${DB.aliDirect.length})</span></label>`;
+  // Inseminação = each planilha as option
+  DB.inseminacao.forEach(p=>{container.innerHTML+=`<label class="report-check"><input type="checkbox" value="inseminacao:${p.id}"><span>Inseminação — ${p.name} (${p.animals.length})</span></label>`});
+  if(!container.innerHTML)container.innerHTML='<div style="padding:12px;color:var(--text3);font-size:.8rem;text-align:center">Nenhum dado disponível</div>';
+  // Populate raça filter
+  const racas=new Set();getAllRebanhoAnimals().forEach(a=>{if(a.raca&&a.raca!=='N/A')racas.add(a.raca)});
   const racaSel=document.getElementById('reportFilterRaca');
   racaSel.innerHTML='<option value="">Todas</option>';
   [...racas].sort().forEach(r=>{racaSel.innerHTML+=`<option>${r}</option>`});
@@ -985,26 +1114,34 @@ function populateReportSources(){
 function getFiltered(){
   const checks=document.querySelectorAll('#reportSourceChecks input[type=checkbox]:checked');
   if(!checks.length)return{sources:[],animals:[],type:'',name:''};
-  const sources=[];let allAnimals=[];let names=[];let mainType='';
-  checks.forEach(cb=>{
-    const[type,id]=cb.value.split(':');
-    const p=DB[type].find(x=>x.id===id);
-    if(!p)return;
-    sources.push({type,planilha:p});
-    if(!mainType)mainType=type;
-    names.push(p.name);
-    p.animals.forEach(a=>allAnimals.push({...a,_type:type,_planilha:p.name}));
-  });
-  // Apply filters (only for rebanho type animals)
+  let allAnimals=[];let names=[];let mainType='';
   const cf=document.getElementById('reportFilterCat').value;
   const sf=document.getElementById('reportFilterSex').value;
   const rf=document.getElementById('reportFilterRaca').value;
   const stf=document.getElementById('reportFilterSit').value;
-  if(cf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.cat===cf);
-  if(sf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.sexo===sf);
-  if(rf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.raca===rf);
-  if(stf)allAnimals=allAnimals.filter(a=>a._type!=='rebanho'||a.sit===stf);
-  return{sources,animals:allAnimals,type:mainType,name:names.join(', ')};
+  checks.forEach(cb=>{
+    const val=cb.value;
+    if(val==='rebanho'){
+      mainType=mainType||'rebanho';names.push('Rebanho');
+      let items=getAllRebanhoAnimals();
+      if(cf)items=items.filter(a=>a.cat===cf);
+      if(sf)items=items.filter(a=>a.sexo===sf);
+      if(rf)items=items.filter(a=>a.raca===rf);
+      if(stf)items=items.filter(a=>a.sit===stf);
+      items.forEach(a=>allAnimals.push({...a,_type:'rebanho',_planilha:'Rebanho'}));
+    } else if(val==='medicacao'){
+      mainType=mainType||'medicacao';names.push('Medicação');
+      (DB.medDirect||[]).forEach(a=>allAnimals.push({...a,_type:'medicacao',_planilha:'Medicação'}));
+    } else if(val==='alimentacao'){
+      mainType=mainType||'alimentacao';names.push('Alimentação');
+      (DB.aliDirect||[]).forEach(a=>allAnimals.push({...a,_type:'alimentacao',_planilha:'Alimentação'}));
+    } else if(val.startsWith('inseminacao:')){
+      const id=val.split(':')[1];
+      const p=DB.inseminacao.find(x=>x.id===id);
+      if(p){mainType=mainType||'inseminacao';names.push('Insem. — '+p.name);p.animals.forEach(a=>allAnimals.push({...a,_type:'inseminacao',_planilha:p.name}));}
+    }
+  });
+  return{sources:[],animals:allAnimals,type:mainType,name:names.join(', ')};
 }
 function downloadReport(fmt){
   const result=getFiltered();
@@ -1019,11 +1156,21 @@ function downloadReport(fmt){
   if(fmt==='csv'){
     let csv='';
     Object.values(grouped).forEach(g=>{
-      csv+=`\n--- ${g.planilha} (${g.type}) ---\n`;
+      csv+=`\n--- ${g.planilha} ---\n`;
       if(g.type==='rebanho')csv+='Numero,Nome,Sexo,Categoria,Situacao,Raca,Peso(kg),Leite(L/dia)\n'+g.items.map(a=>`${a.num},${a.nome},${a.sexo},${a.cat},${a.sit},${a.raca},${a.peso||''},${a.leite||''}`).join('\n');
       else if(g.type==='inseminacao')csv+='Numero,Nome,Data,Tempo,Touro,Muco,Obs\n'+g.items.map(a=>`${a.num},${a.nome},${a.data},${a.tempo},${a.touro},${a.muco},"${a.obs||''}"`).join('\n');
-      else if(g.type==='medicacao')csv+='Numero,Nome,Inicio,Fim,Medicamentos\n'+g.items.map(a=>`${a.num},${a.nome},${a.dataIni},${a.dataFim},"${a.medicamentos||''}"`).join('\n');
-      else csv+='Dieta,Valor/kg,Animais\n'+g.items.map(a=>{const dt=(a.dietas||[]).map(d=>d.tipo+(d.qtd?' '+d.qtd+'kg':'')).join('; ')||a.racao||'';return`"${dt}",${a.valor},"${(a.animais||[]).map(x=>x.num+'-'+x.nome).join('; ')}"`}).join('\n');
+      else if(g.type==='medicacao')csv+='Numero,Nome,Tipo,Medicamento,Dosagem,Inicio,Fim\n'+g.items.map(a=>`${a.num},${a.nome},${a.tipo||''},${a.nomeMed||''},"${a.dosagem||''}",${a.dataIni},${a.dataFim}`).join('\n');
+      else if(g.type==='alimentacao'){
+        csv+='Dietas,Kg/animal,Valor/kg,Animais,Qtd Animais,Custo Total\n';
+        let aliTotal=0;
+        csv+=g.items.map(a=>{
+          const dt=(a.dietas||[]).map(d=>`${d.tipo}:${d.kg||0}kg@R$${parseFloat(d.valorKg||0).toFixed(2)}`).join('; ');
+          const anis=(a.animais||[]).map(x=>x.num+'-'+x.nome).join('; ');
+          aliTotal+=parseFloat(a.custoTotal||0);
+          return`"${dt}","${(a.dietas||[]).map(d=>d.kg||0).join(';')}","${(a.dietas||[]).map(d=>d.valorKg||0).join(';')}","${anis}",${a.numAnimais||0},${parseFloat(a.custoTotal||0).toFixed(2)}`;
+        }).join('\n');
+        csv+=`\nTOTAL GASTO,,,,, R$ ${aliTotal.toFixed(2)}`;
+      }
       csv+='\n';
     });
     const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download=`ELTECH_Relatorio_${ds.replace(/\//g,'-')}.csv`;l.click();toast('Excel exportado!');
@@ -1033,9 +1180,18 @@ function downloadReport(fmt){
       let rows='';
       if(g.type==='rebanho')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Sexo</th><th>Cat.</th><th>Situação</th><th>Raça</th><th>Peso</th><th>Leite</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.sexo}</td><td>${a.cat}</td><td>${a.sit}</td><td>${a.raca}</td><td>${a.peso?a.peso+'kg':'—'}</td><td>${a.leite?a.leite+'L':'—'}</td></tr>`).join('');
       else if(g.type==='inseminacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Data</th><th>Tempo</th><th>Touro</th><th>Muco</th><th>Obs</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.data}</td><td>${a.tempo}</td><td>${a.touro}</td><td>${a.muco}</td><td>${a.obs||''}</td></tr>`).join('');
-      else if(g.type==='medicacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Início</th><th>Fim</th><th>Medicamentos</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.dataIni}</td><td>${a.dataFim}</td><td>${a.medicamentos||''}</td></tr>`).join('');
-      else rows='<tr class="hdr"><th>Dieta</th><th>Valor/kg</th><th>Animais</th></tr>'+g.items.map((a,i)=>{const dt=(a.dietas||[]).map(d=>`${d.tipo}${d.qtd?' — '+d.qtd+'kg':''}`).join(', ')||a.racao||'—';return`<tr class="${i%2?'alt':''}"><td>${dt}</td><td>R$ ${parseFloat(a.valor||0).toFixed(2)}</td><td>${(a.animais||[]).map(x=>'#'+x.num+' '+x.nome).join(', ')}</td></tr>`}).join('');
-      tables+=`<h2 style="color:#0a7c44;font-size:16px;margin:24px 0 8px;border-bottom:2px solid #0a7c44;padding-bottom:6px">${g.planilha} <span style="font-weight:400;font-size:12px;color:#888">(${g.type})</span></h2><table>${rows}</table><p style="font-size:11px;color:#999;margin-top:4px">${g.items.length} registro(s)</p>`;
+      else if(g.type==='medicacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Tipo</th><th>Medicamento</th><th>Dosagem</th><th>Início</th><th>Fim</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.tipo||'—'}</td><td>${a.nomeMed||'—'}</td><td>${a.dosagem||'—'}</td><td>${a.dataIni||'—'}</td><td>${a.dataFim||'—'}</td></tr>`).join('');
+      else if(g.type==='alimentacao'){
+        let aliTotal=0;
+        rows='<tr class="hdr"><th>Dietas</th><th>Animais</th><th>Qtd</th><th>Custo</th></tr>'+g.items.map((a,i)=>{
+          const dt=(a.dietas||[]).map(d=>`${d.tipo}: ${d.kg||0}kg/animal × R$${parseFloat(d.valorKg||0).toFixed(2)}/kg`).join('<br>');
+          const anis=(a.animais||[]).map(x=>'#'+x.num+' '+x.nome).join(', ');
+          aliTotal+=parseFloat(a.custoTotal||0);
+          return`<tr class="${i%2?'alt':''}"><td>${dt}</td><td style="font-size:10px">${anis}</td><td>${a.numAnimais||0}</td><td><strong>R$ ${parseFloat(a.custoTotal||0).toFixed(2)}</strong></td></tr>`;
+        }).join('');
+        rows+=`<tr style="background:#0a7c44;color:#fff;font-weight:700"><td colspan="3" style="text-align:right;border:none;padding:12px">TOTAL GASTO</td><td style="border:none;padding:12px;font-size:14px">R$ ${aliTotal.toFixed(2)}</td></tr>`;
+      }
+      tables+=`<h2 style="color:#0a7c44;font-size:16px;margin:24px 0 8px;border-bottom:2px solid #0a7c44;padding-bottom:6px">${g.planilha}</h2><table>${rows}</table><p style="font-size:11px;color:#999;margin-top:4px">${g.items.length} registro(s)</p>`;
     });
     const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>ELTECH</title><style>*{margin:0;box-sizing:border-box}body{font-family:Segoe UI,sans-serif;padding:40px 24px;color:#1a1a1a;background:#fff}.hd{text-align:center;margin-bottom:24px}.hd h1{color:#0a7c44;font-size:28px;letter-spacing:3px;margin-bottom:4px}.hd p{color:#666;font-size:12px}table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px}th,td{padding:9px 10px;text-align:left;border-bottom:1px solid #e5e5e5}.hdr th{background:linear-gradient(135deg,#0a7c44,#10b461);color:#fff;font-weight:600;border:none;font-size:11px}.alt td{background:#f0fdf4}.ft{text-align:center;margin-top:30px;padding-top:14px;border-top:2px solid #0a7c44;color:#666;font-size:11px}</style></head><body><div class="hd"><h1>ELTECH</h1><p>Relatório · ${ds} às ${ts}</p></div>${tables}<div class="ft">Total: ${animals.length} registro(s) · Gerado por ELTECH</div></body></html>`;
     const w=window.open('','_blank');w.document.write(html);w.document.close();setTimeout(()=>w.print(),400);toast('PDF gerado!');
@@ -1079,7 +1235,7 @@ function importBackup(e){
 }
 
 // ========== INIT ==========
-renderPlanilhas('rebanho');renderPlanilhas('inseminacao');renderPlanilhas('alimentacao');if(!DB.medDirect)DB.medDirect=[];
+renderPlanilhas('inseminacao');if(!DB.medDirect)DB.medDirect=[];if(!DB.aliDirect)DB.aliDirect=[];if(!DB.rebanhoDirect)DB.rebanhoDirect=[];
 
 // ========== PWA ==========
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(()=>console.log('SW registered')).catch(e=>console.log('SW failed',e))}
