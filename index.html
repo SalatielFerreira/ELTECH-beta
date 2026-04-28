@@ -340,21 +340,33 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 
     <!-- REBANHO -->
     <div class="page" id="pageRebanho">
-      <div class="section-header"><h2>Rebanho</h2>
-        <div style="display:flex;gap:8px">
-          <button class="add-btn" style="width:40px;height:40px;background:rgba(255,255,255,0.12);box-shadow:none;border:1px solid rgba(255,255,255,0.2)" onclick="toggleRebanhoFilter()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg></button>
-          <button class="add-btn" onclick="openModal('animalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div id="rebanhoMain">
+        <div class="section-header"><h2>Rebanho</h2>
+          <div style="display:flex;gap:8px">
+            <button class="add-btn" style="width:40px;height:40px;background:rgba(255,255,255,0.12);box-shadow:none;border:1px solid rgba(255,255,255,0.2)" onclick="openModal('loteModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></button>
+            <button class="add-btn" onclick="openModal('animalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
         </div>
+        <div id="lotesList"></div>
       </div>
-      <div id="rebanhoFilterBar" class="hidden" style="margin-bottom:14px">
-        <div class="flex-row" style="gap:6px">
-          <select class="form-input" id="filterSexo" onchange="renderRebanhoDirect()" style="padding:9px 12px;font-size:.78rem"><option value="">Sexo</option><option>Macho</option><option>Fêmea</option></select>
-          <select class="form-input" id="filterCat" onchange="renderRebanhoDirect()" style="padding:9px 12px;font-size:.78rem"><option value="">Categoria</option><option>Bezerro</option><option>Bezerra</option><option>Garrote</option><option>Novilha</option><option>Boi</option><option>Vaca seca</option><option>Vaca em lactação</option><option>Touro</option></select>
-          <select class="form-input" id="filterSit" onchange="renderRebanhoDirect()" style="padding:9px 12px;font-size:.78rem"><option value="">Situação</option><option>Não se aplica</option><option>Anestro</option><option>Vazia</option><option>Prenha</option></select>
+      <div id="loteDetail" class="hidden">
+        <button class="back-btn" onclick="backToLotes()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>Voltar</button>
+        <div class="section-header"><h2 id="loteDetailTitle"></h2>
+          <div style="display:flex;gap:8px">
+            <button class="add-btn" style="width:40px;height:40px;background:rgba(255,255,255,0.12);box-shadow:none;border:1px solid rgba(255,255,255,0.2)" onclick="toggleLoteFilter()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg></button>
+            <button class="add-btn" onclick="openAnimalForLote()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
         </div>
+        <div id="loteFilterBar" class="hidden" style="margin-bottom:14px">
+          <div class="flex-row" style="gap:6px">
+            <select class="form-input" id="filterSexo" onchange="renderLoteAnimals()" style="padding:9px 12px;font-size:.78rem"><option value="">Sexo</option><option>Macho</option><option>Fêmea</option></select>
+            <select class="form-input" id="filterCat" onchange="renderLoteAnimals()" style="padding:9px 12px;font-size:.78rem"><option value="">Categoria</option><option>Bezerro</option><option>Bezerra</option><option>Garrote</option><option>Novilha</option><option>Boi</option><option>Vaca seca</option><option>Vaca em lactação</option><option>Touro</option></select>
+            <select class="form-input" id="filterSit" onchange="renderLoteAnimals()" style="padding:9px 12px;font-size:.78rem"><option value="">Situação</option><option>Não se aplica</option><option>Anestro</option><option>Vazia</option><option>Prenha</option></select>
+          </div>
+        </div>
+        <div class="search-bar"><input type="text" id="searchLote" placeholder="Buscar por nº ou nome..." oninput="renderLoteAnimals()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div id="loteAnimals"></div>
       </div>
-      <div class="search-bar"><input type="text" id="searchRebanho" placeholder="Buscar por nº ou nome..." oninput="renderRebanhoDirect()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
-      <div id="rebanhoDirectList"></div>
     </div>
 
     <!-- INSEMINAÇÃO -->
@@ -398,7 +410,7 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
         </div>
         <div class="flex-row">
           <div class="form-group"><label>Situação</label><select class="form-input" id="reportFilterSit"><option value="">Todas</option><option>Não se aplica</option><option>Anestro</option><option>Vazia</option><option>Prenha</option></select></div>
-          <div class="form-group"><label>Raça</label><select class="form-input" id="reportFilterRaca"><option value="">Todas</option></select></div>
+          <div class="form-group"><label>Inseminadas</label><select class="form-input" id="reportFilterInsem"><option value="">Todas</option><option value="sim">Sim</option><option value="nao">Não</option></select></div>
         </div>
         <div class="report-dl">
           <button class="btn btn-primary" onclick="downloadReport('pdf')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</button>
@@ -465,13 +477,24 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 <!-- ===== MODALS ===== -->
 <div class="modal-overlay" id="planilhaModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="planilhaModalTitle">Nova Planilha</h3><button class="modal-close" onclick="closeModal('planilhaModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><div class="form-group"><label>Nome da planilha</label><input class="form-input" id="planilhaNome" placeholder="Ex: Lote 2025"></div><button class="btn btn-primary mt-8" onclick="savePlanilha()">Salvar</button></div></div>
 
+<div class="modal-overlay" id="loteModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="loteModalTitle">Novo Lote</h3><button class="modal-close" onclick="closeModal('loteModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><div class="form-group"><label>Nome do Lote</label><input class="form-input" id="loteNome" placeholder="Ex: Lote Maternidade"></div><button class="btn btn-primary mt-8" onclick="saveLote()">Salvar</button></div></div>
+
 <div class="modal-overlay" id="animalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="animalModalTitle">Adicionar Animal</h3><button class="modal-close" onclick="closeModal('animalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="flex-row"><div class="form-group"><label>Nº do Animal</label><input class="form-input" id="animalNum" placeholder="001"></div><div class="form-group"><label>Nome</label><input class="form-input" id="animalNome" placeholder="Mimosa"></div></div>
+<div class="flex-row"><div class="form-group"><label>Origem</label><select class="form-input" id="animalOrigem" onchange="onOrigemChange()"><option value="Nascido">Nascido na propriedade</option><option value="Comprado">Comprado</option></select></div><div class="form-group"><label>Data de Nascimento</label><input class="form-input" id="animalDataNasc" type="date"></div></div>
+<div class="form-group"><label>Lote</label><select class="form-input" id="animalLote"><option value="">Selecione...</option></select></div>
 <div class="flex-row"><div class="form-group"><label>Sexo</label><select class="form-input" id="animalSexo" onchange="onSexoChange()"><option value="Macho">Macho</option><option value="Fêmea">Fêmea</option></select></div><div class="form-group"><label>Categoria</label><select class="form-input" id="animalCat" onchange="onCatChange()"></select></div></div>
-<div class="flex-row"><div class="form-group"><label>Situação</label><select class="form-input" id="animalSit" disabled onchange="onSitChange()"></select></div><div class="form-group"><label>Raça</label><input class="form-input" id="animalRaca" placeholder="Nelore"></div></div>
+<div class="flex-row"><div class="form-group"><label>Situação</label><select class="form-input" id="animalSit" disabled onchange="onSitChange()"></select></div><div class="form-group"><label>Raça</label><select class="form-input" id="animalRaca"><option value="">Selecione...</option><option>Holandesa</option><option>Jersey</option><option>Girolando</option><option>Gir</option><option>Ayrshire</option><option>Nelore</option><option>Brahman</option><option>Tabapuã</option></select></div></div>
+<div id="paiMaeNascido">
+  <div class="form-group"><label>Mãe (do rebanho)</label><select class="form-input" id="animalMaeSelect"><option value="">Selecione...</option></select></div>
+  <div class="form-group"><label>Pai (touro do rebanho ou inseminação)</label><select class="form-input" id="animalPaiSelect"><option value="">Selecione...</option></select></div>
+</div>
+<div id="paiMaeComprado" class="hidden">
+  <div class="flex-row"><div class="form-group"><label>Nome da Mãe</label><input class="form-input" id="animalNomeMae" placeholder="Nome da mãe"></div><div class="form-group"><label>Nome do Pai</label><input class="form-input" id="animalNomePai" placeholder="Nome do pai"></div></div>
+</div>
 <div class="flex-row"><div class="form-group"><label>Peso (kg)</label><input class="form-input" id="animalPeso" type="number" step="0.1" placeholder="Ex: 450"></div><div class="form-group" id="leiteGroup"><label>Prod. Média Leite (L/dia)</label><input class="form-input" id="animalLeite" type="number" step="0.1" placeholder="Ex: 12.5"></div></div>
 <div class="form-group" id="partoGroup" style="display:none"><label>Data do Último Parto</label><input class="form-input" id="animalUltimoParto" type="date"></div>
-<button class="btn btn-primary mt-8" onclick="saveAnimalDirect()">Salvar</button></div></div>
+<button class="btn btn-primary mt-8" onclick="saveAnimalToLote()">Salvar</button></div></div>
 
 <div class="modal-overlay" id="insemAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="insemAnimalModalTitle">Adicionar Inseminação</h3><button class="modal-close" onclick="closeModal('insemAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="form-group"><label>Animal</label><select class="form-input" id="insemAnimalSelect"><option value="">Selecione o animal...</option></select></div>
@@ -482,7 +505,18 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
 <button class="btn btn-primary mt-8" onclick="saveInsemAnimal()">Salvar</button></div></div>
 
 <div class="modal-overlay" id="medAnimalModal"><div class="modal glass"><div class="modal-handle"></div><div class="modal-header"><h3 id="medAnimalModalTitle">Adicionar Medicação</h3><button class="modal-close" onclick="closeModal('medAnimalModal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="form-group"><label>Animal</label><select class="form-input" id="medAnimalSelect"><option value="">Selecione o animal...</option></select></div>
+<div class="form-group"><label>Modo de Seleção</label>
+<div style="display:flex;gap:6px;margin-bottom:12px">
+  <button class="filter-chip active" id="medModeLote" onclick="setMedMode('lote')">Lote inteiro</button>
+  <button class="filter-chip" id="medModeIndiv" onclick="setMedMode('individual')">Individual</button>
+</div></div>
+<div id="medLoteSection">
+  <div class="form-group"><label>Selecionar Lote</label><select class="form-input" id="medLoteSelect" onchange="loadMedLoteAnimals()"><option value="">Selecione o lote...</option></select></div>
+  <div id="medLoteAnimals" style="max-height:150px;overflow-y:auto;margin-bottom:12px"></div>
+</div>
+<div id="medIndivSection" class="hidden">
+  <div class="form-group"><label>Animal</label><select class="form-input" id="medAnimalSelect"><option value="">Selecione o animal...</option></select></div>
+</div>
 <div class="flex-row"><div class="form-group"><label>Início</label><input class="form-input" id="medDataIni" type="date"></div><div class="form-group"><label>Até Quando</label><input class="form-input" id="medDataFim" type="date"></div></div>
 <div class="form-group"><label>Tipo</label><select class="form-input" id="medTipo"><option value="Vacina">Vacina</option><option value="Vermífugo">Vermífugo</option><option value="Tratamento">Tratamento</option></select></div>
 <div class="form-group"><label>Nome do Medicamento</label><input class="form-input" id="medNomeMed" placeholder="Ex: Ivermectina"></div>
@@ -498,9 +532,20 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
   <label class="diet-check"><input type="checkbox" value="Concentrado" onchange="onDietChange2()"><span>Concentrado</span></label>
 </div></div>
 <div id="dietDetailFields"></div>
-<div class="form-group"><label>Adicionar Animal</label><select class="form-input" id="aliAnimalSelect"><option value="">Selecione o animal...</option></select></div>
-<div id="aliSelectedAnimals" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px"></div>
-<button class="btn btn-outline btn-xs mb-16" onclick="addAliAnimalNew()">+ Adicionar Animal</button>
+<div class="form-group"><label>Modo de Seleção</label>
+<div style="display:flex;gap:6px;margin-bottom:8px">
+  <button class="filter-chip active" id="aliModeLote" onclick="setAliMode('lote')">Lote inteiro</button>
+  <button class="filter-chip" id="aliModeIndiv" onclick="setAliMode('individual')">Individual</button>
+</div></div>
+<div id="aliLoteSection">
+  <div class="form-group"><label>Selecionar Lote</label><select class="form-input" id="aliLoteSelect" onchange="loadAliLoteAnimals()"><option value="">Selecione o lote...</option></select></div>
+  <div id="aliLoteAnimals" style="max-height:150px;overflow-y:auto;margin-bottom:12px"></div>
+</div>
+<div id="aliIndivSection" class="hidden">
+  <div class="form-group"><label>Adicionar Animal</label><select class="form-input" id="aliAnimalSelect"><option value="">Selecione...</option></select></div>
+  <div id="aliSelectedAnimals" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px"></div>
+  <button class="btn btn-outline btn-xs mb-16" onclick="addAliAnimalNew()">+ Adicionar Animal</button>
+</div>
 <div id="aliCostPreview" style="margin-bottom:14px"></div>
 <button class="btn btn-primary" onclick="saveAliDirect()">Salvar</button></div></div>
 
@@ -515,11 +560,12 @@ canvas#pieChart{max-width:240px;max-height:240px;margin:0 auto;display:block}
   </div>
 </div>
 
+
 <script>
 // ========== DATA ==========
-let DB={user:{email:'',phone:'',password:'',name:'Usuário',avatar:''},rebanho:[],rebanhoDirect:[],inseminacao:[],medicacao:[],alimentacao:[],medDirect:[],aliDirect:[]};
+let DB={user:{email:'',phone:'',password:'',name:'Usuário',avatar:''},lotes:[],inseminacao:[],medDirect:[],aliDirect:[]};
 const save=()=>{try{localStorage.setItem('eltech_db',JSON.stringify(DB))}catch(e){}};
-const load=()=>{try{const d=localStorage.getItem('eltech_db');if(d)DB=JSON.parse(d)}catch(e){}};
+const load=()=>{try{const d=localStorage.getItem('eltech_db');if(d){DB=JSON.parse(d);if(!DB.lotes)DB.lotes=[];if(!DB.medDirect)DB.medDirect=[];if(!DB.aliDirect)DB.aliDirect=[];/* migrate old data */if(DB.rebanhoDirect&&DB.rebanhoDirect.length){if(!DB.lotes.find(l=>l.name==='Geral')){DB.lotes.push({id:uid(),name:'Geral',createdAt:Date.now(),animals:[...DB.rebanhoDirect]})}DB.rebanhoDirect=[];}if(DB.rebanho&&DB.rebanho.length){DB.rebanho.forEach(p=>{if(p.animals&&p.animals.length){const existing=DB.lotes.find(l=>l.name===p.name);if(existing){p.animals.forEach(a=>{if(!existing.animals.find(x=>x.id===a.id))existing.animals.push(a)})}else{DB.lotes.push({id:p.id||uid(),name:p.name,createdAt:p.createdAt||Date.now(),animals:[...p.animals]})}}});DB.rebanho=[];save()}}}catch(e){}};
 load();
 const uid=()=>'_'+Math.random().toString(36).substr(2,9);
 
@@ -527,676 +573,117 @@ const uid=()=>'_'+Math.random().toString(36).substr(2,9);
 function toast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast toast-'+type+' show';setTimeout(()=>t.classList.remove('show'),2800)}
 
 // PASSWORD TOGGLE
-function togglePass(id,btn){
-  const input=document.getElementById(id);
-  const isHidden=input.type==='password';
-  input.type=isHidden?'text':'password';
-  btn.innerHTML=isHidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-  btn.style.color=isHidden?'var(--g400)':'var(--text3)';
-}
+function togglePass(id,btn){const input=document.getElementById(id);const isHidden=input.type==='password';input.type=isHidden?'text':'password';btn.innerHTML=isHidden?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';btn.style.color=isHidden?'var(--g400)':'var(--text3)'}
 
 // CUSTOM CONFIRM
 let _confirmCb=null;
-function showConfirm(msg,icon='⚠️'){
-  return new Promise(resolve=>{
-    _confirmCb=resolve;
-    document.getElementById('confirmIcon').textContent=icon;
-    document.getElementById('confirmMsg').textContent=msg;
-    document.getElementById('confirmModal').classList.add('show');
-  });
-}
-function confirmResolve(val){
-  document.getElementById('confirmModal').classList.remove('show');
-  if(_confirmCb)_confirmCb(val);_confirmCb=null;
-}
+function showConfirm(msg,icon='⚠️'){return new Promise(resolve=>{_confirmCb=resolve;document.getElementById('confirmIcon').textContent=icon;document.getElementById('confirmMsg').textContent=msg;document.getElementById('confirmModal').classList.add('show')})}
+function confirmResolve(val){document.getElementById('confirmModal').classList.remove('show');if(_confirmCb)_confirmCb(val);_confirmCb=null}
 
 // ========== LOGIN ==========
-function switchLoginTab(tab){
-  document.querySelectorAll('.login-tab').forEach((t,i)=>t.classList.toggle('active',['login','register'][i]===tab));
-  document.querySelectorAll('.login-form').forEach(f=>f.classList.remove('active'));
-  document.getElementById(tab==='login'?'loginForm':'registerForm').classList.add('active');
-}
-
-// Email validation
+function switchLoginTab(tab){document.querySelectorAll('.login-tab').forEach((t,i)=>t.classList.toggle('active',['login','register'][i]===tab));document.querySelectorAll('.login-form').forEach(f=>f.classList.remove('active'));document.getElementById(tab==='login'?'loginForm':'registerForm').classList.add('active')}
 function isValidEmail(e){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}
-// Password validation
 function isValidPassword(p){return p.length>=6&&/[A-Z]/.test(p)&&/[0-9]/.test(p)&&/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p)}
-// Name validation (letters only, max 15)
 function isValidName(n){return/^[a-zA-ZÀ-ÿ\s]{1,15}$/.test(n)&&n.trim().length>0}
-
-// Live password feedback on register
-document.getElementById('regPass').addEventListener('input',function(){
-  const p=this.value;
-  const set=(id,ok)=>{const el=document.getElementById(id);el.style.color=ok?'var(--g400)':'var(--text3)';el.textContent=(ok?'✓ ':'◯ ')+el.textContent.substring(2)};
-  set('reqUpper',/[A-Z]/.test(p));set('reqNumber',/[0-9]/.test(p));set('reqSpecial',/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p));set('reqLen',p.length>=6);
-});
-
-function doLogin(){
-  const input=document.getElementById('loginEmail').value.trim();
-  const p=document.getElementById('loginPass').value;
-  if(!input||!p)return toast('Preencha todos os campos','error');
-  // Check if user is registered
-  if(!DB.user.email||!DB.user.password)return toast('Nenhum usuário cadastrado. Cadastre-se primeiro.','error');
-  // Match by email or name
-  const matchEmail=input.toLowerCase()===DB.user.email.toLowerCase();
-  const matchName=input.toLowerCase()===DB.user.name.toLowerCase();
-  if(!matchEmail&&!matchName)return toast('Usuário não encontrado','error');
-  if(p!==DB.user.password)return toast('Senha incorreta','error');
-  enterApp();
-}
-
-function doRegister(){
-  const name=document.getElementById('regName').value.trim();
-  const email=document.getElementById('regEmail').value.trim();
-  const pass=document.getElementById('regPass').value;
-  const passConfirm=document.getElementById('regPassConfirm').value;
-  if(!name||!email||!pass||!passConfirm)return toast('Preencha todos os campos','error');
-  if(!isValidName(name))return toast('Nome: apenas letras, máx. 15 caracteres','error');
-  if(!isValidEmail(email))return toast('Email inválido. Ex: nome@email.com','error');
-  if(!isValidPassword(pass))return toast('Senha precisa de: maiúscula, número e caractere especial','error');
-  if(pass!==passConfirm)return toast('As senhas não coincidem','error');
-  DB.user={email,name,password:pass,avatar:''};save();
-  toast('Cadastro realizado! Faça login.');switchLoginTab('login');
-}
+document.getElementById('regPass').addEventListener('input',function(){const p=this.value;const set=(id,ok)=>{const el=document.getElementById(id);el.style.color=ok?'var(--g400)':'var(--text3)';el.textContent=(ok?'✓ ':'◯ ')+el.textContent.substring(2)};set('reqUpper',/[A-Z]/.test(p));set('reqNumber',/[0-9]/.test(p));set('reqSpecial',/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p));set('reqLen',p.length>=6)});
+function doLogin(){const input=document.getElementById('loginEmail').value.trim();const p=document.getElementById('loginPass').value;if(!input||!p)return toast('Preencha todos os campos','error');if(!DB.user.email||!DB.user.password)return toast('Nenhum usuário cadastrado.','error');const matchEmail=input.toLowerCase()===DB.user.email.toLowerCase();const matchName=input.toLowerCase()===DB.user.name.toLowerCase();if(!matchEmail&&!matchName)return toast('Usuário não encontrado','error');if(p!==DB.user.password)return toast('Senha incorreta','error');enterApp()}
+function doRegister(){const name=document.getElementById('regName').value.trim();const email=document.getElementById('regEmail').value.trim();const pass=document.getElementById('regPass').value;const passConfirm=document.getElementById('regPassConfirm').value;if(!name||!email||!pass||!passConfirm)return toast('Preencha todos os campos','error');if(!isValidName(name))return toast('Nome: apenas letras, máx. 15 caracteres','error');if(!isValidEmail(email))return toast('Email inválido','error');if(!isValidPassword(pass))return toast('Senha precisa de: maiúscula, número e caractere especial','error');if(pass!==passConfirm)return toast('As senhas não coincidem','error');DB.user={email,name,password:pass,avatar:''};save();toast('Cadastro realizado!');switchLoginTab('login')}
 function enterApp(){document.getElementById('loginPage').classList.add('hidden');document.getElementById('mainApp').style.display='flex';document.getElementById('profileName').value=DB.user.name||'Usuário';if(DB.user.avatar){document.getElementById('avatarImg').src=DB.user.avatar;document.getElementById('avatarImg').style.display='block';document.getElementById('avatarPlaceholder').style.display='none'}renderHome()}
 function doLogout(){document.getElementById('loginPage').classList.remove('hidden');document.getElementById('mainApp').style.display='none'}
 
+// ========== HELPERS ==========
+function getAllAnimals(){let all=[];DB.lotes.forEach(l=>l.animals.forEach(a=>all.push({...a,loteId:l.id,loteName:l.name})));return all}
+function sortByNum(arr){return arr.sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')})}
+function ageDays(dateStr){if(!dateStr)return'';return Math.floor((Date.now()-new Date(dateStr+'T12:00').getTime())/(1000*60*60*24))}
+function getInsemDate(num){let d='';DB.inseminacao.forEach(p=>p.animals.forEach(a=>{if(a.num===num&&a.data>d)d=a.data}));return d?new Date(d+'T12:00').toLocaleDateString('pt-BR'):''}
+
 // ========== NAV ==========
-function refreshCurrentPage(){
-  const active=document.querySelector('.page.active');
-  if(!active)return;
-  const id=active.id;
-  if(id==='pageHome')renderHome();
-  else if(id==='pageRebanho')renderRebanhoDirect();
-  else if(id==='pageInseminacao'){if(!document.getElementById('insemDetail').classList.contains('hidden'))renderAnimals('inseminacao');else renderPlanilhas('inseminacao');}
-  else if(id==='pageMedicacao')renderMedDirect();
-  else if(id==='pageAlimentacao')renderAliDirect();
-  else if(id==='pageRelatorios')populateReportSources();
-  toast('Atualizado!','info');
-}
-function goPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
-  document.querySelector('.page-content').scrollTop=0;
-  const types=['rebanho','inseminacao','medicacao','alimentacao'];
-  types.forEach(t=>{const l=document.getElementById(t==='inseminacao'?'insemList':t==='medicacao'?'medList':t==='alimentacao'?'aliList':'rebanhoList');const d=document.getElementById(t==='inseminacao'?'insemDetail':t==='medicacao'?'medDetail':t==='alimentacao'?'aliDetail':'rebanhoDetail');if(l&&d){l.classList.remove('hidden');d.classList.add('hidden')}});
-  if(id==='pageHome')renderHome();
-  if(id==='pageRebanho')renderRebanhoDirect();
-  if(id==='pageInseminacao')renderPlanilhas('inseminacao');
-  if(id==='pageMedicacao')renderMedDirect();
-  if(id==='pageAlimentacao')renderAliDirect();
-  if(id==='pageRelatorios')populateReportSources();
-}
+let currentLoteId=null;let editAniId=null;let editLoteId=null;
+function refreshCurrentPage(){const a=document.querySelector('.page.active');if(!a)return;const id=a.id;if(id==='pageHome')renderHome();else if(id==='pageRebanho'){if(!document.getElementById('loteDetail').classList.contains('hidden'))renderLoteAnimals();else renderLotes()}else if(id==='pageInseminacao'){if(!document.getElementById('insemDetail').classList.contains('hidden'))renderAnimals('inseminacao');else renderPlanilhas('inseminacao')}else if(id==='pageMedicacao')renderMedDirect();else if(id==='pageAlimentacao')renderAliDirect();else if(id==='pageRelatorios')populateReportSources();toast('Atualizado!','info')}
+function goPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.querySelector('.page-content').scrollTop=0;if(id==='pageHome')renderHome();if(id==='pageRebanho'){document.getElementById('rebanhoMain').classList.remove('hidden');document.getElementById('loteDetail').classList.add('hidden');renderLotes()}if(id==='pageInseminacao'){document.getElementById('insemList').classList.remove('hidden');document.getElementById('insemDetail').classList.add('hidden');renderPlanilhas('inseminacao')}if(id==='pageMedicacao')renderMedDirect();if(id==='pageAlimentacao')renderAliDirect();if(id==='pageRelatorios')populateReportSources()}
 
 // ========== MODAL ==========
-let currentType='';let editPlanId=null;let editAniId=null;let currentPlanId=null;
-function openModal(id,type){if(type)currentType=type;document.getElementById(id).classList.add('show');
-  if(id==='aliAnimalModal')populateAliAnimalSelect();
-  if(id==='medAnimalModal')populateMedSelect();
-  if(id==='insemAnimalModal')populateInsemSelect();
-  if(id==='animalModal'&&!editAniId){document.getElementById('animalModalTitle').textContent='Adicionar Animal';initAnimalForm()}
-  if(id==='planilhaModal'&&!editPlanId)document.getElementById('planilhaModalTitle').textContent='Nova Planilha';
-}
-function closeModal(id){document.getElementById(id).classList.remove('show');editPlanId=null;editAniId=null;tempAliAnimals=[];document.getElementById(id).querySelectorAll('input:not([type=file]):not([disabled]):not([type=checkbox]),textarea').forEach(el=>el.value='');document.getElementById(id).querySelectorAll('select').forEach(el=>el.selectedIndex=0);if(id==='aliAnimalModal'){const as=document.getElementById('aliSelectedAnimals');if(as)as.innerHTML='';document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);const df=document.getElementById('dietDetailFields');if(df)df.innerHTML='';const cp=document.getElementById('aliCostPreview');if(cp)cp.innerHTML=''}}
+function openModal(id){document.getElementById(id).classList.add('show');if(id==='animalModal'&&!editAniId){document.getElementById('animalModalTitle').textContent='Adicionar Animal';initAnimalForm();populateLoteSelect('animalLote')}if(id==='loteModal'&&!editLoteId)document.getElementById('loteModalTitle').textContent='Novo Lote';if(id==='medAnimalModal'){populateMedLoteSelect();populateMedSelect();medMode='lote';setMedMode('lote')}if(id==='aliAnimalModal'){populateAliLoteSelect();populateAliAnimalSelect2();aliMode='lote';setAliMode('lote')}if(id==='insemAnimalModal')populateInsemSelect()}
+function closeModal(id){document.getElementById(id).classList.remove('show');editAniId=null;editLoteId=null;tempMedAnimals=[];tempAliAnimals=[];document.getElementById(id).querySelectorAll('input:not([type=file]):not([disabled]):not([type=checkbox]),textarea').forEach(el=>el.value='');document.getElementById(id).querySelectorAll('select').forEach(el=>el.selectedIndex=0);if(id==='aliAnimalModal'){const as=document.getElementById('aliSelectedAnimals');if(as)as.innerHTML='';document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);const df=document.getElementById('dietDetailFields');if(df)df.innerHTML='';const cp=document.getElementById('aliCostPreview');if(cp)cp.innerHTML='';const la=document.getElementById('aliLoteAnimals');if(la)la.innerHTML=''}if(id==='medAnimalModal'){const la=document.getElementById('medLoteAnimals');if(la)la.innerHTML=''}}
 
-// ========== ANIMAL FORM CONDITIONALS ==========
-function onSexoChange(){
-  const sexo=document.getElementById('animalSexo').value;
-  const catSel=document.getElementById('animalCat');
-  catSel.innerHTML='';
-  if(sexo==='Macho'){
-    ['Bezerro','Garrote','Boi','Touro'].forEach(o=>{catSel.innerHTML+=`<option value="${o}">${o}</option>`});
-  } else {
-    ['Bezerra','Novilha','Vaca seca','Vaca em lactação'].forEach(o=>{catSel.innerHTML+=`<option value="${o}">${o}</option>`});
-  }
-  onCatChange();
-}
-function onCatChange(){
-  const sexo=document.getElementById('animalSexo').value;
-  const cat=document.getElementById('animalCat').value;
-  const sitSel=document.getElementById('animalSit');
-  if(sexo==='Macho'||cat==='Bezerra'){
-    sitSel.innerHTML='<option value="Não se aplica">Não se aplica</option>';
-    sitSel.disabled=true;
-  } else {
-    sitSel.innerHTML='';
-    ['Anestro','Vazia','Prenha'].forEach(o=>{sitSel.innerHTML+=`<option value="${o}">${o}</option>`});
-    sitSel.disabled=false;
-  }
-  onSitChange();
-}
-function onSitChange(){
-  updateFieldVisibility();
-}
-function updateFieldVisibility(){
-  const sexo=document.getElementById('animalSexo').value;
-  const cat=document.getElementById('animalCat').value;
-  const sit=document.getElementById('animalSit').value;
-  // Esconder Leite quando: macho, bezerro, bezerra ou anestro
-  const hideLeite=(sexo==='Macho'||cat==='Bezerro'||cat==='Bezerra'||sit==='Anestro');
-  document.getElementById('leiteGroup').style.display=hideLeite?'none':'block';
-  if(hideLeite)document.getElementById('animalLeite').value='';
-  // Mostrar Último Parto quando: fêmea + (Novilha/Vaca seca/Vaca em lactação) + (Vazia/Prenha)
-  const showParto=(sexo==='Fêmea'&&(cat==='Novilha'||cat==='Vaca seca'||cat==='Vaca em lactação')&&(sit==='Vazia'||sit==='Prenha'));
-  document.getElementById('partoGroup').style.display=showParto?'block':'none';
-  if(!showParto)document.getElementById('animalUltimoParto').value='';
-}
-function initAnimalForm(){
-  onSexoChange();
-}
+// ========== LOTES ==========
+function populateLoteSelect(selId){const sel=document.getElementById(selId);if(!sel)return;const prev=sel.value;sel.innerHTML='<option value="">Selecione...</option>';DB.lotes.forEach(l=>{sel.innerHTML+=`<option value="${l.id}">${l.name} (${l.animals.length})</option>`});if(prev)sel.value=prev}
+function saveLote(){const name=document.getElementById('loteNome').value.trim();if(!name)return toast('Digite o nome do lote','error');if(editLoteId){const l=DB.lotes.find(x=>x.id===editLoteId);if(l)l.name=name}else DB.lotes.push({id:uid(),name,createdAt:Date.now(),animals:[]});save();closeModal('loteModal');renderLotes();toast('Lote salvo!')}
+function renderLotes(){const container=document.getElementById('lotesList');const sorted=[...DB.lotes].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));container.innerHTML=sorted.length?sorted.map(l=>`<div class="card glass2 anim-fade"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="card-title">${l.name}</div><div class="card-sub">${l.animals.length} animal(is)</div></div></div><div class="card-actions"><button class="edit-btn" onclick="event.stopPropagation();editLoteId='${l.id}';document.getElementById('loteNome').value='${l.name}';document.getElementById('loteModalTitle').textContent='Editar Lote';openModal('loteModal')">Editar</button><button class="del-btn" onclick="event.stopPropagation();delLote('${l.id}')">Excluir</button><button class="open-btn" onclick="openLoteDetail('${l.id}')">Abrir →</button></div></div>`).join(''):'<div class="empty-state"><p>Nenhum lote criado.<br>Toque no 📁 para criar um lote.</p></div>'}
+async function delLote(id){const ok=await showConfirm('Excluir este lote e todos os animais?','🗑️');if(!ok)return;DB.lotes=DB.lotes.filter(x=>x.id!==id);save();renderLotes();toast('Lote excluído')}
+function openLoteDetail(id){currentLoteId=id;document.getElementById('rebanhoMain').classList.add('hidden');document.getElementById('loteDetail').classList.remove('hidden');const l=DB.lotes.find(x=>x.id===id);document.getElementById('loteDetailTitle').textContent=l.name;if(document.getElementById('searchLote'))document.getElementById('searchLote').value='';renderLoteAnimals()}
+function backToLotes(){document.getElementById('loteDetail').classList.add('hidden');document.getElementById('rebanhoMain').classList.remove('hidden');renderLotes()}
+function openAnimalForLote(){editAniId=null;document.getElementById('animalModalTitle').textContent='Adicionar Animal';initAnimalForm();populateLoteSelect('animalLote');document.getElementById('animalLote').value=currentLoteId||'';openModal('animalModal')}
+function toggleLoteFilter(){document.getElementById('loteFilterBar').classList.toggle('hidden')}
 
-// ========== REBANHO DIRECT ==========
-function toggleRebanhoFilter(){document.getElementById('rebanhoFilterBar').classList.toggle('hidden')}
-function getAllRebanhoAnimals(){
-  // Merge old planilha-based animals + new direct animals
-  if(!DB.rebanhoDirect)DB.rebanhoDirect=[];
-  let all=[...DB.rebanhoDirect];
-  DB.rebanho.forEach(p=>p.animals.forEach(a=>{if(!all.find(x=>x.id===a.id))all.push(a)}));
-  return all;
-}
-function renderRebanhoDirect(){
-  const container=document.getElementById('rebanhoDirectList');
-  let animals=getAllRebanhoAnimals();
-  // Search
-  const q=(document.getElementById('searchRebanho')?.value||'').toLowerCase().trim();
-  if(q)animals=animals.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));
-  // Filters
-  const fs=document.getElementById('filterSexo')?.value||'';
-  const fc=document.getElementById('filterCat')?.value||'';
-  const fst=document.getElementById('filterSit')?.value||'';
-  if(fs)animals=animals.filter(a=>a.sexo===fs);
-  if(fc)animals=animals.filter(a=>a.cat===fc);
-  if(fst)animals=animals.filter(a=>a.sit===fst);
-  // Sort
-  animals.sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
-  if(!animals.length){container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5C3 7.5 4.5 6 6.5 6c.5-1.5 2-3 4-3h3c2 0 3.5 1.5 4 3C19.5 6 21 7.5 21 9.5c0 1.5-.8 2.8-2 3.5v5a2 2 0 01-2 2h-1l-.5 2h-1l-.5-2h-4l-.5 2h-1L9 20H8a2 2 0 01-2-2v-5C4.8 12.3 4 11 4 9.5z"/></svg><p>${q||fs||fc||fst?'Nenhum resultado encontrado.':'Nenhum animal cadastrado.<br>Toque no + para adicionar.'}</p></div>`;return}
-  container.innerHTML=animals.map((a,i)=>{
-    const insemStr=getInsemDate(a.num);
-    const insemLine=insemStr!=='Sem registro'?' · Insem: '+insemStr:'';
-    let partoLine='';
-    if(a.ultimoParto){const dias=Math.floor((Date.now()-new Date(a.ultimoParto+'T12:00').getTime())/(1000*60*60*24));partoLine=' · Parto: '+dias+' dias';}
-    return`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="badges"><span class="badge ${a.sexo==='Macho'?'badge-m':'badge-f'}">${a.sexo}</span><span class="badge badge-cat">${a.cat}</span><span class="badge badge-sit">${a.sit}</span></div><div class="detail">Raça: ${a.raca} · Peso: ${a.peso?a.peso+' kg':'—'} · Leite: ${a.leite?a.leite+' L/dia':'—'}</div><div class="detail">${insemLine}${partoLine}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editRebanhoAnimal('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delRebanhoAnimal('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`;
-  }).join('');
-}
-function saveAnimalDirect(){
-  if(!DB.rebanhoDirect)DB.rebanhoDirect=[];
-  const num=document.getElementById('animalNum').value.trim();
-  const nome=document.getElementById('animalNome').value.trim();
-  if(!num||!nome)return toast('Preencha nº e nome','error');
-  const d={num,nome,sexo:document.getElementById('animalSexo').value,cat:document.getElementById('animalCat').value,sit:document.getElementById('animalSit').value,raca:document.getElementById('animalRaca').value.trim()||'N/A',peso:document.getElementById('animalPeso').value||'',leite:document.getElementById('animalLeite').value||'',ultimoParto:document.getElementById('animalUltimoParto').value||''};
-  if(editAniId){const a=DB.rebanhoDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d);else{DB.rebanho.forEach(p=>{const ai=p.animals.find(x=>x.id===editAniId);if(ai)Object.assign(ai,d)})}}
-  else DB.rebanhoDirect.push({id:uid(),...d});
-  save();closeModal('animalModal');renderRebanhoDirect();toast('Animal salvo!');
-}
-function editRebanhoAnimal(aid){
-  let a=DB.rebanhoDirect.find(x=>x.id===aid);
-  if(!a){DB.rebanho.forEach(p=>{const f=p.animals.find(x=>x.id===aid);if(f)a=f})}
-  if(!a)return;editAniId=aid;
-  document.getElementById('animalNum').value=a.num;document.getElementById('animalNome').value=a.nome;
-  document.getElementById('animalSexo').value=a.sexo;onSexoChange();
-  document.getElementById('animalCat').value=a.cat;onCatChange();
-  document.getElementById('animalSit').value=a.sit;updateFieldVisibility();
-  document.getElementById('animalRaca').value=a.raca;
-  document.getElementById('animalPeso').value=a.peso||'';
-  document.getElementById('animalLeite').value=a.leite||'';
-  document.getElementById('animalUltimoParto').value=a.ultimoParto||'';
-  document.getElementById('animalModalTitle').textContent='Editar Animal';
-  openModal('animalModal');
-}
-async function delRebanhoAnimal(aid){
-  const ok=await showConfirm('Excluir este animal?','🗑️');if(!ok)return;
-  DB.rebanhoDirect=DB.rebanhoDirect.filter(x=>x.id!==aid);
-  DB.rebanho.forEach(p=>{p.animals=p.animals.filter(x=>x.id!==aid)});
-  save();renderRebanhoDirect();toast('Animal excluído');
-}
+function renderLoteAnimals(){const l=DB.lotes.find(x=>x.id===currentLoteId);if(!l)return;let animals=[...l.animals];const q=(document.getElementById('searchLote')?.value||'').toLowerCase().trim();if(q)animals=animals.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));const fs=document.getElementById('filterSexo')?.value||'';const fc=document.getElementById('filterCat')?.value||'';const fst=document.getElementById('filterSit')?.value||'';if(fs)animals=animals.filter(a=>a.sexo===fs);if(fc)animals=animals.filter(a=>a.cat===fc);if(fst)animals=animals.filter(a=>a.sit===fst);sortByNum(animals);const container=document.getElementById('loteAnimals');if(!animals.length){container.innerHTML=`<div class="empty-state"><p>${q||fs||fc||fst?'Nenhum resultado.':'Nenhum animal neste lote.<br>Toque no + para adicionar.'}</p></div>`;return}container.innerHTML=animals.map((a,i)=>{const insem=getInsemDate(a.num);const age=ageDays(a.dataNasc);const parto=a.ultimoParto?ageDays(a.ultimoParto)+' dias':'';return`<div class="animal-row" style="animation-delay:${i*0.03}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span>${age?`<span style="font-size:.68rem;color:var(--text3);margin-left:6px">${age} dias</span>`:''}</div><div class="badges"><span class="badge ${a.sexo==='Macho'?'badge-m':'badge-f'}">${a.sexo}</span><span class="badge badge-cat">${a.cat}</span><span class="badge badge-sit">${a.sit}</span></div><div class="detail">Raça: ${a.raca||'—'} · Peso: ${a.peso?a.peso+'kg':'—'}${a.leite?' · Leite: '+a.leite+'L/dia':''}${a.nomeMae?' · Mãe: '+a.nomeMae:''}${a.nomePai?' · Pai: '+a.nomePai:''}</div><div class="detail">${insem?'Insem: '+insem:''}${parto?' · Parto: '+parto:''}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimalInLote('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimalFromLote('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`}).join('')}
 
-// ========== PLANILHA CRUD ==========
-function planilhaHTML(type,p){
-  const dateStr=p.createdAt?new Date(p.createdAt).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-  return`<div class="card glass2 anim-fade"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="card-title">${p.name}</div><div class="card-sub">${p.animals.length} registro(s)${dateStr?' · Criada em '+dateStr:''}</div></div></div><div class="card-actions"><button class="edit-btn" onclick="event.stopPropagation();editPlan('${type}','${p.id}')">Editar</button><button class="del-btn" onclick="event.stopPropagation();delPlan('${type}','${p.id}')">Excluir</button><button class="open-btn" onclick="openDetail('${type}','${p.id}')">Abrir →</button></div></div>`;
-}
-function renderPlanilhas(type){
-  const map={rebanho:'rebanhoPlanilhas',inseminacao:'insemPlanilhas',medicacao:'medPlanilhas',alimentacao:'aliPlanilhas'};
-  const el=document.getElementById(map[type]);
-  // Sort newest first
-  const sorted=[...DB[type]].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  el.innerHTML=sorted.length?sorted.map(p=>planilhaHTML(type,p)).join(''):'<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><p>Nenhuma planilha criada.<br>Toque no + para começar.</p></div>';
-}
-function savePlanilha(){const name=document.getElementById('planilhaNome').value.trim();if(!name)return toast('Digite o nome','error');if(editPlanId){const p=DB[currentType].find(x=>x.id===editPlanId);if(p)p.name=name}else DB[currentType].push({id:uid(),name,animals:[],createdAt:Date.now()});save();closeModal('planilhaModal');renderPlanilhas(currentType);toast('Planilha salva!')}
-function editPlan(type,id){currentType=type;editPlanId=id;const p=DB[type].find(x=>x.id===id);document.getElementById('planilhaNome').value=p.name;document.getElementById('planilhaModalTitle').textContent='Editar Planilha';openModal('planilhaModal',type)}
-async function delPlan(type,id){const ok=await showConfirm('Excluir esta planilha e todos os registros?','🗑️');if(!ok)return;DB[type]=DB[type].filter(x=>x.id!==id);save();renderPlanilhas(type);toast('Planilha excluída')}
+// ========== ANIMAL FORM ==========
+function onSexoChange(){const sexo=document.getElementById('animalSexo').value;const catSel=document.getElementById('animalCat');catSel.innerHTML='';if(sexo==='Macho'){['Bezerro','Garrote','Boi','Touro'].forEach(o=>{catSel.innerHTML+=`<option value="${o}">${o}</option>`})}else{['Bezerra','Novilha','Vaca seca','Vaca em lactação'].forEach(o=>{catSel.innerHTML+=`<option value="${o}">${o}</option>`})}onCatChange()}
+function onCatChange(){const sexo=document.getElementById('animalSexo').value;const cat=document.getElementById('animalCat').value;const sitSel=document.getElementById('animalSit');if(sexo==='Macho'||cat==='Bezerra'){sitSel.innerHTML='<option value="Não se aplica">Não se aplica</option>';sitSel.disabled=true}else{sitSel.innerHTML='';['Anestro','Vazia','Prenha'].forEach(o=>{sitSel.innerHTML+=`<option value="${o}">${o}</option>`});sitSel.disabled=false}onSitChange()}
+function onSitChange(){updateFieldVisibility()}
+function updateFieldVisibility(){const sexo=document.getElementById('animalSexo').value;const cat=document.getElementById('animalCat').value;const sit=document.getElementById('animalSit').value;const hideLeite=(sexo==='Macho'||cat==='Bezerro'||cat==='Bezerra'||sit==='Anestro');document.getElementById('leiteGroup').style.display=hideLeite?'none':'block';if(hideLeite)document.getElementById('animalLeite').value='';const showParto=(sexo==='Fêmea'&&(cat==='Novilha'||cat==='Vaca seca'||cat==='Vaca em lactação')&&(sit==='Vazia'||sit==='Prenha'));document.getElementById('partoGroup').style.display=showParto?'block':'none';if(!showParto)document.getElementById('animalUltimoParto').value=''}
+function initAnimalForm(){onSexoChange();onOrigemChange()}
+function onOrigemChange(){const origem=document.getElementById('animalOrigem').value;document.getElementById('paiMaeNascido').classList.toggle('hidden',origem!=='Nascido');document.getElementById('paiMaeComprado').classList.toggle('hidden',origem!=='Comprado');if(origem==='Nascido')populateMaePaiSelects()}
+function populateMaePaiSelects(){const all=getAllAnimals();const maeSel=document.getElementById('animalMaeSelect');const paiSel=document.getElementById('animalPaiSelect');const prevMae=maeSel.value;const prevPai=paiSel.value;maeSel.innerHTML='<option value="">Selecione...</option>';paiSel.innerHTML='<option value="">Selecione...</option>';sortByNum(all.filter(a=>a.sexo==='Fêmea')).forEach(a=>{maeSel.innerHTML+=`<option value="${a.nome}">#${a.num} - ${a.nome}</option>`});/* Pais: machos do rebanho + touros da inseminação */const pais=new Set();sortByNum(all.filter(a=>a.sexo==='Macho')).forEach(a=>{paiSel.innerHTML+=`<option value="${a.nome}">#${a.num} - ${a.nome}</option>`;pais.add(a.nome)});DB.inseminacao.forEach(p=>p.animals.forEach(a=>{if(a.touro&&!pais.has(a.touro)){paiSel.innerHTML+=`<option value="${a.touro}">🧬 ${a.touro} (insem.)</option>`;pais.add(a.touro)}}));if(prevMae)maeSel.value=prevMae;if(prevPai)paiSel.value=prevPai}
 
-// ========== DETAIL VIEW ==========
-function openDetail(type,id){
-  currentPlanId=id;currentType=type;
-  const listId={rebanho:'rebanhoList',inseminacao:'insemList',medicacao:'medList',alimentacao:'aliList'}[type];
-  const detId={rebanho:'rebanhoDetail',inseminacao:'insemDetail',medicacao:'medDetail',alimentacao:'aliDetail'}[type];
-  const titleId={rebanho:'rebanhoDetailTitle',inseminacao:'insemDetailTitle',medicacao:'medDetailTitle',alimentacao:'aliDetailTitle'}[type];
-  const searchId={rebanho:'searchRebanho',inseminacao:'searchInseminacao',medicacao:'searchMedicacao',alimentacao:'searchAlimentacao'}[type];
-  document.getElementById(listId).classList.add('hidden');document.getElementById(detId).classList.remove('hidden');
-  const p=DB[type].find(x=>x.id===id);
-  document.getElementById(titleId).textContent=p.name;
-  // Clear search on open
-  const searchEl=document.getElementById(searchId);if(searchEl)searchEl.value='';
-  renderAnimals(type);
-}
-function backToList(type){
-  const listId={rebanho:'rebanhoList',inseminacao:'insemList',medicacao:'medList',alimentacao:'aliList'}[type];
-  const detId={rebanho:'rebanhoDetail',inseminacao:'insemDetail',medicacao:'medDetail',alimentacao:'aliDetail'}[type];
-  document.getElementById(detId).classList.add('hidden');document.getElementById(listId).classList.remove('hidden');renderPlanilhas(type);
-}
+function saveAnimalToLote(){const num=document.getElementById('animalNum').value.trim();const nome=document.getElementById('animalNome').value.trim();const loteId=document.getElementById('animalLote').value;if(!num||!nome)return toast('Preencha nº e nome','error');if(!loteId)return toast('Selecione um lote','error');const origem=document.getElementById('animalOrigem').value;let nomeMae='',nomePai='';if(origem==='Nascido'){nomeMae=document.getElementById('animalMaeSelect').value||'';nomePai=document.getElementById('animalPaiSelect').value||''}else{nomeMae=document.getElementById('animalNomeMae').value.trim();nomePai=document.getElementById('animalNomePai').value.trim()}const d={num,nome,origem,dataNasc:document.getElementById('animalDataNasc').value||'',sexo:document.getElementById('animalSexo').value,cat:document.getElementById('animalCat').value,sit:document.getElementById('animalSit').value,raca:document.getElementById('animalRaca').value||'',nomeMae,nomePai,peso:document.getElementById('animalPeso').value||'',leite:document.getElementById('animalLeite').value||'',ultimoParto:document.getElementById('animalUltimoParto').value||''};if(editAniId){/* find and update in any lote, move if lote changed */let found=false;DB.lotes.forEach(l=>{const idx=l.animals.findIndex(x=>x.id===editAniId);if(idx!==-1){if(l.id===loteId){Object.assign(l.animals[idx],d);found=true}else{const[removed]=l.animals.splice(idx,1);Object.assign(removed,d);const target=DB.lotes.find(x=>x.id===loteId);if(target){target.animals.push(removed);found=true}}}});if(!found)toast('Erro ao salvar','error')}else{const lote=DB.lotes.find(x=>x.id===loteId);if(lote)lote.animals.push({id:uid(),...d})}save();closeModal('animalModal');if(currentLoteId)renderLoteAnimals();renderLotes();toast('Animal salvo!')}
+function editAnimalInLote(aid){let a=null;let srcLoteId='';DB.lotes.forEach(l=>{const f=l.animals.find(x=>x.id===aid);if(f){a=f;srcLoteId=l.id}});if(!a)return;editAniId=aid;populateLoteSelect('animalLote');document.getElementById('animalNum').value=a.num;document.getElementById('animalNome').value=a.nome;document.getElementById('animalOrigem').value=a.origem||'Nascido';onOrigemChange();document.getElementById('animalDataNasc').value=a.dataNasc||'';document.getElementById('animalLote').value=srcLoteId;document.getElementById('animalSexo').value=a.sexo;onSexoChange();document.getElementById('animalCat').value=a.cat;onCatChange();document.getElementById('animalSit').value=a.sit;updateFieldVisibility();document.getElementById('animalRaca').value=a.raca||'';if(a.origem==='Comprado'){document.getElementById('animalNomeMae').value=a.nomeMae||'';document.getElementById('animalNomePai').value=a.nomePai||''}else{document.getElementById('animalMaeSelect').value=a.nomeMae||'';document.getElementById('animalPaiSelect').value=a.nomePai||''}document.getElementById('animalPeso').value=a.peso||'';document.getElementById('animalLeite').value=a.leite||'';document.getElementById('animalUltimoParto').value=a.ultimoParto||'';document.getElementById('animalModalTitle').textContent='Editar Animal';openModal('animalModal')}
+async function delAnimalFromLote(aid){const ok=await showConfirm('Excluir este animal?','🗑️');if(!ok)return;DB.lotes.forEach(l=>{l.animals=l.animals.filter(x=>x.id!==aid)});save();renderLoteAnimals();toast('Animal excluído')}
 
-function getInsemDate(num){let d='';DB.inseminacao.forEach(p=>p.animals.forEach(a=>{if(a.num===num&&a.data>d)d=a.data}));return d?new Date(d+'T12:00').toLocaleDateString('pt-BR'):'Sem registro'}
+// ========== INSEMINAÇÃO ==========
+function renderPlanilhas(type){if(type!=='inseminacao')return;const el=document.getElementById('insemPlanilhas');const sorted=[...DB.inseminacao].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));el.innerHTML=sorted.length?sorted.map(p=>{const dateStr=p.createdAt?new Date(p.createdAt).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}):'';return`<div class="card glass2 anim-fade"><div class="card-title">${p.name}</div><div class="card-sub">${p.animals.length} registro(s)${dateStr?' · '+dateStr:''}</div><div class="card-actions"><button class="edit-btn" onclick="event.stopPropagation();editPlanId='${p.id}';document.getElementById('planilhaNome').value='${p.name}';document.getElementById('planilhaModalTitle').textContent='Editar Planilha';openModal('planilhaModal')">Editar</button><button class="del-btn" onclick="event.stopPropagation();delPlan('${p.id}')">Excluir</button><button class="open-btn" onclick="openInsemDetail('${p.id}')">Abrir →</button></div></div>`}).join(''):'<div class="empty-state"><p>Nenhuma planilha criada.</p></div>'}
+let editPlanId=null;let currentPlanId=null;
+function savePlanilha(){const name=document.getElementById('planilhaNome').value.trim();if(!name)return toast('Digite o nome','error');if(editPlanId){const p=DB.inseminacao.find(x=>x.id===editPlanId);if(p)p.name=name}else DB.inseminacao.push({id:uid(),name,animals:[],createdAt:Date.now()});save();closeModal('planilhaModal');editPlanId=null;renderPlanilhas('inseminacao');toast('Planilha salva!')}
+async function delPlan(id){const ok=await showConfirm('Excluir esta planilha?','🗑️');if(!ok)return;DB.inseminacao=DB.inseminacao.filter(x=>x.id!==id);save();renderPlanilhas('inseminacao');toast('Excluída')}
+function openInsemDetail(id){currentPlanId=id;document.getElementById('insemList').classList.add('hidden');document.getElementById('insemDetail').classList.remove('hidden');const p=DB.inseminacao.find(x=>x.id===id);document.getElementById('insemDetailTitle').textContent=p.name;if(document.getElementById('searchInseminacao'))document.getElementById('searchInseminacao').value='';renderAnimals('inseminacao')}
+function backToList(){document.getElementById('insemDetail').classList.add('hidden');document.getElementById('insemList').classList.remove('hidden');renderPlanilhas('inseminacao')}
+function renderAnimals(type){if(type!=='inseminacao')return;const p=DB.inseminacao.find(x=>x.id===currentPlanId);if(!p)return;const container=document.getElementById('insemAnimals');let animals=[...p.animals];const q=(document.getElementById('searchInseminacao')?.value||'').toLowerCase().trim();if(q)animals=animals.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));sortByNum(animals);if(!animals.length){container.innerHTML=`<div class="empty-state"><p>${q?'Nenhum resultado.':'Nenhum registro.'}</p></div>`;return}container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.03}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">Data: ${a.data?new Date(a.data+'T12:00').toLocaleDateString('pt-BR'):'-'} · Touro: ${a.touro||'-'}</div><div class="badges"><span class="badge badge-muco">Muco: ${a.muco}</span><span class="badge badge-cat">${a.tempo||'-'}</span></div>${a.obs?`<div class="detail" style="font-style:italic;margin-top:3px">${a.obs}</div>`:''}</div><div class="animal-actions"><button class="edit-btn" onclick="editInsemAnimal('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delInsemAnimal('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('')}
+function populateInsemSelect(){const sel=document.getElementById('insemAnimalSelect');sel.innerHTML='<option value="">Selecione o animal...</option>';const eligible=getAllAnimals().filter(a=>a.sexo!=='Macho'&&a.cat!=='Bezerra'&&a.sit!=='Anestro');sortByNum(eligible);eligible.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`})}
+function saveInsemAnimal(){const p=DB.inseminacao.find(x=>x.id===currentPlanId);if(!p)return;const sel=document.getElementById('insemAnimalSelect');let num,nome;if(sel.value){[num,nome]=sel.value.split('|')}else if(editAniId){const ex=p.animals.find(x=>x.id===editAniId);if(ex){num=ex.num;nome=ex.nome}}if(!num)return toast('Selecione um animal','error');const d={num,nome,data:document.getElementById('insemData').value,tempo:document.getElementById('insemTempo').value,touro:document.getElementById('insemTouro').value,muco:document.getElementById('insemMuco').value,obs:document.getElementById('insemObs').value};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('insemAnimalModal');renderAnimals('inseminacao');toast('Inseminação salva!')}
+function editInsemAnimal(aid){const p=DB.inseminacao.find(x=>x.id===currentPlanId);const a=p.animals.find(x=>x.id===aid);if(!a)return;editAniId=aid;populateInsemSelect();document.getElementById('insemAnimalSelect').value=a.num+'|'+a.nome;document.getElementById('insemData').value=a.data;document.getElementById('insemTempo').value=a.tempo;document.getElementById('insemTouro').value=a.touro;document.getElementById('insemMuco').value=a.muco;document.getElementById('insemObs').value=a.obs;document.getElementById('insemAnimalModalTitle').textContent='Editar';openModal('insemAnimalModal')}
+async function delInsemAnimal(aid){const ok=await showConfirm('Excluir?','🗑️');if(!ok)return;const p=DB.inseminacao.find(x=>x.id===currentPlanId);p.animals=p.animals.filter(x=>x.id!==aid);save();renderAnimals('inseminacao');toast('Excluído')}
 
-function renderAnimals(type){
-  const p=DB[type].find(x=>x.id===currentPlanId);if(!p)return;
-  const container=document.getElementById({rebanho:'rebanhoAnimals',inseminacao:'insemAnimals',medicacao:'medAnimals',alimentacao:'aliAnimals'}[type]);
-  
-  // Search filter
-  const searchId={rebanho:'searchRebanho',inseminacao:'searchInseminacao',medicacao:'searchMedicacao',alimentacao:'searchAlimentacao'}[type];
-  const searchEl=document.getElementById(searchId);
-  const q=(searchEl?searchEl.value:'').toLowerCase().trim();
-  
-  let animals=p.animals;
-  if(q){
-    animals=animals.filter(a=>{
-      const num=(a.num||'').toLowerCase();
-      const nome=(a.nome||'').toLowerCase();
-      // For alimentacao, also search in linked animals
-      if(type==='alimentacao'){
-        const linked=(a.animais||[]).some(x=>(x.num||'').toLowerCase().includes(q)||(x.nome||'').toLowerCase().includes(q));
-        return num.includes(q)||nome.includes(q)||linked;
-      }
-      return num.includes(q)||nome.includes(q);
-    });
-  }
+// ========== MEDICAÇÃO (lote + individual) ==========
+let medMode='lote';let tempMedAnimals=[];
+function setMedMode(mode){medMode=mode;document.getElementById('medModeLote').classList.toggle('active',mode==='lote');document.getElementById('medModeIndiv').classList.toggle('active',mode==='individual');document.getElementById('medLoteSection').classList.toggle('hidden',mode!=='lote');document.getElementById('medIndivSection').classList.toggle('hidden',mode!=='individual')}
+function populateMedLoteSelect(){const sel=document.getElementById('medLoteSelect');sel.innerHTML='<option value="">Selecione o lote...</option>';DB.lotes.forEach(l=>{sel.innerHTML+=`<option value="${l.id}">${l.name} (${l.animals.length})</option>`})}
+function populateMedSelect(){const sel=document.getElementById('medAnimalSelect');sel.innerHTML='<option value="">Selecione o animal...</option>';const all=sortByNum(getAllAnimals().slice());all.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome} (${a.loteName})</option>`})}
+function loadMedLoteAnimals(){const lid=document.getElementById('medLoteSelect').value;const container=document.getElementById('medLoteAnimals');if(!lid){container.innerHTML='';tempMedAnimals=[];return}const l=DB.lotes.find(x=>x.id===lid);if(!l)return;tempMedAnimals=l.animals.map(a=>({num:a.num,nome:a.nome,included:true}));renderMedLoteList()}
+function renderMedLoteList(){const container=document.getElementById('medLoteAnimals');container.innerHTML=tempMedAnimals.map((a,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;margin-bottom:4px;background:${a.included?'rgba(78,232,152,0.1)':'rgba(255,87,87,0.08)'}"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;flex:1;font-size:.8rem;color:${a.included?'var(--g300)':'var(--danger)'}"><input type="checkbox" ${a.included?'checked':''} onchange="tempMedAnimals[${i}].included=this.checked;renderMedLoteList()" style="accent-color:var(--g500)">#${a.num} ${a.nome}</label></div>`).join('')}
+function saveMedAnimal(){let animalsToSave=[];if(medMode==='lote'){animalsToSave=tempMedAnimals.filter(a=>a.included);if(!animalsToSave.length)return toast('Selecione ao menos um animal','error')}else{const sel=document.getElementById('medAnimalSelect');if(!sel.value&&!editAniId)return toast('Selecione um animal','error');if(sel.value){const[num,nome]=sel.value.split('|');animalsToSave=[{num,nome}]}else if(editAniId){const ex=DB.medDirect.find(x=>x.id===editAniId);if(ex)animalsToSave=[{num:ex.num,nome:ex.nome}]}}const base={dataIni:document.getElementById('medDataIni').value,dataFim:document.getElementById('medDataFim').value,tipo:document.getElementById('medTipo').value,nomeMed:document.getElementById('medNomeMed').value,dosagem:document.getElementById('medDosagem').value};if(editAniId){const a=DB.medDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,{...base,num:animalsToSave[0].num,nome:animalsToSave[0].nome,medicamentos:base.tipo+' — '+base.nomeMed})}else{animalsToSave.forEach(an=>{DB.medDirect.push({id:uid(),num:an.num,nome:an.nome,...base,medicamentos:base.tipo+' — '+base.nomeMed})})}save();closeModal('medAnimalModal');renderMedDirect();toast('Medicação salva!')}
+function renderMedDirect(){const container=document.getElementById('medDirectList');const q=(document.getElementById('searchMedicacao')?.value||'').toLowerCase().trim();let items=[...DB.medDirect];if(q)items=items.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));sortByNum(items);if(!items.length){container.innerHTML=`<div class="empty-state"><p>${q?'Nenhum resultado.':'Nenhuma medicação registrada.'}</p></div>`;return}container.innerHTML=items.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.03}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">De ${a.dataIni?new Date(a.dataIni+'T12:00').toLocaleDateString('pt-BR'):'-'} até ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'-'}</div><div class="badges" style="margin-top:6px"><span class="badge badge-muco">${a.tipo||'—'}</span></div></div><div class="animal-actions"><button class="edit-btn" onclick="editMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="detail" style="margin-top:8px;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px"><strong>${a.nomeMed||'—'}</strong> · Dosagem: ${a.dosagem||'—'}</div></div>`).join('')}
+function editMedDirect(aid){const a=DB.medDirect.find(x=>x.id===aid);if(!a)return;editAniId=aid;setMedMode('individual');populateMedSelect();document.getElementById('medAnimalSelect').value=a.num+'|'+a.nome;document.getElementById('medDataIni').value=a.dataIni;document.getElementById('medDataFim').value=a.dataFim;document.getElementById('medTipo').value=a.tipo||'Vacina';document.getElementById('medNomeMed').value=a.nomeMed||'';document.getElementById('medDosagem').value=a.dosagem||'';document.getElementById('medAnimalModalTitle').textContent='Editar Medicação';openModal('medAnimalModal')}
+async function delMedDirect(aid){const ok=await showConfirm('Excluir?','🗑️');if(!ok)return;DB.medDirect=DB.medDirect.filter(x=>x.id!==aid);save();renderMedDirect();toast('Excluído')}
 
-  // Sort by animal number ascending
-  animals.sort((a,b)=>{
-    const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;
-    if(na!==nb)return na-nb;
-    return(a.num||'').localeCompare(b.num||'');
-  });
-
-  if(!animals.length){
-    const msg=q?'Nenhum resultado para "'+q+'"':'Nenhum registro.<br>Toque no + para adicionar.';
-    container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">${q?'<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>':'<path d="M12 2C6.48 2 2 6 2 10.5c0 3.03 2.16 5.66 5.25 6.8L6 22l3.5-2.5L12 22l2.5-2.5L18 22l-1.25-4.7C19.84 16.16 22 13.53 22 10.5 22 6 17.52 2 12 2z"/>'}</svg><p>${msg}</p></div>`;
-    if(type==='alimentacao')document.getElementById('aliCostGrid').innerHTML='';return;
-  }
-
-  if(type==='rebanho'){
-    container.innerHTML=animals.map((a,i)=>{
-      const insemStr=getInsemDate(a.num);
-      const insemLine=insemStr!=='Sem registro'?` · Insem: ${insemStr}`:'';
-      let partoLine='';
-      if(a.ultimoParto){const dias=Math.floor((Date.now()-new Date(a.ultimoParto+'T12:00').getTime())/(1000*60*60*24));partoLine=` · Parto: ${dias} dias`;}
-      return`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="badges"><span class="badge ${a.sexo==='Macho'?'badge-m':'badge-f'}">${a.sexo}</span><span class="badge badge-cat">${a.cat}</span><span class="badge badge-sit">${a.sit}</span></div><div class="detail">Raça: ${a.raca} · Peso: ${a.peso?a.peso+' kg':'—'} · Leite: ${a.leite?a.leite+' L/dia':'—'}</div><div class="detail">${insemLine}${partoLine}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('rebanho','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`;
-    }).join('');
-  } else if(type==='inseminacao'){
-    container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">Data: ${a.data?new Date(a.data+'T12:00').toLocaleDateString('pt-BR'):'-'} · Touro: ${a.touro||'-'}</div><div class="badges"><span class="badge badge-muco">Muco: ${a.muco}</span><span class="badge badge-cat">${a.tempo||'-'}</span></div>${a.obs?`<div class="detail" style="font-style:italic;margin-top:3px">${a.obs}</div>`:''}</div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('inseminacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('inseminacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div>`).join('');
-  } else if(type==='medicacao'){
-    container.innerHTML=animals.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">De ${a.dataIni?new Date(a.dataIni+'T12:00').toLocaleDateString('pt-BR'):'-'} até ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'-'}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('medicacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('medicacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="detail" style="margin-top:8px;white-space:pre-wrap;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px">${a.medicamentos}</div></div>`).join('');
-  } else if(type==='alimentacao'){
-    let totalC=0,totalA=0;animals.forEach(a=>{totalC+=parseFloat(a.valor||0);totalA+=(a.animais||[]).length});
-    document.getElementById('aliCostGrid').innerHTML=`<div class="cost-box glass3"><div class="val">R$ ${totalC.toFixed(2)}</div><div class="lbl">Valor/kg Total</div></div><div class="cost-box glass3"><div class="val">${totalA}</div><div class="lbl">Animais</div></div>`;
-    container.innerHTML=animals.map((a,i)=>{
-      const dietaStr=(a.dietas||[]).map(d=>`<span class="badge badge-cat" style="margin:2px">${d.tipo}${d.qtd?' · '+d.qtd+' kg':''}</span>`).join('')||`<span class="badge badge-cat">${a.racao||'—'}</span>`;
-      return `<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--g400);font-size:.9rem">Dieta</div><div class="detail">R$ ${parseFloat(a.valor||0).toFixed(2)} /kg</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAnimal('alimentacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAnimal('alimentacao','${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">${dietaStr}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${(a.animais||[]).map(x=>`<span class="badge badge-m" style="margin:1px">#${x.num} ${x.nome}</span>`).join('')}</div></div>`;
-    }).join('');
-  }
-}
-async function delAnimal(type,aid){const ok=await showConfirm('Excluir este registro?','🗑️');if(!ok)return;const p=DB[type].find(x=>x.id===currentPlanId);p.animals=p.animals.filter(x=>x.id!==aid);save();renderAnimals(type);toast('Registro excluído')}
-
-// ========== SAVE ANIMALS ==========
-function saveAnimal(){const p=DB.rebanho.find(x=>x.id===currentPlanId);if(!p)return;const num=document.getElementById('animalNum').value.trim();const nome=document.getElementById('animalNome').value.trim();if(!num||!nome)return toast('Preencha nº e nome','error');const d={num,nome,sexo:document.getElementById('animalSexo').value,cat:document.getElementById('animalCat').value,sit:document.getElementById('animalSit').value,raca:document.getElementById('animalRaca').value.trim()||'N/A',peso:document.getElementById('animalPeso').value||'',leite:document.getElementById('animalLeite').value||'',ultimoParto:document.getElementById('animalUltimoParto').value||''};if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});save();closeModal('animalModal');renderAnimals('rebanho');toast('Animal salvo!')}
-function populateInsemSelect(){
-  const sel=document.getElementById('insemAnimalSelect');
-  sel.innerHTML='<option value="">Selecione o animal...</option>';
-  const eligible=getAllRebanhoAnimals().filter(a=>a.sexo!=='Macho'&&a.cat!=='Bezerra'&&a.sit!=='Anestro');
-  eligible.sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
-  eligible.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`});
-}
-function saveInsemAnimal(){const p=DB.inseminacao.find(x=>x.id===currentPlanId);if(!p)return;
-  const sel=document.getElementById('insemAnimalSelect');
-  let num,nome;
-  if(sel.value){const parts=sel.value.split('|');num=parts[0];nome=parts[1];}
-  else if(editAniId){const existing=p.animals.find(x=>x.id===editAniId);if(existing){num=existing.num;nome=existing.nome;}}
-  if(!num)return toast('Selecione um animal','error');
-  const d={num,nome,data:document.getElementById('insemData').value,tempo:document.getElementById('insemTempo').value,touro:document.getElementById('insemTouro').value,muco:document.getElementById('insemMuco').value,obs:document.getElementById('insemObs').value};
-  if(editAniId){const a=p.animals.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else p.animals.push({id:uid(),...d});
-  save();closeModal('insemAnimalModal');renderAnimals('inseminacao');toast('Inseminação salva!');
-}
-function saveMedAnimal(){
-  const sel=document.getElementById('medAnimalSelect');
-  if(!sel.value&&!editAniId)return toast('Selecione um animal','error');
-  let num,nome;
-  if(sel.value){const parts=sel.value.split('|');num=parts[0];nome=parts[1];}
-  else if(editAniId){const existing=DB.medDirect.find(x=>x.id===editAniId);if(existing){num=existing.num;nome=existing.nome;}}
-  if(!num)return toast('Selecione um animal','error');
-  const d={num,nome,dataIni:document.getElementById('medDataIni').value,dataFim:document.getElementById('medDataFim').value,tipo:document.getElementById('medTipo').value,nomeMed:document.getElementById('medNomeMed').value,dosagem:document.getElementById('medDosagem').value,medicamentos:document.getElementById('medTipo').value+' — '+document.getElementById('medNomeMed').value};
-  if(editAniId){const a=DB.medDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
-  else DB.medDirect.push({id:uid(),...d});
-  save();closeModal('medAnimalModal');renderMedDirect();toast('Medicação salva!');
-}
-function populateMedSelect(){
-  const sel=document.getElementById('medAnimalSelect');
-  sel.innerHTML='<option value="">Selecione o animal...</option>';
-  const all=getAllRebanhoAnimals().slice().sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
-  all.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`});
-}
-function renderMedDirect(){
-  if(!DB.medDirect)DB.medDirect=[];
-  const container=document.getElementById('medDirectList');
-  const q=(document.getElementById('searchMedicacao')?document.getElementById('searchMedicacao').value:'').toLowerCase().trim();
-  let items=DB.medDirect;
-  if(q)items=items.filter(a=>(a.num||'').toLowerCase().includes(q)||(a.nome||'').toLowerCase().includes(q));
-  items=[...items].sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
-  if(!items.length){container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 3h6v4H9zM4 7h16v14H4z"/><path d="M12 11v6M9 14h6"/></svg><p>${q?'Nenhum resultado para "'+q+'"':'Nenhuma medicação registrada.<br>Toque no + para adicionar.'}</p></div>`;return}
-  container.innerHTML=items.map((a,i)=>`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="animal-info"><div><span class="num">#${a.num}</span><span class="name-text">${a.nome}</span></div><div class="detail">De ${a.dataIni?new Date(a.dataIni+'T12:00').toLocaleDateString('pt-BR'):'-'} até ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'-'}</div><div class="badges" style="margin-top:6px"><span class="badge badge-muco">${a.tipo||'—'}</span></div></div><div class="animal-actions"><button class="edit-btn" onclick="editMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delMedDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div class="detail" style="margin-top:8px;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px"><strong>${a.nomeMed||'—'}</strong> · Dosagem: ${a.dosagem||'—'}</div></div>`).join('');
-}
-function editMedDirect(aid){
-  const a=DB.medDirect.find(x=>x.id===aid);if(!a)return;editAniId=aid;
-  populateMedSelect();
-  document.getElementById('medAnimalSelect').value=a.num+'|'+a.nome;
-  document.getElementById('medDataIni').value=a.dataIni;document.getElementById('medDataFim').value=a.dataFim;
-  document.getElementById('medTipo').value=a.tipo||'Vacina';
-  document.getElementById('medNomeMed').value=a.nomeMed||'';
-  document.getElementById('medDosagem').value=a.dosagem||'';
-  document.getElementById('medAnimalModalTitle').textContent='Editar Medicação';
-  openModal('medAnimalModal');
-}
-async function delMedDirect(aid){const ok=await showConfirm('Excluir esta medicação?','🗑️');if(!ok)return;DB.medDirect=DB.medDirect.filter(x=>x.id!==aid);save();renderMedDirect();toast('Medicação excluída')}
-
-function populateAliAnimalSelect(){
-  const sel=document.getElementById('aliAnimalSelect');
-  sel.innerHTML='<option value="">Selecione o animal...</option>';
-  const all=getAllRebanhoAnimals().slice().sort((a,b)=>{const na=parseInt(a.num)||0;const nb=parseInt(b.num)||0;return na!==nb?na-nb:(a.num||'').localeCompare(b.num||'')});
-  all.forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome}</option>`});
-}
-let tempAliAnimals=[];
-function addAliAnimalNew(){
-  const sel=document.getElementById('aliAnimalSelect');if(!sel.value)return;
-  const[num,nome]=sel.value.split('|');
-  if(tempAliAnimals.find(a=>a.num===num))return toast('Já adicionado','info');
-  tempAliAnimals.push({num,nome});renderTempAliAnimals();sel.selectedIndex=0;calcAliCost();
-}
-function renderTempAliAnimals(){
-  document.getElementById('aliSelectedAnimals').innerHTML=tempAliAnimals.map((a,i)=>`<span class="badge badge-cat" style="cursor:pointer;padding:5px 12px" onclick="tempAliAnimals.splice(${i},1);renderTempAliAnimals();calcAliCost()">#${a.num} ${a.nome} ✕</span>`).join('');
-}
-function saveAliDirect(){
-  if(!DB.aliDirect)DB.aliDirect=[];
-  const dietas=getSelectedDiets2();
-  if(!dietas.length)return toast('Selecione ao menos um tipo de dieta','error');
-  if(!tempAliAnimals.length&&!editAniId)return toast('Adicione ao menos um animal','error');
-  const numAni=tempAliAnimals.length;
-  let totalCost=0;
-  dietas.forEach(d=>{totalCost+=parseFloat(d.valorKg||0)*parseFloat(d.kg||0)*numAni});
-  const d={dietas,animais:[...tempAliAnimals],numAnimais:numAni,custoTotal:totalCost};
-  if(editAniId){const a=DB.aliDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
-  else DB.aliDirect.push({id:uid(),createdAt:Date.now(),...d});
-  tempAliAnimals=[];save();closeModal('aliAnimalModal');renderAliDirect();toast('Alimentação salva!');
-}
-
-// New diet fields with value per kg + kg consumed per animal
-function onDietChange2(){
-  const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]');
-  const container=document.getElementById('dietDetailFields');
-  container.innerHTML='';
-  checks.forEach(cb=>{
-    if(cb.checked){
-      container.innerHTML+=`<div class="diet-qtd" style="flex-direction:column;gap:6px;padding:12px 14px"><div class="diet-label" style="min-width:auto;margin-bottom:4px">${cb.value}</div><div class="flex-row"><div class="form-group" style="margin-bottom:0"><label style="font-size:.65rem">Valor/kg (R$)</label><input class="form-input" id="dietVal_${cb.value}" type="number" step="0.01" placeholder="R$/kg" style="padding:9px 12px;font-size:.82rem" oninput="calcAliCost()"></div><div class="form-group" style="margin-bottom:0"><label style="font-size:.65rem">Consumo/animal (kg)</label><input class="form-input" id="dietKg_${cb.value}" type="number" step="0.1" placeholder="kg/animal" style="padding:9px 12px;font-size:.82rem" oninput="calcAliCost()"></div></div></div>`;
-    }
-  });
-  calcAliCost();
-}
-function calcAliCost(){
-  const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]:checked');
-  const numAnimais=tempAliAnimals.length;
-  let totalCost=0;
-  const preview=document.getElementById('aliCostPreview');
-  let lines='';
-  checks.forEach(cb=>{
-    const val=parseFloat(document.getElementById('dietVal_'+cb.value)?.value||0);
-    const kgPerAnimal=parseFloat(document.getElementById('dietKg_'+cb.value)?.value||0);
-    const kgTotal=kgPerAnimal*numAnimais;
-    const cost=val*kgTotal;
-    totalCost+=cost;
-    if(val||kgPerAnimal)lines+=`<div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text2);padding:2px 0"><span>${cb.value}: ${kgPerAnimal}kg × ${numAnimais} animais × R$${val.toFixed(2)}</span><span>R$ ${cost.toFixed(2)}</span></div>`;
-  });
-  if(lines||numAnimais)preview.innerHTML=`<div class="glass3" style="border-radius:var(--rx);padding:12px;margin-top:4px"><div style="font-size:.72rem;color:var(--text3);margin-bottom:6px">${numAnimais} animal(is) selecionado(s)</div>${lines}<div style="display:flex;justify-content:space-between;font-size:.9rem;font-weight:700;color:var(--g400);border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:6px"><span>Custo Total</span><span>R$ ${totalCost.toFixed(2)}</span></div></div>`;
-  else preview.innerHTML='';
-}
-function getSelectedDiets2(){
-  const diets=[];
-  document.querySelectorAll('#dietaChecks input[type=checkbox]:checked').forEach(cb=>{
-    const valEl=document.getElementById('dietVal_'+cb.value);
-    const kgEl=document.getElementById('dietKg_'+cb.value);
-    diets.push({tipo:cb.value,valorKg:valEl?valEl.value:'',kg:kgEl?kgEl.value:''});
-  });
-  return diets;
-}
-function saveAliDirect(){
-  if(!DB.aliDirect)DB.aliDirect=[];
-  const dietas=getSelectedDiets2();
-  if(!dietas.length)return toast('Selecione ao menos um tipo de dieta','error');
-  if(!tempAliAnimals.length&&!editAniId)return toast('Adicione ao menos um animal','error');
-  const numAni=editAniId&&!tempAliAnimals.length?(DB.aliDirect.find(x=>x.id===editAniId)?.animais||[]).length:tempAliAnimals.length;
-  const animais=tempAliAnimals.length?[...tempAliAnimals]:(editAniId?(DB.aliDirect.find(x=>x.id===editAniId)?.animais||[]):[]);
-  let totalCost=0;
-  dietas.forEach(d=>{totalCost+=parseFloat(d.valorKg||0)*parseFloat(d.kg||0)*animais.length});
-  const d={dietas,animais,numAnimais:animais.length,custoTotal:totalCost};
-  if(editAniId){const a=DB.aliDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}
-  else DB.aliDirect.push({id:uid(),createdAt:Date.now(),...d});
-  tempAliAnimals=[];save();closeModal('aliAnimalModal');renderAliDirect();toast('Alimentação salva!');
-}
-function renderAliDirect(){
-  if(!DB.aliDirect)DB.aliDirect=[];
-  const container=document.getElementById('aliDirectList');
-  const costGrid=document.getElementById('aliCostGrid');
-  const items=[...DB.aliDirect].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-  let totalGeral=0;items.forEach(a=>totalGeral+=parseFloat(a.custoTotal||0));
-  costGrid.innerHTML=items.length?`<div class="cost-box glass3"><div class="val">R$ ${totalGeral.toFixed(2)}</div><div class="lbl">Custo Total</div></div><div class="cost-box glass3"><div class="val">${items.length}</div><div class="lbl">Dietas</div></div>`:'';
-  if(!items.length){container.innerHTML='<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg><p>Nenhuma alimentação registrada.<br>Toque no + para adicionar.</p></div>';return}
-  container.innerHTML=items.map((a,i)=>{
-    const dietBadges=a.dietas.map(d=>`<span class="badge badge-cat" style="margin:2px">${d.tipo}: ${d.kg||0}kg × R$${parseFloat(d.valorKg||0).toFixed(2)}</span>`).join('');
-    const animalBadges=(a.animais||[]).map(x=>`<span class="badge badge-m" style="margin:1px">#${x.num} ${x.nome}</span>`).join('');
-    return`<div class="animal-row" style="animation-delay:${i*0.04}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--g400);font-size:.9rem">${a.numAnimais||0} animais</div><div class="detail">R$ ${parseFloat(a.custoTotal||0).toFixed(2)}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAliDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAliDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">${dietBadges}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${animalBadges}</div></div>`;
-  }).join('');
-}
-function editAliDirect(aid){
-  const a=DB.aliDirect.find(x=>x.id===aid);if(!a)return;editAniId=aid;
-  document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);
-  a.dietas.forEach(d=>{const cb=document.querySelector('#dietaChecks input[value="'+d.tipo+'"]');if(cb)cb.checked=true});
-  onDietChange2();
-  a.dietas.forEach(d=>{
-    const ve=document.getElementById('dietVal_'+d.tipo);if(ve)ve.value=d.valorKg||'';
-    const ke=document.getElementById('dietKg_'+d.tipo);if(ke)ke.value=d.kg||'';
-  });
-  tempAliAnimals=[...(a.animais||[])];renderTempAliAnimals();
-  populateAliAnimalSelect();
-  calcAliCost();
-  document.getElementById('aliAnimalModalTitle').textContent='Editar Alimentação';
-  openModal('aliAnimalModal');
-}
-async function delAliDirect(aid){const ok=await showConfirm('Excluir esta alimentação?','🗑️');if(!ok)return;DB.aliDirect=DB.aliDirect.filter(x=>x.id!==aid);save();renderAliDirect();toast('Alimentação excluída')}
-
-// ========== EDIT ANIMALS ==========
-function editAnimal(type,aid){
-  const p=DB[type].find(x=>x.id===currentPlanId);const a=p.animals.find(x=>x.id===aid);if(!a)return;editAniId=aid;
-  if(type==='rebanho'){document.getElementById('animalNum').value=a.num;document.getElementById('animalNome').value=a.nome;document.getElementById('animalSexo').value=a.sexo;onSexoChange();document.getElementById('animalCat').value=a.cat;onCatChange();document.getElementById('animalSit').value=a.sit;updateFieldVisibility();document.getElementById('animalRaca').value=a.raca;document.getElementById('animalPeso').value=a.peso||'';document.getElementById('animalLeite').value=a.leite||'';document.getElementById('animalUltimoParto').value=a.ultimoParto||'';document.getElementById('animalModalTitle').textContent='Editar Animal';openModal('animalModal')}
-  else if(type==='inseminacao'){populateInsemSelect();document.getElementById('insemAnimalSelect').value=a.num+'|'+a.nome;document.getElementById('insemData').value=a.data;document.getElementById('insemTempo').value=a.tempo;document.getElementById('insemTouro').value=a.touro;document.getElementById('insemMuco').value=a.muco;document.getElementById('insemObs').value=a.obs;document.getElementById('insemAnimalModalTitle').textContent='Editar Inseminação';openModal('insemAnimalModal')}
-  else if(type==='medicacao'){document.getElementById('medNum').value=a.num;document.getElementById('medNome').value=a.nome;document.getElementById('medDataIni').value=a.dataIni;document.getElementById('medDataFim').value=a.dataFim;document.getElementById('medMedicamentos').value=a.medicamentos;document.getElementById('medAnimalModalTitle').textContent='Editar Medicação';openModal('medAnimalModal')}
-  else if(type==='alimentacao'){setDietChecks(a.dietas||[]);document.getElementById('aliValor').value=a.valor;tempAli=[...(a.animais||[])];renderTempAli();document.getElementById('aliAnimalModalTitle').textContent='Editar Alimentação';openModal('aliAnimalModal')}
-}
+// ========== ALIMENTAÇÃO (lote + individual) ==========
+let aliMode='lote';let tempAliAnimals=[];
+function setAliMode(mode){aliMode=mode;document.getElementById('aliModeLote').classList.toggle('active',mode==='lote');document.getElementById('aliModeIndiv').classList.toggle('active',mode==='individual');document.getElementById('aliLoteSection').classList.toggle('hidden',mode!=='lote');document.getElementById('aliIndivSection').classList.toggle('hidden',mode!=='individual');calcAliCost()}
+function populateAliLoteSelect(){const sel=document.getElementById('aliLoteSelect');sel.innerHTML='<option value="">Selecione o lote...</option>';DB.lotes.forEach(l=>{sel.innerHTML+=`<option value="${l.id}">${l.name} (${l.animals.length})</option>`})}
+function populateAliAnimalSelect2(){const sel=document.getElementById('aliAnimalSelect');sel.innerHTML='<option value="">Selecione...</option>';sortByNum(getAllAnimals().slice()).forEach(a=>{sel.innerHTML+=`<option value="${a.num}|${a.nome}">#${a.num} - ${a.nome} (${a.loteName})</option>`})}
+function loadAliLoteAnimals(){const lid=document.getElementById('aliLoteSelect').value;const container=document.getElementById('aliLoteAnimals');if(!lid){container.innerHTML='';calcAliCost();return}const l=DB.lotes.find(x=>x.id===lid);if(!l)return;tempAliAnimals=l.animals.map(a=>({num:a.num,nome:a.nome,included:true}));renderAliLoteList();calcAliCost()}
+function renderAliLoteList(){const container=document.getElementById('aliLoteAnimals');container.innerHTML=tempAliAnimals.map((a,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;margin-bottom:4px;background:${a.included?'rgba(78,232,152,0.1)':'rgba(255,87,87,0.08)'}"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;flex:1;font-size:.8rem;color:${a.included?'var(--g300)':'var(--danger)'}"><input type="checkbox" ${a.included?'checked':''} onchange="tempAliAnimals[${i}].included=this.checked;renderAliLoteList();calcAliCost()" style="accent-color:var(--g500)">#${a.num} ${a.nome}</label></div>`).join('')}
+function addAliAnimalNew(){const sel=document.getElementById('aliAnimalSelect');if(!sel.value)return;const[num,nome]=sel.value.split('|');if(tempAliAnimals.find(a=>a.num===num))return toast('Já adicionado','info');tempAliAnimals.push({num,nome,included:true});renderTempAliAnimals();sel.selectedIndex=0;calcAliCost()}
+function renderTempAliAnimals(){document.getElementById('aliSelectedAnimals').innerHTML=tempAliAnimals.map((a,i)=>`<span class="badge badge-cat" style="cursor:pointer;padding:5px 12px" onclick="tempAliAnimals.splice(${i},1);renderTempAliAnimals();calcAliCost()">#${a.num} ${a.nome} ✕</span>`).join('')}
+function onDietChange2(){const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]');const container=document.getElementById('dietDetailFields');container.innerHTML='';checks.forEach(cb=>{if(cb.checked){container.innerHTML+=`<div class="diet-qtd" style="flex-direction:column;gap:6px;padding:12px 14px"><div class="diet-label" style="min-width:auto;margin-bottom:4px">${cb.value}</div><div class="flex-row"><div class="form-group" style="margin-bottom:0"><label style="font-size:.65rem">Valor/kg (R$)</label><input class="form-input" id="dietVal_${cb.value}" type="number" step="0.01" placeholder="R$/kg" style="padding:9px 12px;font-size:.82rem" oninput="calcAliCost()"></div><div class="form-group" style="margin-bottom:0"><label style="font-size:.65rem">Consumo/animal (kg)</label><input class="form-input" id="dietKg_${cb.value}" type="number" step="0.1" placeholder="kg/animal" style="padding:9px 12px;font-size:.82rem" oninput="calcAliCost()"></div></div></div>`}});calcAliCost()}
+function calcAliCost(){const checks=document.querySelectorAll('#dietaChecks input[type=checkbox]:checked');const numAni=tempAliAnimals.filter(a=>a.included!==false).length;let totalCost=0;const preview=document.getElementById('aliCostPreview');let lines='';checks.forEach(cb=>{const val=parseFloat(document.getElementById('dietVal_'+cb.value)?.value||0);const kg=parseFloat(document.getElementById('dietKg_'+cb.value)?.value||0);const cost=val*kg*numAni;totalCost+=cost;if(val||kg)lines+=`<div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text2);padding:2px 0"><span>${cb.value}: ${kg}kg × ${numAni} anim. × R$${val.toFixed(2)}</span><span>R$ ${cost.toFixed(2)}</span></div>`});if(lines||numAni)preview.innerHTML=`<div class="glass3" style="border-radius:var(--rx);padding:12px;margin-top:4px"><div style="font-size:.72rem;color:var(--text3);margin-bottom:6px">${numAni} animal(is)</div>${lines}<div style="display:flex;justify-content:space-between;font-size:.9rem;font-weight:700;color:var(--g400);border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:6px"><span>Custo Total</span><span>R$ ${totalCost.toFixed(2)}</span></div></div>`;else preview.innerHTML=''}
+function getSelectedDiets2(){const diets=[];document.querySelectorAll('#dietaChecks input[type=checkbox]:checked').forEach(cb=>{const valEl=document.getElementById('dietVal_'+cb.value);const kgEl=document.getElementById('dietKg_'+cb.value);diets.push({tipo:cb.value,valorKg:valEl?valEl.value:'',kg:kgEl?kgEl.value:''})});return diets}
+function saveAliDirect(){const dietas=getSelectedDiets2();if(!dietas.length)return toast('Selecione ao menos um tipo de dieta','error');const animais=tempAliAnimals.filter(a=>a.included!==false).map(a=>({num:a.num,nome:a.nome}));if(!animais.length)return toast('Adicione ao menos um animal','error');let totalCost=0;dietas.forEach(d=>{totalCost+=parseFloat(d.valorKg||0)*parseFloat(d.kg||0)*animais.length});const d={dietas,animais,numAnimais:animais.length,custoTotal:totalCost};if(editAniId){const a=DB.aliDirect.find(x=>x.id===editAniId);if(a)Object.assign(a,d)}else DB.aliDirect.push({id:uid(),createdAt:Date.now(),...d});tempAliAnimals=[];save();closeModal('aliAnimalModal');renderAliDirect();toast('Alimentação salva!')}
+function renderAliDirect(){const container=document.getElementById('aliDirectList');const costGrid=document.getElementById('aliCostGrid');const items=[...DB.aliDirect].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));let totalGeral=0;items.forEach(a=>totalGeral+=parseFloat(a.custoTotal||0));costGrid.innerHTML=items.length?`<div class="cost-box glass3"><div class="val">R$ ${totalGeral.toFixed(2)}</div><div class="lbl">Custo Total</div></div><div class="cost-box glass3"><div class="val">${items.length}</div><div class="lbl">Dietas</div></div>`:'';if(!items.length){container.innerHTML='<div class="empty-state"><p>Nenhuma alimentação registrada.</p></div>';return}container.innerHTML=items.map((a,i)=>{const dietBadges=a.dietas.map(d=>`<span class="badge badge-cat" style="margin:2px">${d.tipo}: ${d.kg||0}kg × R$${parseFloat(d.valorKg||0).toFixed(2)}</span>`).join('');const animalBadges=(a.animais||[]).map(x=>`<span class="badge badge-m" style="margin:1px">#${x.num} ${x.nome}</span>`).join('');return`<div class="animal-row" style="animation-delay:${i*0.03}s;flex-direction:column;align-items:stretch"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--g400);font-size:.9rem">${a.numAnimais||0} animais · R$ ${parseFloat(a.custoTotal||0).toFixed(2)}</div></div><div class="animal-actions"><button class="edit-btn" onclick="editAliDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="del-btn" onclick="delAliDirect('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button></div></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">${dietBadges}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${animalBadges}</div></div>`}).join('')}
+function editAliDirect(aid){const a=DB.aliDirect.find(x=>x.id===aid);if(!a)return;editAniId=aid;document.querySelectorAll('#dietaChecks input[type=checkbox]').forEach(cb=>cb.checked=false);a.dietas.forEach(d=>{const cb=document.querySelector('#dietaChecks input[value="'+d.tipo+'"]');if(cb)cb.checked=true});onDietChange2();a.dietas.forEach(d=>{const ve=document.getElementById('dietVal_'+d.tipo);if(ve)ve.value=d.valorKg||'';const ke=document.getElementById('dietKg_'+d.tipo);if(ke)ke.value=d.kg||''});setAliMode('individual');tempAliAnimals=(a.animais||[]).map(x=>({...x,included:true}));renderTempAliAnimals();populateAliAnimalSelect2();calcAliCost();document.getElementById('aliAnimalModalTitle').textContent='Editar Alimentação';openModal('aliAnimalModal')}
+async function delAliDirect(aid){const ok=await showConfirm('Excluir?','🗑️');if(!ok)return;DB.aliDirect=DB.aliDirect.filter(x=>x.id!==aid);save();renderAliDirect();toast('Excluído')}
 
 // ========== HOME ==========
 let chartFilter='categoria';
-const COLORS=['#1bd171','#5b9aff','#ffb830','#ff5757','#a78bfa','#f472b6','#2dd4bf','#fb923c','#818cf8','#a3e635','#fbbf24','#67e8f9'];
+const COLORS=['#1bd171','#5b9aff','#ffb830','#ff4757','#a78bfa','#f472b6','#2dd4bf','#fb923c','#818cf8','#a3e635','#fbbf24','#67e8f9'];
 function setChartFilter(f,btn){chartFilter=f;document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderHome()}
-function renderHome(){
-  let all=getAllRebanhoAnimals();
-  if(!DB.medDirect)DB.medDirect=[];
-  let medCount=0;const today=new Date().toISOString().split('T')[0];DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medCount++});
-  let insemCount=0;DB.inseminacao.forEach(p=>insemCount+=p.animals.length);
-
-  // Greeting
-  const hour=new Date().getHours();
-  const greet=hour<12?'Bom dia':hour<18?'Boa tarde':'Boa noite';
-  const userName=DB.user.name||'Usuário';
-
-  document.getElementById('statGrid').innerHTML=`
-    <div style="grid-column:1/-1;margin-bottom:4px"><p style="font-size:1rem;font-weight:700;color:#fff">${greet}, ${userName}!</p><p style="font-size:.75rem;color:var(--text2);margin-top:2px">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</p></div>
-    <div class="stat-card glass2 anim-fade"><div class="stat-icon">🐄</div><div class="stat-val">${all.length}</div><div class="stat-lbl">Total Animais</div></div>
-    <div class="stat-card glass2 anim-fade anim-d1"><div class="stat-icon">💊</div><div class="stat-val">${medCount}</div><div class="stat-lbl">Em Medicação</div></div>
-    <div class="stat-card glass2 anim-fade anim-d2"><div class="stat-icon">🧬</div><div class="stat-val">${insemCount}</div><div class="stat-lbl">Inseminações</div></div>
-    <div class="stat-card glass2 anim-fade anim-d3"><div class="stat-icon">📋</div><div class="stat-val">${DB.rebanho.length+DB.inseminacao.length+DB.medicacao.length+DB.alimentacao.length}</div><div class="stat-lbl">Planilhas</div></div>`;
-
-  const counts={};
-  // Build set of medicated animal numbers
-  const medNums=new Set();DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medNums.add(a.num)});
-
-  if(chartFilter==='planilha'){
-    DB.rebanho.forEach(p=>{counts[p.name]=p.animals.length});
-  } else if(chartFilter==='medicado'){
-    let mc=0,naoMed=0;
-    all.forEach(a=>{if(medNums.has(a.num))mc++;else naoMed++});
-    if(mc)counts['Em medicação']=mc;
-    if(naoMed)counts['Sem medicação']=naoMed;
-  } else {
-    all.forEach(a=>{let k='';if(chartFilter==='categoria')k=a.cat;else if(chartFilter==='sexo')k=a.sexo;else if(chartFilter==='situacao')k=a.sit;else k=a.raca||'N/A';counts[k]=(counts[k]||0)+1});
-  }
-  drawPie(counts);
-
-  let meds=[];DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)meds.push(a)});
-  document.getElementById('homeMedList').innerHTML=meds.length?meds.map(a=>`<div class="med-alert-card glass3 anim-fade"><div class="med-animal">#${a.num} ${a.nome}</div><div class="med-detail">Até: ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'Indefinido'}</div><div class="med-detail">${a.medicamentos}</div></div>`).join(''):'<div class="empty-state" style="padding:30px"><p>Nenhum animal em medicação no momento.</p></div>';
-}
-function drawPie(data){
-  const c=document.getElementById('pieChart'),ctx=c.getContext('2d'),W=c.width,H=c.height,cx=W/2,cy=H/2,r=Math.min(W,H)/2-16;
-  ctx.clearRect(0,0,W,H);
-  const keys=Object.keys(data),total=keys.reduce((s,k)=>s+data[k],0);
-  const leg=document.getElementById('chartLegend');
-  if(!total){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(78,232,152,0.15)';ctx.lineWidth=20;ctx.stroke();ctx.fillStyle='rgba(195,249,221,0.3)';ctx.font='500 13px Sora';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Sem dados',cx,cy);leg.innerHTML='';return}
-  let start=-Math.PI/2;leg.innerHTML='';
-  keys.forEach((k,i)=>{
-    const angle=(data[k]/total)*Math.PI*2;const color=COLORS[i%COLORS.length];
-    // Draw donut segment
-    ctx.beginPath();ctx.arc(cx,cy,r,start,start+angle);ctx.arc(cx,cy,r*0.55,start+angle,start,true);ctx.closePath();ctx.fillStyle=color;ctx.fill();
-    // Label
-    if(angle>0.35){const mid=start+angle/2;const lx=cx+Math.cos(mid)*(r*0.78);const ly=cy+Math.sin(mid)*(r*0.78);ctx.fillStyle='#fff';ctx.font='700 11px Sora';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(data[k],lx,ly)}
-    start+=angle;
-    leg.innerHTML+=`<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${k} (${data[k]})</div>`;
-  });
-  // Center text
-  ctx.fillStyle='var(--text)';ctx.font='700 22px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(total,cx,cy-6);
-  ctx.fillStyle='rgba(195,249,221,0.5)';ctx.font='500 10px Sora';ctx.fillText('TOTAL',cx,cy+12);
-}
+function renderHome(){const all=getAllAnimals();const today=new Date().toISOString().split('T')[0];let medCount=0;DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medCount++});let insemCount=0;DB.inseminacao.forEach(p=>insemCount+=p.animals.length);const hour=new Date().getHours();const greet=hour<12?'Bom dia':hour<18?'Boa tarde':'Boa noite';document.getElementById('statGrid').innerHTML=`<div style="grid-column:1/-1;margin-bottom:4px"><p style="font-size:1rem;font-weight:700;color:#fff">${greet}, ${DB.user.name||'Usuário'}!</p><p style="font-size:.75rem;color:var(--text2);margin-top:2px">${new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})}</p></div><div class="stat-card glass2 anim-fade"><div class="stat-icon">🐄</div><div class="stat-val">${all.length}</div><div class="stat-lbl">Total Animais</div></div><div class="stat-card glass2 anim-fade anim-d1"><div class="stat-icon">💊</div><div class="stat-val">${medCount}</div><div class="stat-lbl">Em Medicação</div></div><div class="stat-card glass2 anim-fade anim-d2"><div class="stat-icon">🧬</div><div class="stat-val">${insemCount}</div><div class="stat-lbl">Inseminações</div></div><div class="stat-card glass2 anim-fade anim-d3"><div class="stat-icon">📋</div><div class="stat-val">${DB.lotes.length}</div><div class="stat-lbl">Lotes</div></div>`;const counts={};const medNums=new Set();DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)medNums.add(a.num)});if(chartFilter==='planilha'){DB.lotes.forEach(l=>{if(l.animals.length)counts[l.name]=l.animals.length})}else if(chartFilter==='medicado'){let mc=0,nm=0;all.forEach(a=>{if(medNums.has(a.num))mc++;else nm++});if(mc)counts['Em medicação']=mc;if(nm)counts['Sem medicação']=nm}else{all.forEach(a=>{let k='';if(chartFilter==='categoria')k=a.cat;else if(chartFilter==='sexo')k=a.sexo;else if(chartFilter==='situacao')k=a.sit;else k=a.raca||'N/A';counts[k]=(counts[k]||0)+1})}drawPie(counts);let meds=[];DB.medDirect.forEach(a=>{if(!a.dataFim||a.dataFim>=today)meds.push(a)});document.getElementById('homeMedList').innerHTML=meds.length?meds.map(a=>`<div class="med-alert-card glass3 anim-fade"><div class="med-animal">#${a.num} ${a.nome}</div><div class="med-detail">Até: ${a.dataFim?new Date(a.dataFim+'T12:00').toLocaleDateString('pt-BR'):'Indefinido'}</div><div class="med-detail">${a.nomeMed||a.medicamentos||''} · ${a.dosagem||''}</div></div>`).join(''):'<div class="empty-state" style="padding:30px"><p>Nenhum animal em medicação.</p></div>'}
+function drawPie(data){const c=document.getElementById('pieChart'),ctx=c.getContext('2d'),W=c.width,H=c.height,cx=W/2,cy=H/2,r=Math.min(W,H)/2-16;ctx.clearRect(0,0,W,H);const keys=Object.keys(data),total=keys.reduce((s,k)=>s+data[k],0);const leg=document.getElementById('chartLegend');if(!total){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='rgba(78,232,152,0.15)';ctx.lineWidth=20;ctx.stroke();ctx.fillStyle='rgba(195,249,221,0.3)';ctx.font='500 13px Sora';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Sem dados',cx,cy);leg.innerHTML='';return}let start=-Math.PI/2;leg.innerHTML='';keys.forEach((k,i)=>{const angle=(data[k]/total)*Math.PI*2;const color=COLORS[i%COLORS.length];ctx.beginPath();ctx.arc(cx,cy,r,start,start+angle);ctx.arc(cx,cy,r*0.55,start+angle,start,true);ctx.closePath();ctx.fillStyle=color;ctx.fill();if(angle>0.35){const mid=start+angle/2;const lx=cx+Math.cos(mid)*(r*0.78);const ly=cy+Math.sin(mid)*(r*0.78);ctx.fillStyle='#fff';ctx.font='700 11px Sora';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(data[k],lx,ly)}start+=angle;leg.innerHTML+=`<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${k} (${data[k]})</div>`});ctx.fillStyle='#fff';ctx.font='700 22px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(total,cx,cy-6);ctx.fillStyle='rgba(195,249,221,0.5)';ctx.font='500 10px Sora';ctx.fillText('TOTAL',cx,cy+12)}
 
 // ========== RELATÓRIOS ==========
-function populateReportSources(){
-  const container=document.getElementById('reportSourceChecks');
-  container.innerHTML='';
-  // Rebanho = single list
-  container.innerHTML+=`<label class="report-check"><input type="checkbox" value="rebanho"><span>Rebanho</span></label>`;
-  // Medicação = single list
-  if(DB.medDirect&&DB.medDirect.length)container.innerHTML+=`<label class="report-check"><input type="checkbox" value="medicacao"><span>Medicação (${DB.medDirect.length})</span></label>`;
-  // Alimentação = single list
-  if(DB.aliDirect&&DB.aliDirect.length)container.innerHTML+=`<label class="report-check"><input type="checkbox" value="alimentacao"><span>Alimentação (${DB.aliDirect.length})</span></label>`;
-  // Inseminação = each planilha as option
-  DB.inseminacao.forEach(p=>{container.innerHTML+=`<label class="report-check"><input type="checkbox" value="inseminacao:${p.id}"><span>Inseminação — ${p.name} (${p.animals.length})</span></label>`});
-  if(!container.innerHTML)container.innerHTML='<div style="padding:12px;color:var(--text3);font-size:.8rem;text-align:center">Nenhum dado disponível</div>';
-  // Populate raça filter
-  const racas=new Set();getAllRebanhoAnimals().forEach(a=>{if(a.raca&&a.raca!=='N/A')racas.add(a.raca)});
-  const racaSel=document.getElementById('reportFilterRaca');
-  racaSel.innerHTML='<option value="">Todas</option>';
-  [...racas].sort().forEach(r=>{racaSel.innerHTML+=`<option>${r}</option>`});
-}
-function getFiltered(){
-  const checks=document.querySelectorAll('#reportSourceChecks input[type=checkbox]:checked');
-  if(!checks.length)return{sources:[],animals:[],type:'',name:''};
-  let allAnimals=[];let names=[];let mainType='';
-  const cf=document.getElementById('reportFilterCat').value;
-  const sf=document.getElementById('reportFilterSex').value;
-  const rf=document.getElementById('reportFilterRaca').value;
-  const stf=document.getElementById('reportFilterSit').value;
-  checks.forEach(cb=>{
-    const val=cb.value;
-    if(val==='rebanho'){
-      mainType=mainType||'rebanho';names.push('Rebanho');
-      let items=getAllRebanhoAnimals();
-      if(cf)items=items.filter(a=>a.cat===cf);
-      if(sf)items=items.filter(a=>a.sexo===sf);
-      if(rf)items=items.filter(a=>a.raca===rf);
-      if(stf)items=items.filter(a=>a.sit===stf);
-      items.forEach(a=>allAnimals.push({...a,_type:'rebanho',_planilha:'Rebanho'}));
-    } else if(val==='medicacao'){
-      mainType=mainType||'medicacao';names.push('Medicação');
-      (DB.medDirect||[]).forEach(a=>allAnimals.push({...a,_type:'medicacao',_planilha:'Medicação'}));
-    } else if(val==='alimentacao'){
-      mainType=mainType||'alimentacao';names.push('Alimentação');
-      (DB.aliDirect||[]).forEach(a=>allAnimals.push({...a,_type:'alimentacao',_planilha:'Alimentação'}));
-    } else if(val.startsWith('inseminacao:')){
-      const id=val.split(':')[1];
-      const p=DB.inseminacao.find(x=>x.id===id);
-      if(p){mainType=mainType||'inseminacao';names.push('Insem. — '+p.name);p.animals.forEach(a=>allAnimals.push({...a,_type:'inseminacao',_planilha:p.name}));}
-    }
-  });
-  return{sources:[],animals:allAnimals,type:mainType,name:names.join(', ')};
-}
-function downloadReport(fmt){
-  const result=getFiltered();
-  if(!result.animals.length)return toast('Selecione planilhas e verifique os filtros','error');
-  const{sources,animals,name}=result;
-  const now=new Date(),ds=now.toLocaleDateString('pt-BR'),ts=now.toLocaleTimeString('pt-BR');
-
-  // Group animals by source type
-  const grouped={};
-  animals.forEach(a=>{const key=a._type+'|'+a._planilha;if(!grouped[key])grouped[key]={type:a._type,planilha:a._planilha,items:[]};grouped[key].items.push(a)});
-
-  if(fmt==='csv'){
-    let csv='';
-    Object.values(grouped).forEach(g=>{
-      csv+=`\n--- ${g.planilha} ---\n`;
-      if(g.type==='rebanho')csv+='Numero,Nome,Sexo,Categoria,Situacao,Raca,Peso(kg),Leite(L/dia)\n'+g.items.map(a=>`${a.num},${a.nome},${a.sexo},${a.cat},${a.sit},${a.raca},${a.peso||''},${a.leite||''}`).join('\n');
-      else if(g.type==='inseminacao')csv+='Numero,Nome,Data,Tempo,Touro,Muco,Obs\n'+g.items.map(a=>`${a.num},${a.nome},${a.data},${a.tempo},${a.touro},${a.muco},"${a.obs||''}"`).join('\n');
-      else if(g.type==='medicacao')csv+='Numero,Nome,Tipo,Medicamento,Dosagem,Inicio,Fim\n'+g.items.map(a=>`${a.num},${a.nome},${a.tipo||''},${a.nomeMed||''},"${a.dosagem||''}",${a.dataIni},${a.dataFim}`).join('\n');
-      else if(g.type==='alimentacao'){
-        csv+='Dietas,Kg/animal,Valor/kg,Animais,Qtd Animais,Custo Total\n';
-        let aliTotal=0;
-        csv+=g.items.map(a=>{
-          const dt=(a.dietas||[]).map(d=>`${d.tipo}:${d.kg||0}kg@R$${parseFloat(d.valorKg||0).toFixed(2)}`).join('; ');
-          const anis=(a.animais||[]).map(x=>x.num+'-'+x.nome).join('; ');
-          aliTotal+=parseFloat(a.custoTotal||0);
-          return`"${dt}","${(a.dietas||[]).map(d=>d.kg||0).join(';')}","${(a.dietas||[]).map(d=>d.valorKg||0).join(';')}","${anis}",${a.numAnimais||0},${parseFloat(a.custoTotal||0).toFixed(2)}`;
-        }).join('\n');
-        csv+=`\nTOTAL GASTO,,,,, R$ ${aliTotal.toFixed(2)}`;
-      }
-      csv+='\n';
-    });
-    const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download=`ELTECH_Relatorio_${ds.replace(/\//g,'-')}.csv`;l.click();toast('Excel exportado!');
-  } else {
-    let tables='';
-    Object.values(grouped).forEach(g=>{
-      let rows='';
-      if(g.type==='rebanho')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Sexo</th><th>Cat.</th><th>Situação</th><th>Raça</th><th>Peso</th><th>Leite</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.sexo}</td><td>${a.cat}</td><td>${a.sit}</td><td>${a.raca}</td><td>${a.peso?a.peso+'kg':'—'}</td><td>${a.leite?a.leite+'L':'—'}</td></tr>`).join('');
-      else if(g.type==='inseminacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Data</th><th>Tempo</th><th>Touro</th><th>Muco</th><th>Obs</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.data}</td><td>${a.tempo}</td><td>${a.touro}</td><td>${a.muco}</td><td>${a.obs||''}</td></tr>`).join('');
-      else if(g.type==='medicacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Tipo</th><th>Medicamento</th><th>Dosagem</th><th>Início</th><th>Fim</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.tipo||'—'}</td><td>${a.nomeMed||'—'}</td><td>${a.dosagem||'—'}</td><td>${a.dataIni||'—'}</td><td>${a.dataFim||'—'}</td></tr>`).join('');
-      else if(g.type==='alimentacao'){
-        let aliTotal=0;
-        rows='<tr class="hdr"><th>Dietas</th><th>Animais</th><th>Qtd</th><th>Custo</th></tr>'+g.items.map((a,i)=>{
-          const dt=(a.dietas||[]).map(d=>`${d.tipo}: ${d.kg||0}kg/animal × R$${parseFloat(d.valorKg||0).toFixed(2)}/kg`).join('<br>');
-          const anis=(a.animais||[]).map(x=>'#'+x.num+' '+x.nome).join(', ');
-          aliTotal+=parseFloat(a.custoTotal||0);
-          return`<tr class="${i%2?'alt':''}"><td>${dt}</td><td style="font-size:10px">${anis}</td><td>${a.numAnimais||0}</td><td><strong>R$ ${parseFloat(a.custoTotal||0).toFixed(2)}</strong></td></tr>`;
-        }).join('');
-        rows+=`<tr style="background:#0a7c44;color:#fff;font-weight:700"><td colspan="3" style="text-align:right;border:none;padding:12px">TOTAL GASTO</td><td style="border:none;padding:12px;font-size:14px">R$ ${aliTotal.toFixed(2)}</td></tr>`;
-      }
-      tables+=`<h2 style="color:#0a7c44;font-size:16px;margin:24px 0 8px;border-bottom:2px solid #0a7c44;padding-bottom:6px">${g.planilha}</h2><table>${rows}</table><p style="font-size:11px;color:#999;margin-top:4px">${g.items.length} registro(s)</p>`;
-    });
-    const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>ELTECH</title><style>*{margin:0;box-sizing:border-box}body{font-family:Segoe UI,sans-serif;padding:40px 24px;color:#1a1a1a;background:#fff}.hd{text-align:center;margin-bottom:24px}.hd h1{color:#0a7c44;font-size:28px;letter-spacing:3px;margin-bottom:4px}.hd p{color:#666;font-size:12px}table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px}th,td{padding:9px 10px;text-align:left;border-bottom:1px solid #e5e5e5}.hdr th{background:linear-gradient(135deg,#0a7c44,#10b461);color:#fff;font-weight:600;border:none;font-size:11px}.alt td{background:#f0fdf4}.ft{text-align:center;margin-top:30px;padding-top:14px;border-top:2px solid #0a7c44;color:#666;font-size:11px}</style></head><body><div class="hd"><h1>ELTECH</h1><p>Relatório · ${ds} às ${ts}</p></div>${tables}<div class="ft">Total: ${animals.length} registro(s) · Gerado por ELTECH</div></body></html>`;
-    const w=window.open('','_blank');w.document.write(html);w.document.close();setTimeout(()=>w.print(),400);toast('PDF gerado!');
-  }
-}
+function populateReportSources(){const container=document.getElementById('reportSourceChecks');container.innerHTML='';DB.lotes.forEach(l=>{container.innerHTML+=`<label class="report-check"><input type="checkbox" value="lote:${l.id}"><span>Rebanho — ${l.name} (${l.animals.length})</span></label>`});if(DB.medDirect.length)container.innerHTML+=`<label class="report-check"><input type="checkbox" value="medicacao"><span>Medicação (${DB.medDirect.length})</span></label>`;if(DB.aliDirect.length)container.innerHTML+=`<label class="report-check"><input type="checkbox" value="alimentacao"><span>Alimentação (${DB.aliDirect.length})</span></label>`;DB.inseminacao.forEach(p=>{container.innerHTML+=`<label class="report-check"><input type="checkbox" value="inseminacao:${p.id}"><span>Insem. — ${p.name} (${p.animals.length})</span></label>`})}
+function getFiltered(){const checks=document.querySelectorAll('#reportSourceChecks input[type=checkbox]:checked');if(!checks.length)return{animals:[]};let allAnimals=[];const cf=document.getElementById('reportFilterCat').value;const sf=document.getElementById('reportFilterSex').value;const stf=document.getElementById('reportFilterSit').value;const insemF=document.getElementById('reportFilterInsem').value;const insemNums=new Set();DB.inseminacao.forEach(p=>p.animals.forEach(a=>insemNums.add(a.num)));checks.forEach(cb=>{const val=cb.value;if(val.startsWith('lote:')){const id=val.split(':')[1];const l=DB.lotes.find(x=>x.id===id);if(l){let items=l.animals.map(a=>({...a,loteName:l.name}));if(cf)items=items.filter(a=>a.cat===cf);if(sf)items=items.filter(a=>a.sexo===sf);if(stf)items=items.filter(a=>a.sit===stf);if(insemF==='sim')items=items.filter(a=>insemNums.has(a.num));else if(insemF==='nao')items=items.filter(a=>!insemNums.has(a.num));items.forEach(a=>allAnimals.push({...a,_type:'rebanho',_planilha:'Rebanho — '+l.name}))}}else if(val==='medicacao'){DB.medDirect.forEach(a=>allAnimals.push({...a,_type:'medicacao',_planilha:'Medicação'}))}else if(val==='alimentacao'){DB.aliDirect.forEach(a=>allAnimals.push({...a,_type:'alimentacao',_planilha:'Alimentação'}))}else if(val.startsWith('inseminacao:')){const id=val.split(':')[1];const p=DB.inseminacao.find(x=>x.id===id);if(p)p.animals.forEach(a=>allAnimals.push({...a,_type:'inseminacao',_planilha:'Insem. — '+p.name}))}});return{animals:allAnimals}}
+function downloadReport(fmt){const result=getFiltered();if(!result.animals.length)return toast('Selecione fontes e verifique filtros','error');const animals=result.animals;const now=new Date(),ds=now.toLocaleDateString('pt-BR'),ts=now.toLocaleTimeString('pt-BR');const grouped={};animals.forEach(a=>{const key=a._type+'|'+a._planilha;if(!grouped[key])grouped[key]={type:a._type,planilha:a._planilha,items:[]};grouped[key].items.push(a)});if(fmt==='csv'){let csv='';Object.values(grouped).forEach(g=>{csv+=`\n--- ${g.planilha} ---\n`;if(g.type==='rebanho')csv+='Numero,Nome,Sexo,Categoria,Situacao,Raca,Peso,Leite,Lote\n'+g.items.map(a=>`${a.num},${a.nome},${a.sexo},${a.cat},${a.sit},${a.raca},${a.peso||''},${a.leite||''},${a.loteName||''}`).join('\n');else if(g.type==='inseminacao')csv+='Numero,Nome,Data,Tempo,Touro,Muco,Obs\n'+g.items.map(a=>`${a.num},${a.nome},${a.data},${a.tempo},${a.touro},${a.muco},"${a.obs||''}"`).join('\n');else if(g.type==='medicacao')csv+='Numero,Nome,Tipo,Medicamento,Dosagem,Inicio,Fim\n'+g.items.map(a=>`${a.num},${a.nome},${a.tipo||''},${a.nomeMed||''},"${a.dosagem||''}",${a.dataIni},${a.dataFim}`).join('\n');else if(g.type==='alimentacao'){csv+='Dietas,Animais,Qtd,Custo\n';let aliT=0;csv+=g.items.map(a=>{const dt=(a.dietas||[]).map(d=>`${d.tipo}:${d.kg||0}kg@R$${parseFloat(d.valorKg||0).toFixed(2)}`).join('; ');aliT+=parseFloat(a.custoTotal||0);return`"${dt}","${(a.animais||[]).map(x=>x.num+'-'+x.nome).join('; ')}",${a.numAnimais||0},${parseFloat(a.custoTotal||0).toFixed(2)}`}).join('\n');csv+=`\nTOTAL,,, R$ ${aliT.toFixed(2)}`}csv+='\n'});const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const l=document.createElement('a');l.href=URL.createObjectURL(b);l.download=`ELTECH_${ds.replace(/\//g,'-')}.csv`;l.click();toast('Excel exportado!')}else{let tables='';Object.values(grouped).forEach(g=>{let rows='';if(g.type==='rebanho')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Sexo</th><th>Cat.</th><th>Sit.</th><th>Raça</th><th>Peso</th><th>Lote</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.sexo}</td><td>${a.cat}</td><td>${a.sit}</td><td>${a.raca}</td><td>${a.peso?a.peso+'kg':'—'}</td><td>${a.loteName||''}</td></tr>`).join('');else if(g.type==='inseminacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Data</th><th>Tempo</th><th>Touro</th><th>Muco</th><th>Obs</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.data}</td><td>${a.tempo}</td><td>${a.touro}</td><td>${a.muco}</td><td>${a.obs||''}</td></tr>`).join('');else if(g.type==='medicacao')rows='<tr class="hdr"><th>Nº</th><th>Nome</th><th>Tipo</th><th>Med.</th><th>Dose</th><th>Início</th><th>Fim</th></tr>'+g.items.map((a,i)=>`<tr class="${i%2?'alt':''}"><td>${a.num}</td><td>${a.nome}</td><td>${a.tipo||'—'}</td><td>${a.nomeMed||'—'}</td><td>${a.dosagem||'—'}</td><td>${a.dataIni||'—'}</td><td>${a.dataFim||'—'}</td></tr>`).join('');else if(g.type==='alimentacao'){let aliT=0;rows='<tr class="hdr"><th>Dietas</th><th>Animais</th><th>Qtd</th><th>Custo</th></tr>'+g.items.map((a,i)=>{const dt=(a.dietas||[]).map(d=>`${d.tipo}: ${d.kg||0}kg/an × R$${parseFloat(d.valorKg||0).toFixed(2)}`).join('<br>');aliT+=parseFloat(a.custoTotal||0);return`<tr class="${i%2?'alt':''}"><td>${dt}</td><td style="font-size:10px">${(a.animais||[]).map(x=>'#'+x.num).join(', ')}</td><td>${a.numAnimais||0}</td><td><strong>R$ ${parseFloat(a.custoTotal||0).toFixed(2)}</strong></td></tr>`}).join('');rows+=`<tr style="background:#0a7c44;color:#fff;font-weight:700"><td colspan="3" style="text-align:right;border:none;padding:12px">TOTAL</td><td style="border:none;padding:12px">R$ ${aliT.toFixed(2)}</td></tr>`}tables+=`<h2 style="color:#0a7c44;font-size:16px;margin:24px 0 8px;border-bottom:2px solid #0a7c44;padding-bottom:6px">${g.planilha}</h2><table>${rows}</table><p style="font-size:11px;color:#999;margin-top:4px">${g.items.length} registro(s)</p>`});const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>ELTECH</title><style>*{margin:0;box-sizing:border-box}body{font-family:Segoe UI,sans-serif;padding:40px 24px;color:#1a1a1a;background:#fff}.hd{text-align:center;margin-bottom:24px}.hd h1{color:#0a7c44;font-size:28px;letter-spacing:3px}.hd p{color:#666;font-size:12px}table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px}th,td{padding:9px 10px;text-align:left;border-bottom:1px solid #e5e5e5}.hdr th{background:linear-gradient(135deg,#0a7c44,#10b461);color:#fff;font-weight:600;border:none;font-size:11px}.alt td{background:#f0fdf4}.ft{text-align:center;margin-top:30px;padding-top:14px;border-top:2px solid #0a7c44;color:#666;font-size:11px}</style></head><body><div class="hd"><h1>ELTECH</h1><p>Relatório · ${ds} às ${ts}</p></div>${tables}<div class="ft">Total: ${animals.length} registro(s) · Gerado por ELTECH</div></body></html>`;const w=window.open('','_blank');w.document.write(html);w.document.close();setTimeout(()=>w.print(),400);toast('PDF gerado!')}}
 
 // ========== CONFIG ==========
 function setAvatar(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{DB.user.avatar=ev.target.result;document.getElementById('avatarImg').src=ev.target.result;document.getElementById('avatarImg').style.display='block';document.getElementById('avatarPlaceholder').style.display='none';save();toast('Foto atualizada!')};r.readAsDataURL(f)}
@@ -1204,53 +691,16 @@ document.getElementById('profileName').addEventListener('change',function(){DB.u
 function changePassword(){const o=document.getElementById('cfgOldPass').value;const n=document.getElementById('cfgNewPass').value;if(!o||!n)return toast('Preencha os campos','error');if(o!==DB.user.password)return toast('Senha atual incorreta','error');if(!isValidPassword(n))return toast('Nova senha precisa de: maiúscula, número e caractere especial','error');DB.user.password=n;save();toast('Senha alterada!');document.getElementById('cfgOldPass').value='';document.getElementById('cfgNewPass').value=''}
 
 // ========== BACKUP ==========
-function exportBackup(){
-  const data=JSON.stringify(DB,null,2);
-  const blob=new Blob([data],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  const d=new Date();
-  a.download=`ELTECH_backup_${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;
-  a.click();
-  toast('Backup exportado com sucesso!');
-}
-function importBackup(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=async function(ev){
-    try{
-      const data=JSON.parse(ev.target.result);
-      if(!data.rebanho&&!data.inseminacao&&!data.medicacao)throw new Error('Formato inválido');
-      const ok=await showConfirm('Isso vai substituir TODOS os dados atuais. Deseja continuar?','📦');
-      if(!ok)return;
-      DB=data;save();
-      if(DB.user.name)document.getElementById('profileName').value=DB.user.name;
-      if(DB.user.avatar){document.getElementById('avatarImg').src=DB.user.avatar;document.getElementById('avatarImg').style.display='block';document.getElementById('avatarPlaceholder').style.display='none'}
-      goPage('pageHome');
-      toast('Backup restaurado com sucesso!');
-    }catch(err){toast('Arquivo de backup inválido','error')}
-  };
-  reader.readAsText(file);
-  e.target.value='';
-}
-
-// ========== INIT ==========
-renderPlanilhas('inseminacao');if(!DB.medDirect)DB.medDirect=[];if(!DB.aliDirect)DB.aliDirect=[];if(!DB.rebanhoDirect)DB.rebanhoDirect=[];
+function exportBackup(){const data=JSON.stringify(DB,null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');const d=new Date();a.href=URL.createObjectURL(blob);a.download=`ELTECH_backup_${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;a.click();toast('Backup exportado!')}
+function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=async function(ev){try{const data=JSON.parse(ev.target.result);const ok=await showConfirm('Substituir TODOS os dados?','📦');if(!ok)return;DB=data;if(!DB.lotes)DB.lotes=[];if(!DB.medDirect)DB.medDirect=[];if(!DB.aliDirect)DB.aliDirect=[];save();if(DB.user.name)document.getElementById('profileName').value=DB.user.name;if(DB.user.avatar){document.getElementById('avatarImg').src=DB.user.avatar;document.getElementById('avatarImg').style.display='block';document.getElementById('avatarPlaceholder').style.display='none'}goPage('pageHome');toast('Backup restaurado!')}catch(err){toast('Arquivo inválido','error')}};reader.readAsText(file);e.target.value=''}
 
 // ========== PWA ==========
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(()=>console.log('SW registered')).catch(e=>console.log('SW failed',e))}
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;
-  // Show install button after login
-  const installDiv=document.createElement('div');
-  installDiv.id='installBanner';
-  installDiv.style.cssText='position:fixed;bottom:80px;left:16px;right:16px;z-index:60;padding:16px 20px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;animation:slideUp .4s ease';
-  installDiv.className='glass';
-  installDiv.innerHTML='<div style="flex:1"><div style="font-weight:700;font-size:.88rem">Instalar ELTECH</div><div style="font-size:.72rem;color:var(--text2);margin-top:2px">Adicione à tela inicial do celular</div></div><button class="btn btn-primary btn-sm" onclick="installApp()" style="flex-shrink:0">Instalar</button><button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:1.2rem">✕</button>';
-  document.body.appendChild(installDiv);
-});
-function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(r=>{if(r.outcome==='accepted')toast('App instalado!');deferredPrompt=null;const b=document.getElementById('installBanner');if(b)b.remove()})}}
-window.addEventListener('appinstalled',()=>{toast('ELTECH instalado no seu celular!');const b=document.getElementById('installBanner');if(b)b.remove()});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(e=>{})}
+let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;const d=document.createElement('div');d.id='installBanner';d.style.cssText='position:fixed;bottom:80px;left:16px;right:16px;z-index:60;padding:16px 20px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;animation:slideUp .4s ease';d.className='glass';d.innerHTML='<div style="flex:1"><div style="font-weight:700;font-size:.88rem">Instalar ELTECH</div><div style="font-size:.72rem;color:var(--text2);margin-top:2px">Adicione à tela inicial</div></div><button class="btn btn-primary btn-sm" onclick="installApp()" style="flex-shrink:0">Instalar</button><button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:1.2rem">✕</button>';document.body.appendChild(d)});
+function installApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(r=>{deferredPrompt=null;const b=document.getElementById('installBanner');if(b)b.remove()})}}
+
+// ========== INIT ==========
+renderLotes();
 </script>
 </body>
 </html>
